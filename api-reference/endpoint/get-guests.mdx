@@ -1,0 +1,45 @@
+---
+title: 'GET /public/guests/list'
+description: 'Get a list of all the bookings.'
+---
+
+#### Authentication
+
+Include these following headers:
+
+<ParamField path="X-API-APP-ID" type="string" required>
+  The id you received when you registered your application 
+</ParamField>
+
+<ParamField path="X-API-SECRET-KEY" type="string" required>
+  The api secret key provided by center 
+</ParamField>
+
+<ParamField path="X-API-PUBLIC-KEY" type="string" required>
+  The api public key provided by center 
+</ParamField>
+
+
+
+#### Query Params
+
+<ParamField path="start" type="Date" required>
+  From date 
+</ParamField>
+
+<ParamField path="end" type="Date" required>
+  To date
+</ParamField>
+
+
+#### Response
+
+```json
+"guests": {
+  "firstName": string;
+  "lastName": string;
+  "startDate": Date;
+  "endDate": Date;
+  "role": 'patient' | 'guest'
+}[]
+```

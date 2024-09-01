@@ -1,0 +1,63 @@
+---
+title: 'Introduction'
+description: 'Example section for showcasing API endpoints'
+---
+
+<Note>
+  If you're not looking to build API reference documentation, you can delete
+  this section by removing the api-reference folder.
+</Note>
+
+## Welcome
+
+There are two ways to build API documentation: [OpenAPI](https://mintlify.com/docs/api-playground/openapi/setup) and [MDX components](https://mintlify.com/docs/api-playground/mdx/configuration). For the starter kit, we are using the following OpenAPI specification.
+
+<Card
+  title="Plant Store Endpoints"
+  icon="leaf"
+  href="https://github.com/mintlify/starter/blob/main/api-reference/openapi.json"
+>
+  View the OpenAPI specification file
+</Card>
+
+## GET /public/guests/list
+
+### Authentication
+
+Include these following headers:
+
+X-API-APP-ID (you need to register your app, instructions below)
+
+X-API-SECRET-KEY (provided by center)
+
+X-API-PUBLIC-KEY (provided by center)
+
+#### Response
+
+```json
+"guests": {
+  "firstName": string;
+  "lastName": string;
+  "startDate": Date;
+  "endDate": Date;
+  "role": 'patient' | 'guest'
+}[]
+```
+
+## Create application
+
+### POST apps/register
+
+#### Body
+
+```json
+{
+"name": string;
+"email": string;
+}
+```
+
+
+#### Response
+
+As a response you will get your APP ID. Please save it for future use.
