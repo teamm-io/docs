@@ -8,29 +8,34 @@ description: 'Get a list of all the bookings.'
 Include these following headers:
 
 <ParamField path="X-API-APP-ID" type="string" required>
-  The id you received when you registered your application 
+	The ID you received when you registered your application. See
+	https://help.teamm.work/api-reference/endpoint/create-app for more info.
 </ParamField>
 
 <ParamField path="X-API-SECRET-KEY" type="string" required>
-  The api secret key provided by center 
+	The API secret key provided by center.
 </ParamField>
 
 <ParamField path="X-API-PUBLIC-KEY" type="string" required>
-  The api public key provided by center 
+  The API public key provided by center.
+
+### Getting the Secret Keys
+
+The keys provided by the center can be found in General Settings -\> Other Settings. On the top right there is a button leading to Api Secret Keys page.
+
+On the top right you will find the API Public Key. Next to it there is a button to create a new secret key for each app that wishes to connect to your center's account through the API.
+
 </ParamField>
-
-
 
 #### Query Params
 
 <ParamField path="start" type="Date" required>
-  From date 
+	From date
 </ParamField>
 
 <ParamField path="end" type="Date" required>
-  To date
+	To date
 </ParamField>
-
 
 #### Response
 
@@ -40,6 +45,6 @@ Include these following headers:
   "lastName": string;
   "startDate": Date;
   "endDate": Date;
-  "role": 'patient' | 'guest'
+  "role": 'patient'|'companion'|'visitor'
 }[]
 ```
