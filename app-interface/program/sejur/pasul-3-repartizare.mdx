@@ -1,0 +1,106 @@
+---
+title: "Pasul 3 — Repartizare: terapeut, oră, cameră pe zile"
+description: "Cum repartizezi procedurile individuale pe zilele sejurului în TEAMM: consultații, terapeut/cameră/oră per oaspete, orele individuale, „Repartizează pe zile”, adăugarea în programul oaspeților, ștergerea repartizării (toate sau doar zilele viitoare), adăugarea unei zile la mai mulți oaspeți și editarea în masă."
+---
+
+**Unde în aplicație:** „Program v2” → tab „Repartizare” (`/admin/schedule/manage-v2`). Tab-ul acoperă tot sejurul; calendarul este dezactivat aici.
+
+## Întrebări la care răspunde pagina
+
+- Cum împart procedurile individuale ale oaspeților pe zilele sejurului?
+- Ce înseamnă „Repartizează pe zile” și „Adaugă în programul oaspeților”?
+- Cum șterg repartizarea doar pentru zilele viitoare, fără să ating zilele trecute?
+- Cum adaug o procedură într-o zi pentru mai mulți oaspeți deodată?
+- De ce nu apare consultația unui oaspete în program?
+- Ce este „Număr de proceduri din această categorie pe zi”?
+
+## Pe scurt
+
+Repartizarea este primul generator: ia planul terapeutic al fiecărui oaspete și îl întinde pe zilele sejurului, după frecvența prescrisă, respectând cotele (maxim pe zi, minim pe sejur), zilele permise pe săptămână, dependențele dintre protocoale și regulile „evită în aceeași zi”. Rezultatul este distribuția pe zile; orele exacte se stabilesc în [Pasul 4](/app-interface/program/sejur/pasul-4-oaspeti).
+
+Tabelul este o matrice **oaspeți × zile**. Fiecare celulă arată procedura repartizată în acea zi, cu ora, camera și terapeutul. Sus alegi **tipul de procedură** cu care lucrezi (individuală, consultație etc.); pașii de verificare se referă la tipul selectat.
+
+## Pași
+
+<Steps>
+  <Step title="Verifică consultațiile">
+    Pasul „Consultații” arată câte consultații au proceduri programabile atașate („8 din 10 consultații au planuri pentru program”). O consultație fără plan nu produce nimic de repartizat. Pragul „Proceduri minime per consultație” este implicit 1.
+  </Step>
+  <Step title="Completează terapeut, cameră, oră per oaspete">
+    Pasul „Terapeut, cameră, oră” verifică că fiecare oaspete are terapeutul, camera (dacă centrul folosește cameră per oaspete) și ora setate. Click deschide lista cu „Complet” / „Lipsește: cameră”. Editarea se face în coloanele de la începutul rândului sau în masă din „Editează ora, camera și terapeutul” (bara laterală de editare: selectezi oaspeții, setezi valorile o dată).
+    <Note>
+    „Ora aleasă va fi folosită la generarea programului.” Ora individuală a oaspetelui este ora la care generatorul încearcă să-i pună procedurile individuale; camera se poate seta doar dacă există oră.
+    </Note>
+  </Step>
+  <Step title="Verifică orele la procedurile individuale">
+    Pasul „Ore la procedurile individuale” compară orele setate cu numărul de proceduri individuale ale oaspetelui. Mesajele posibile: oră fixată pentru o procedură pe care oaspetele nu o mai are în plan; oră fixată care nu se regăsește în orele oaspetelui (re-rulează Faza 2 — Ore individuale); prea multe proceduri flexibile în aceeași zi cu o singură oră comună; proceduri flexibile fără oră comună.
+  </Step>
+  <Step title="Confirmă că procedurile sunt în programul general">
+    Pasul „Proceduri în program” verifică că procedurile de tipul selectat apar în programul general în suficiente zile („Zile minime cu proceduri”, implicit 1). Dacă lipsesc, întoarce-te la [Pasul 1](/app-interface/program/sejur/pasul-1-general).
+  </Step>
+  <Step title="Repartizează pe zile">
+    Pasul „Repartizează pe zile” (butonul „Repartizează pe zile”) rulează generatorul de repartizare. În dialog alegi:
+    - **Proceduri**: lasă gol pentru toate procedurile tipului, sau restrânge la câteva.
+    - **Oaspeți**: lasă gol pentru toți oaspeții.
+    - **Zile**: doar zilele bifate sunt regenerate; celelalte rămân neatinse. Ziua cea mai devreme bifată este punctul de plecare al generării.
+    - **„Număr de proceduri din această categorie pe zi”**: câte proceduri de acest tip poate primi un oaspete într-o zi (sau nelimitat).
+    - **„Repartizați primii”**: oaspeții deja alocați unui terapeut sunt repartizați înaintea celorlalți.
+    - **„Regenerează inclusiv zilele trecute”**: implicit, ziua de azi și zilele trecute nu se rescriu. Bifarea cere confirmare: „Aceasta va suprascrie programul pentru ziua de azi și zilele trecute. Continuați?”
+    La final, „Ultima generare” din bară deschide detaliile rulării (ce a fost plasat, ce nu și de ce).
+  </Step>
+  <Step title="Adaugă în programul oaspeților">
+    Pasul „Adaugă în programul oaspeților” verifică că fiecare zi repartizată se regăsește în programul oaspeților (programările efective). Click pe „Adaugă în program” creează programările lipsă pentru zilele repartizate. Lista arată „3 din 12 zile fără program” per plan.
+  </Step>
+</Steps>
+
+## Alte acțiuni din tab
+
+### Adaugă o zi la mai mulți oaspeți
+
+Din capul unei coloane de zi, „Adaugă procedură într-o zi” deschide bara laterală: alegi procedura, apoi lista se restrânge la oaspeții care o au în plan (cu starea „deja planificat”, „se adaugă” sau „plan nou”). Oaspeții care au deja procedura în acea zi sunt săriți. La consultații alegi durata și medicul; opțiunea „Medicul deja atribuit al fiecărui oaspete” folosește medicul din fișa fiecăruia. Nu se creează programări cu oră; le creează pasul „Adaugă în program” sau alocarea.
+
+### Șterge ziua
+
+Din capul coloanei, „Șterge ziua” elimină repartizarea din acea dată pentru tipul selectat, inclusiv programările generate pentru oaspeți. Acțiunea nu poate fi anulată.
+
+### Șterge repartizarea pe zile
+
+Butonul „Șterge repartizarea pe zile” cere să alegi ce zile ștergi:
+
+- **Doar zilele viitoare** (păstrează ziua de azi și cele trecute): de mâine înainte.
+- **Toate zilele** (inclusiv cele trecute).
+
+Se șterg zilele alese și programările generate din ele. Acțiunea nu poate fi anulată.
+
+### Șterge o programare
+
+Din celulă, „Șterge programarea” elimină procedura din acea zi pentru acel oaspete; ora și camera repartizate sunt eliminate.
+
+### Istoricul celulei
+
+Iconița de istoric dintr-o celulă arată „Valoare anterioară”: cine și când a schimbat ora, camera sau terapeutul.
+
+### Afișare
+
+„Afișează ora”, „Afișează camera”, „Afișează opțiuni și mențiuni”, „Colorează rânduri în funcție de terapeut”, „Numele procedurii” / „Numele procedurii pentru oaspete” / „Abreviere”, grupare pe „Grupuri de familie”, vizualizare „Tabel detaliat” sau „Prezentare generală (sejur)”.
+
+## Reguli de reținut
+
+- **Consultațiile se plasează doar din zilele alese.** O consultație fără zi repartizată nu apare niciodată în program, nici la generarea orelor. Repartizeaz-o pe zile sau adaug-o cu „Adaugă procedură într-o zi”.
+- „Max / zi” din cote este limită strictă; „Min / sejur” ridică ținta oaspetelui, iar dacă nu se atinge, diferența apare la „Neprogramate”.
+- O frecvență prea mare față de numărul de zile ale sejurului duce la proceduri neplasate. Verifică frecvențele înainte de generare.
+- Planul se poate schimba la consultațiile de control; modificările se reflectă la următoarea rulare, pentru zilele rămase.
+
+## Exemple
+
+- Kinetoterapie de 3 ori pe săptămână + masaj zilnic: repartizarea alege zilele de kineto și pune masajul în fiecare zi.
+- Pachet de 6 ședințe pe un sejur de 12 zile: câte o ședință la două zile.
+- „Împachetarea evită bazinul”: în zilele cu împachetare, bazinul e mutat în alte zile.
+- „Maxim 1 împachetare pe zi”: chiar la frecvență mare, niciodată două în aceeași zi.
+
+## Vezi și
+
+- [Planul terapeutic și frecvența](/app-interface/program/plan-terapeutic)
+- [Pasul 4 — Oaspeți](/app-interface/program/sejur/pasul-4-oaspeti)
+- [Configurare: faze, cote și capacitate](/app-interface/program/referinta/configurare-faze-cote-capacitate)
+- [De ce nu a fost plasată o procedură](/app-interface/program/depanare/proceduri-neplasate)

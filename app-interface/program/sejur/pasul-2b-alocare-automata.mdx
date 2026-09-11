@@ -1,0 +1,125 @@
+---
+title: "Alocarea automată a terapeuților (fazele 1–3) și a camerelor"
+description: "Cum funcționează generatorul de alocare din TEAMM: cele trei faze (colective, ore individuale, comune & protocoale), previzualizarea modificărilor propuse, păstrarea modificărilor manuale, opțiunea „Suprascrie și modificările manuale” și repartizarea automată a camerelor."
+---
+
+**Unde în aplicație:** „Program v2” → tab „Terapeuți” → butonul „Generează” (`/admin/schedule/manage-v2`). Repartizarea camerelor: tab „Repartizare” → „Generează” → „Pasul 3 · Repartizează camerele”.
+
+## Întrebări la care răspunde pagina
+
+- Ce fac cele trei faze ale generatorului de alocare și în ce ordine le rulez?
+- De ce nu mi-a schimbat generatorul terapeutul pe care l-am pus eu manual?
+- Ce înseamnă „Modificate manual — păstrate” și „Suprascrie și modificările manuale”?
+- Pot rula alocarea doar pentru câteva zile din sejur?
+- Cum alege aplicația camera unei proceduri individuale?
+- De ce un slot pentru femei nu primește un terapeut bărbat, oricât aș reîncerca?
+
+## Pe scurt
+
+Generatorul de alocare atribuie terapeuți automat, în trei faze pe care le rulezi separat. Fiecare fază pornește de la rezultatul precedentei. Fiecare rulare arată mai întâi o previzualizare („Modificări propuse”) pe care o poți ajusta rând cu rând înainte de „Aplică”. Generatorul completează doar ce este liber sau ce a scris el însuși data trecută: alocările făcute manual sunt păstrate și raportate separat. Genul este regulă strictă în toate fazele. Camerele se repartizează printr-un generator separat, cu aceleași principii.
+
+## Cele trei faze
+
+| Faza | Buton | Ce face |
+|---|---|---|
+| 1 | „1 · Repartizează colective” | Atribuie terapeuți sloturilor colective pe tot sejurul; se rotesc echitabil între sejururi. Modul (unul ia toate sloturile procedurii sau câte un slot fiecare) vine din „Configurare programare”. |
+| 2 | „2 · Ore individuale” | Stabilește orele procedurilor individuale ale fiecărui oaspete, potrivindu-le cu timpul liber al terapeutului alocat: fără suprapuneri, în programul lui de lucru și ocolind orele blocate. |
+| 3 | „3 · Comune & protocoale” | Repartizează procedurile mixte și protocoalele, respectând grupurile de sloturi și echilibrând încărcarea totală între terapeuți. |
+
+<Tip>
+Rulează fazele în ordine și verifică rezultatul după fiecare: o corecție manuală devreme scutește reprogramări în lanț. Poți ajusta manual între faze; fiecare fază se poate rula din nou fără a strica ce ai fixat.
+</Tip>
+
+## Rularea unei faze
+
+<Steps>
+  <Step title="Deschide „Generator de alocare”">
+    Butonul „Generează” din bara tab-ului „Terapeuți” (scurtătură `G`) deschide dialogul „Generator de alocare”: „Atribuie terapeuți automat pentru zilele alese, în trei faze pe care le rulezi separat.”
+  </Step>
+  <Step title="Alege zilele">
+    Secțiunea „Zile” este o grilă cu zilele sejurului (cu „selectează tot” / „golește”); implicit este bifată ziua de mâine. Fazele 1 și 3 lucrează doar pe zilele bifate. „Faza 2 (ore individuale) se aplică pe tot sejurul, indiferent de zilele alese.”
+  </Step>
+  <Step title="Apasă faza dorită">
+    Aplicația calculează o previzualizare și o deschide în panoul lateral, cu numele fazei ca titlu. Nu se salvează nimic încă.
+  </Step>
+  <Step title="Revizuiește „Modificări propuse”">
+    Fiecare rând arată data, slotul sau oaspetele, ora și trecerea „înainte → după”. La rândurile cu terapeut poți alege alt terapeut direct din listă (grupată „Bărbați” / „Femei”), iar la rândurile cu ore ale oaspetelui ai butonul „Fixează ore pe proceduri”. Bifezi ce se aplică: „Selectează tot” și comutatorul „Selectate: se aplică doar ele” / „Selectate: NU se aplică”. „Arată doar câte una din fiecare” comprimă modificările identice din mai multe zile („+ la fel în alte N zile”).
+  </Step>
+  <Step title="Verifică „Modificate manual — păstrate” și „Atenționări”">
+    Secțiunea „Modificate manual — păstrate (N)” listează țintele pe care generatorul nu le atinge pentru că au fost editate de mână. Dacă vrei totuși să le rescrie, activează „Suprascrie și modificările manuale”. „Atenționări” arată ce nu a putut fi rezolvat (de exemplu gen nedeterminat pentru un grup sau nicio oră potrivită pentru un oaspete).
+  </Step>
+  <Step title="Aplică">
+    „Aplică” (sau „Aplică (N)” când nu ai bifat tot) scrie modificările; confirmarea este „Alocarea a fost aplicată.” și panoul arată „N modificări aplicate”. Toate vizualizările se reîncarcă.
+  </Step>
+</Steps>
+
+<Note>
+Același panou lateral este folosit și de „Aplică șabloanele” din tab-ul „Terapeuți”. Acolo apare în plus alegerea „Se aplică pentru”: „Tot sejurul” sau „Doar ziua curentă”, plus secțiunea „Oaspeți atribuiți terapeutului” pentru pacienții preluați din orele „P”.
+</Note>
+
+## Ce păstrează și ce rescrie generatorul
+
+- **Idempotent**: o nouă rulare rescrie doar țintele pe care generatorul le-a scris el însuși ultima dată și care au rămas neschimbate între timp, plus țintele goale. Orice a fost modificat manual după rulare este păstrat și apare la „Modificate manual — păstrate”.
+- **„Suprascrie și modificările manuale”**: rescrie tot ce intră în scopul fazei, inclusiv alocările manuale. Folosește-o doar când vrei să reiei alocarea de la zero.
+- **Faza 2** administrează doar partea flexibilă a orelor unui oaspete: orele fixate din „Fixează ore la proceduri” sunt stricte (aceeași oră în fiecare zi) și câștigă întotdeauna, chiar dacă terapeutul este ocupat (cu o atenționare). Toate procedurile individuale nefixate ale oaspetelui împart o singură oră flexibilă, aleasă ca ora utilizabilă în cele mai multe zile din sejur; este doar o preferință, generatorul zilnic o re-alege pe zi dacă e nevoie.
+- **Faza 3** echilibrează încărcarea: la fiecare alegere ia terapeutul cu cele mai puține ore în ziua respectivă, apoi cu cele mai puține ore pe sejur, ținând cont și de ce au pus deja fazele 1–2. Sloturile dintr-un grup de terapeuți primesc același terapeut la aceeași oră; un grup în care un membru a fost alocat manual (sau membrii nu coincid) este păstrat, nu re-alocat.
+- **Rotație între sejururi** (faza 1): terapeuții se rotesc de la un sejur la altul, ca procedurile să fie distribuite echitabil în timp.
+- **Genul este regulă strictă** în toate fazele: un slot pentru femei primește doar terapeuți femei, fără excepții și fără opțiune de configurare.
+- Toate fazele respectă programul de lucru al terapeuților, intervalele blocate și alocările deja existente din celelalte faze.
+- Sloturile completate din șabloanele de terapeuți sunt tratate ca modificări manuale.
+
+## Modul de alocare la colective
+
+Se configurează în „Configurare programare” → „Alocare colective”: modul implicit aplicat tuturor procedurilor colective este „Un terapeut ia tot” (un terapeut ține toate sloturile procedurii) sau „Fiecare slot alt terapeut” (sloturile se împart pe rând). Poți seta o excepție per procedură („Procedura colectivă pentru care se folosește un mod diferit de cel implicit”).
+
+## Repartizarea automată a camerelor
+
+Se pornește din tab-ul „Repartizare” → „Generează” → „Pasul 3 · Repartizează camerele”, pentru zilele alese în dialog (și, dacă ai restrâns lista, doar pentru procedurile alese). Trebuie să existe cel puțin o zi bifată („Selectează cel puțin o zi.”).
+
+<Steps>
+  <Step title="Previzualizare „Repartizare camere”">
+    Dialogul arată „Alocări propuse (N)”: pentru fiecare programare, data, oaspetele/procedura, regula folosită și trecerea „cameră înainte → cameră după”.
+  </Step>
+  <Step title="Camere setate manual">
+    „Setate manual — păstrate (N)” listează programările a căror cameră a fost aleasă de mână; sunt lăsate neatinse dacă nu activezi „Suprascrie și camerele setate manual”. Programările blocate (🔒) nu sunt atinse niciodată.
+  </Step>
+  <Step title="Aplică">
+    După „Aplică”, titlul devine „Repartizare camere — aplicat” și vezi „N camere alocate” plus „Utilizare per cameră” (câte programări a primit fiecare cameră din totalul ocupării ei).
+  </Step>
+</Steps>
+
+Regula după care se alege camera, în ordine:
+
+| Etichetă în dialog | Regula |
+|---|---|
+| „Cameră oaspete” | Camera oaspetelui, dacă are una și este permisă pentru procedură |
+| „Cameră implicită” | Camera implicită a procedurii |
+| „Cameră terapeut” | Camera preferată a primului terapeut alocat care are una setată |
+| „Automat” | Cea mai puțin folosită cameră permisă, liberă în intervalul respectiv |
+
+Restricțiile de cameră ale procedurii (sălile în care este permisă) filtrează candidatele înainte de orice regulă. Aplicația evită dubla rezervare: o cameră ocupată în același interval de altă programare nu este propusă. La procedurile colective, toți oaspeții aceluiași slot primesc aceeași cameră (două grupe paralele ale aceleiași proceduri, de exemplu împărțite pe gen, rămân în camere diferite).
+
+<Warning>
+Dacă o programare avea deja o cameră, dar la re-rulare nu mai rămâne nicio cameră permisă și liberă, camera veche este ștearsă, nu păstrată: altfel ar rămâne o dublă rezervare ascunsă. Programarea apare în „Atenționări”.
+</Warning>
+
+## Reguli de reținut
+
+- Fazele lucrează pe **tot sejurul** (faza 2) sau pe **zilele bifate** (fazele 1 și 3), nu doar pe ziua din calendar.
+- Previzualizarea nu scrie nimic; doar „Aplică” salvează. Poți închide panoul fără efect.
+- O ținta editată manual rămâne a ta până când o rescrii explicit cu „Suprascrie și modificările manuale”.
+- Un slot al cărui grup de terapeuți are gen nedeterminat sau un oaspete fără nicio oră posibilă ajung la „Atenționări”, nu sunt forțate.
+
+## Exemple
+
+- Bazinul de la 11:00 (Femei) alternează între cele trei terapeute de la un sejur la altul.
+- Oaspetele cu masaj zilnic primește toate ședințele la același terapeut, la ore care nu se suprapun cu bazinul lui.
+- La protocoale, terapeutul cu cea mai mică încărcare totală primește următoarea repartizare.
+- Ai schimbat de mână terapeutul de la Cataplasmă marți; la re-rularea fazei 1, rândul apare la „Modificate manual — păstrate” și rămâne așa.
+
+## Vezi și
+
+- [Pasul 2 — Terapeuți: program pe terapeut](/app-interface/program/sejur/pasul-2-terapeuti)
+- [Ore fixate vs ore blocate](/app-interface/program/ghiduri/fixarea-vs-blocarea-orelor)
+- [Săli](/app-interface/program/configurare/camere)
+- [Blocuri terapeut, ore în plus și ore de recuperat](/app-interface/program/sejur/blocuri-si-ore-terapeuti)

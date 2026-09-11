@@ -1,0 +1,65 @@
+---
+title: "Programul meu"
+description: "Pagina „My schedule” din TEAMM: programul personal al terapeutului sau medicului conectat, grupat pe zile, cu presetările „This week”, „Upcoming”, „Last week”, interval personalizat, și bara de sus cu următoarea programare de azi."
+---
+
+**Unde în aplicație:** meniul principal → „My schedule” (`/admin/my-schedule`). Intrarea apare doar când utilizatorul conectat are ceva în program.
+
+## Întrebări la care răspunde pagina
+
+- Unde îmi văd propriul program, fără să caut în tabelul terapeuților?
+- De ce nu am intrarea „My schedule” în meniu?
+- Ce înseamnă bara „Now” / „At HH:MM” din partea de sus a aplicației?
+- Ce apare în programul meu: doar sloturile mele sau și pacienții repartizați mie?
+- Pot vedea și zilele trecute?
+
+## Pe scurt
+
+„My schedule” este programul personal al persoanei conectate, la nivelul întregului centru, pe toate sejururile: sloturile pe care le acoperă, programările oaspeților atribuite ei, orele de repartizare ale pacienților ei și blocajele ei manuale. Datele sunt aceleași cu rândul persoanei din tabelul „Terapeuți”, filtrate la ce o privește. Pagina nu are setări de permisiuni: serverul întoarce doar datele utilizatorului autentificat.
+
+## Ce conține lista
+
+Elementele sunt grupate pe zile; ziua de azi este marcată „Today”. Fiecare element arată intervalul orar, titlul (procedura sau protocolul), oaspetele (dacă este cazul), camera și sejurul. Elementele trecute apar estompate, iar cele finalizate au bifa „Completed”.
+
+Sursele elementelor:
+
+| Sursă | Ce apare |
+|---|---|
+| Sloturi din programul general pe care le acoperi | Colective, protocoale, grupuri; doar orele pe care le acoperi efectiv, chiar dacă slotul are mai multe ore |
+| Programări ale oaspeților atribuite ție | Inclusiv cele neatribuite explicit, dar ale căror pacienți sunt repartizați ție |
+| Orele de repartizare ale pacienților tăi | În zilele în care pacientul nu are încă o programare concretă |
+| Blocajele tale manuale | Cu eticheta lor („Pauză”, „Ședință” etc.) |
+
+<Info>
+Când acoperi un grup de sloturi, orele din același grup și aceeași fereastră se strâng într-un singur element, ca în tabelul „Terapeuți”.
+</Info>
+
+## Alege intervalul
+
+- „This week”: de luni până duminică, săptămâna curentă.
+- „Upcoming” (implicit): de azi, 14 zile înainte.
+- „Last week”: săptămâna trecută.
+- Cele două câmpuri de dată: interval personalizat; orice modificare reîncarcă lista.
+
+Intervalul cerut este limitat pe server la cel mult 62 de zile. Dacă nu există nimic: „Nothing scheduled for this range.”
+
+## Bara de sus cu următoarea programare
+
+Cât timp ești conectat, aplicația afișează în partea de sus o bară cu următorul tău element de azi:
+
+- „At HH:MM” (albastru) înainte de început, cu titlul, oaspetele și camera;
+- „Now” (verde) după ce a început, cu „until HH:MM”.
+
+Bara se reîmprospătează de pe server la fiecare 5 minute și de fiecare dată când revii în fereastră, iar la fiecare minut trece singură la elementul următor când cel curent s-a încheiat. Click pe bară deschide „My schedule”. O poți închide; elementul închis nu mai reapare în ziua respectivă, iar închiderea se uită singură a doua zi.
+
+## Reguli de reținut
+
+- Intrarea din meniu este condiționată de existența unor elemente **viitoare** (de azi înainte): dacă ai avut program doar în trecut, intrarea nu apare.
+- Un pacient care te are trecut ca terapeut, dar fără ore de proceduri configurate, nu produce elemente și nu activează intrarea.
+- Pagina este doar de citire; modificările se fac din „Program v2”.
+
+## Vezi și
+
+- [Pasul 2 — Terapeuți: program pe terapeut](/app-interface/program/sejur/pasul-2-terapeuti)
+- [Blocuri terapeut, ore în plus și ore de recuperat](/app-interface/program/sejur/blocuri-si-ore-terapeuti)
+- [Pasul 3 — Repartizare](/app-interface/program/sejur/pasul-3-repartizare)

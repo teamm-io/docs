@@ -1,0 +1,71 @@
+{
+  "_comment": "Drop this group into the App Interface tab of docs.json (Mintlify). Pages are in first-time-reader order. Do NOT add onboarding/schedule (outdated Scribe walkthrough).",
+  "group": "Program (planificare)",
+  "pages": [
+    {
+      "group": "Concepte",
+      "pages": [
+        "app-interface/program/introducere",
+        "app-interface/program/plan-terapeutic",
+        "app-interface/program/tipuri-de-proceduri-si-capacitate",
+        "app-interface/program/glosar"
+      ]
+    },
+    {
+      "group": "Configurare inițială",
+      "pages": [
+        "app-interface/program/configurare/proceduri",
+        "app-interface/program/configurare/protocoale-si-logici",
+        "app-interface/program/configurare/sabloane-program",
+        "app-interface/program/configurare/sabloane-terapeuti",
+        "app-interface/program/configurare/sabloane-sejur",
+        "app-interface/program/configurare/terapeuti-si-medici",
+        "app-interface/program/configurare/camere",
+        "app-interface/program/configurare/configurare-programare"
+      ]
+    },
+    {
+      "group": "Programul unui sejur, pas cu pas",
+      "pages": [
+        "app-interface/program/sejur/prezentare",
+        "app-interface/program/sejur/pasul-1-general",
+        "app-interface/program/sejur/pasul-2-terapeuti",
+        "app-interface/program/sejur/pasul-2b-alocare-automata",
+        "app-interface/program/sejur/pasul-3-repartizare",
+        "app-interface/program/sejur/pasul-4-oaspeti",
+        "app-interface/program/sejur/blocuri-si-ore-terapeuti"
+      ]
+    },
+    {
+      "group": "Ghiduri",
+      "pages": [
+        "app-interface/program/ghiduri/generare",
+        "app-interface/program/ghiduri/fixarea-vs-blocarea-orelor",
+        "app-interface/program/ghiduri/descarca-programul",
+        "app-interface/program/ghiduri/program-general-tabel",
+        "app-interface/program/ghiduri/instrumente-ajutatoare",
+        "app-interface/program/ghiduri/programul-meu",
+        "app-interface/program/ghiduri/notite",
+        "app-interface/program/ghiduri/program-clasic"
+      ]
+    },
+    {
+      "group": "Referință",
+      "pages": [
+        "app-interface/program/referinta/configurare-faze-cote-capacitate",
+        "app-interface/program/referinta/configurare-timp-si-zile",
+        "app-interface/program/referinta/configurare-terapeuti",
+        "app-interface/program/referinta/verificari",
+        "app-interface/program/referinta/versiuni-algoritm",
+        "app-interface/program/referinta/avertismente-si-mesaje"
+      ]
+    },
+    {
+      "group": "Depanare",
+      "pages": [
+        "app-interface/program/depanare/proceduri-neplasate",
+        "app-interface/program/depanare/intrebari-frecvente"
+      ]
+    }
+  ]
+}

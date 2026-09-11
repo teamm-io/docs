@@ -1,0 +1,114 @@
+---
+title: "Blocuri terapeut, ore în plus și ore de recuperat"
+description: "Cum blochezi un interval pe rândul unui terapeut în TEAMM (pauză, ședință, concediu), ce înseamnă „Ore libere” și „recurent”, cum se calculează balanța orelor în plus și de recuperat, cum inversezi doi terapeuți și cum duplici repartizarea unei zile."
+---
+
+**Unde în aplicație:** „Program v2” → tab „Terapeuți” → tabelul „Terapeuți” (`/admin/schedule/manage-v2`). Balanța orelor: pagina „Disponibilitate” (`/admin/schedule/therapist-availability`).
+
+## Întrebări la care răspunde pagina
+
+- Cum marchez că un terapeut are pauză, ședință sau concediu într-o zi?
+- Ce diferență este între un blocaj „ocupat” și unul cu „Ore libere”?
+- Ce înseamnă „recurent” la un blocaj? Se repetă săptămânal?
+- Unde văd câte ore în plus a lucrat un terapeut și câte are de recuperat?
+- De ce programările normale nu apar în balanța orelor?
+- Cum copiez repartizarea terapeuților de ieri în ziua de azi?
+- Cum schimb între ei doi terapeuți pe tot sejurul?
+
+## Pe scurt
+
+Un **blocaj** este o rezervare manuală, fără procedură, pe rândul unui terapeut, pentru o singură zi (de exemplu „Pauză”, „Ședință”, „Concediu”). Cât timp există, terapeutul este considerat ocupat în acel interval, iar generatoarele nu îi mai dau nimic acolo. Blocajele sunt și singura sursă a **balanței orelor**: un blocaj ocupat înseamnă ore lucrate în plus, un blocaj cu „Ore libere” înseamnă ore de recuperat. Programările normale nu intră niciodată în această balanță.
+
+## Creează un blocaj
+
+<Steps>
+  <Step title="Click pe o celulă goală din tabelul „Terapeuți”">
+    Celula goală are titlul „Atribuie un slot sau blochează intervalul”. Se deschide dialogul „Ora HH:00 · «terapeut»”.
+  </Step>
+  <Step title="Completează secțiunea „Blochează un interval”">
+    - Textul blocajului: câmp cu placeholder „Ex.: Compensare, Recuperare, Pauză...”.
+    - „De la” / „Până la”: precompletate cu ora pe care ai apăsat → ora următoare; le poți modifica.
+    - Bifa „Ore libere (nu se numără ca ore ocupate)”: marchează blocajul ca timp liber, nu ca timp lucrat (vezi balanța mai jos).
+  </Step>
+  <Step title="Apasă „Blochează”">
+    Pe rândul terapeutului apare un cip cu textul blocajului. Terapeutul devine ocupat pentru alocare în acel interval.
+  </Step>
+</Steps>
+
+Click pe cip deschide dialogul în modul editare: „Editează blocajul · …”, secțiunea „Detalii blocaj”, butonul „Salvează”.
+
+## Acțiunile de pe cipul blocajului
+
+| Acțiune | Ce face |
+|---|---|
+| Lacăt: „Fă recurent (se copiază la duplicarea zilei)” / „Blocaj recurent — apasă pentru a-l face unic” | Marchează blocajul ca recurent. **Nu** îl repetă săptămânal: înseamnă doar că este copiat de „Duplică” (vezi mai jos). |
+| „Ore ocupate — apasă pentru a le marca drept libere” / „Ore libere — apasă pentru a le marca drept ocupate” | Comută între blocaj ocupat (ore în plus) și blocaj liber (ore de recuperat). |
+| „Elimină blocajul” | Șterge blocajul, fără confirmare. |
+
+<Note>
+Insigna de pe rândul terapeutului, „Ore ocupate în această zi”, nu include blocajele marcate ca „Ore libere”.
+</Note>
+
+<Info>
+Celulele de tip BLOCK din șabloanele de terapeuți devin blocaje pe rândul terapeutului real atunci când aplici șablonul. La reaplicarea șablonului, blocajele sunt reconciliate: cele care corespund în continuare rămân, cele pe care șablonul nu le mai cere sunt eliminate.
+</Info>
+
+## Balanța orelor (ore în plus / de recuperat)
+
+Pe pagina „Disponibilitate” găsești tabelul „Balanța orelor (blocaje manuale)”, cu explicația: „Orele provin doar din blocajele manuale din tabelul Terapeuți: blocajele ocupate = ore lucrate în plus, blocajele libere = ore de recuperat. Apasă un rând pentru detalii.”
+
+| Coloană | Conținut |
+|---|---|
+| „Terapeut” | Numele terapeutului |
+| „Sejurul selectat” | „În plus” / „De recuperat” / „Balanță” pentru sejurul ales |
+| „Total (toate sejururile)” | Aceleași valori, cumulate pe toate sejururile |
+
+- Balanța = În plus − De recuperat și se afișează ca `+2h`, `−1h30` sau `0h`.
+- Cifrele sunt rotunjite în sus la 30 de minute.
+- Programările normale (proceduri, consultații) nu se numără niciodată; doar blocajele manuale.
+- Click pe un rând deschide „Blocaje · «nume»”, cu fiecare blocaj etichetat „în plus” sau „recuperare”.
+
+## Duplică repartizarea dintr-o altă zi
+
+Din meniul „Alte acțiuni” al tab-ului „Terapeuți” → „Duplică” (tooltip „Copiază repartizarea terapeuților dintr-o altă zi”). Se deschide „Duplică repartizarea terapeuților”:
+
+- „Copiază din ziua”: implicit ziua anterioară. „Repartizarea din ziua sursă se copiază în ziua curentă. Procedurile individuale ale oaspeților nu se ating.”
+- „Ce se copiază”:
+  - „Blocaje personalizate (doar cele recurente 🔒)”: doar blocajele marcate recurent.
+  - „Proceduri (repartizare terapeuți)”, cu filtru de tip Colective / Mixte / Consultații / Preluare / Altele („Lasă gol pentru toate tipurile.”).
+  - „Protocoale”.
+  - „Grupuri de proceduri”.
+- „Dacă ziua curentă are deja repartizări”: „Suprascrie ce există” (implicit; un slot fără terapeut în ziua sursă nu șterge niciodată ce există în ziua țintă) sau „Completează doar golurile”.
+- Butonul „Duplică”. Confirmarea: „Duplicat: N sloturi, M blocaje, K fără corespondent în ziua curentă.”
+
+## Inversează doi terapeuți
+
+Din același meniu, „Inversează terapeuți” (disponibil doar în vizualizarea tabel) deschide „Inversează doi terapeuți”.
+
+<Warning>
+„Toate repartizările celor doi terapeuți vor fi inversate pentru întregul sejur, în toate zilele.” Alegi „Primul terapeut” și „Al doilea terapeut”; „Sunt incluse programările, pacienții repartizați, blocajele și șabloanele din acest sejur.” Butonul „Inversează” afișează la final „Terapeuții au fost inversați în N repartizări din sejur.”
+</Warning>
+
+## Programul de lucru al terapeutului
+
+Creionul „Setări terapeut” de pe rând deschide „Setări program - «nume»”: culoare, gen, cameră preferată și program de lucru. În editor, comutatorul „Program de lucru personalizat” activează intervalele pe zile; „Fără program setat — terapeutul este considerat mereu disponibil.” și „Zilele fără interval înseamnă că terapeutul nu lucrează în acea zi.” („Nu lucrează”). Coloanele din afara programului apar estompate în tabel.
+
+## Reguli de reținut
+
+- Un blocaj ține de **o singură zi**; „recurent” înseamnă doar „se copiază la Duplică”.
+- Blocajul face terapeutul indisponibil pentru generatoare în intervalul respectiv, indiferent dacă este ocupat sau liber.
+- Balanța orelor vine exclusiv din blocaje: dacă vrei să contabilizezi o oră lucrată în plus, creează un blocaj ocupat; dacă vrei să notezi o oră de recuperat, creează un blocaj cu „Ore libere”.
+- „Elimină blocajul” nu cere confirmare.
+
+## Exemple
+
+- Terapeutul rămâne o oră peste program luni ca să acopere un coleg: blocaj „Compensare” 17:00–18:00, ocupat → `+1h` la „În plus”.
+- Marți pleacă mai devreme: blocaj „Recuperare” 16:00–17:00 cu „Ore libere” → `−1h` la „De recuperat”; balanța sejurului devine `0h`.
+- Ședința de echipă de joi, 13:00–14:00, este marcată recurent; la „Duplică” din joi în vineri, blocajul este copiat automat.
+
+## Vezi și
+
+- [Pasul 2 — Terapeuți: program pe terapeut](/app-interface/program/sejur/pasul-2-terapeuti)
+- [Alocarea automată a terapeuților și a camerelor](/app-interface/program/sejur/pasul-2b-alocare-automata)
+- [Șabloane terapeuți](/app-interface/program/configurare/sabloane-terapeuti)
+- [Glosar](/app-interface/program/glosar)

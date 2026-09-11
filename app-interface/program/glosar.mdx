@@ -1,0 +1,112 @@
+---
+title: "Glosar"
+description: "Termenii folosiți în modulul Program din TEAMM, explicați pe scurt: sejur, program general, repartizare, cotă, plafon, fază, șablon, slot P, oră fixată vs blocată și alții."
+---
+
+## Întrebări la care răspunde pagina
+
+- Ce înseamnă „repartizare” în TEAMM?
+- Care este diferența dintre o oră fixată și o oră blocată?
+- Ce este un slot „P” în șablonul terapeutului?
+- Ce înseamnă plafon și capacitate pe terapeut?
+- Ce sunt cele trei tipuri de șabloane?
+
+## Termeni
+
+<AccordionGroup>
+  <Accordion title="Sejur (sesiune)">
+    Perioada de ședere a unui grup de oaspeți, cu dată de început și de sfârșit. Tot programul este scoped pe un sejur: programul general, disponibilitatea terapeuților, repartizarea și orele. Se alege din selectorul din partea de sus a paginii Program.
+  </Accordion>
+  <Accordion title="Program general">
+    Sloturile unei zile din sejur, independente de oaspeți: procedură sau protocol, interval orar, specialitate, gen, terapeuți, număr de oaspeți pe slot. Se construiește din „Șabloane program” și se editează în pasul „General”. Fără program general pentru o zi nu se poate genera orarul acelei zile.
+  </Accordion>
+  <Accordion title="Repartizare (pe zile)">
+    Distribuirea procedurilor individuale din planul fiecărui oaspete pe zilele sejurului, cu terapeut, oră și cameră. Este primul generator. Rezultatul se vede în tab-ul „Repartizare” ca o matrice oaspeți × zile.
+  </Accordion>
+  <Accordion title="Zile alese (customDates)">
+    Rezultatul repartizării, salvat pe planul oaspetelui: pentru fiecare procedură, lista zilelor în care are loc, opțional cu durata și medicul. O procedură fără zile alese nu poate fi programată. Consultațiile se programează exclusiv din zilele alese.
+  </Accordion>
+  <Accordion title="Plan terapeutic">
+    Prescripția medicului de la consultație: procedurile și protocoalele oaspetelui, cu frecvență, durată, opțiuni și indicații. Doar ce este bifat în plan intră în program.
+  </Accordion>
+  <Accordion title="Frecvență">
+    Cât de des se face o procedură: zilnic, de N ori pe săptămână, un număr total de ședințe pe sejur, o singură dată sau la zile alese manual (custom). Generatorul de repartizare o transformă în zile concrete.
+  </Accordion>
+  <Accordion title="Tip procedură">
+    Individuală (un oaspete, terapeutul lui, oră proprie), colectivă (grup la orele fixe din șabloane), mixtă (mai mulți oaspeți în paralel, terapeuți în faza 3), consultație (la medic), parenteral, intake, altele. Tipul decide cum este programată procedura.
+  </Accordion>
+  <Accordion title="Plafon (număr de oaspeți / slot)">
+    Câți oaspeți pot participa simultan la un slot al procedurii. Este setat pe procedură („Număr de oaspeți”). Poate fi suprascris sau condiționat din „Configurare programare”.
+  </Accordion>
+  <Accordion title="Capacitate pe terapeut">
+    Câți oaspeți poate lua un terapeut într-o oră la o procedură. Capacitatea efectivă a unui slot este minimul dintre plafon și numărul de terapeuți din acea oră înmulțit cu capacitatea pe terapeut.
+  </Accordion>
+  <Accordion title="Categorie de proceduri">
+    O etichetă de tip „Proceduri” pusă pe mai multe proceduri (ex. „Băi”, „Consultații”). Folosită în faze, cote și plafoane zilnice per terapeut. Nu se confundă cu categoriile de camere.
+  </Accordion>
+  <Accordion title="Cotă">
+    Regulă din „Configurare programare”: minim pe sejur și/sau maxim pe zi pentru o procedură sau o categorie. „Max / zi” este limită strictă; „Min / sejur” ridică ținta oaspetelui.
+  </Accordion>
+  <Accordion title="Fază">
+    O etapă a generării. Fiecare fază plasează doar procedurile selectate în ea (după procedură sau categorie), în ordinea dată, apoi trece la următoarea. O fază poate amâna alte proceduri („Blochează”).
+  </Accordion>
+  <Accordion title="Fereastră de timp">
+    Restricție de oră pentru o procedură: oră fixă, cel mai devreme, cel mai târziu, interval evitat. Orele se scriu ca HHmm (0930 = 09:30).
+  </Accordion>
+  <Accordion title="Zi specială (scurtă)">
+    O zi a sejurului în care procedurile de anumite tipuri durează mai puțin (ex. ultima zi, vineri scurtă). Ziua 1 = prima zi a sejurului. Regula doar scurtează, nu prelungește.
+  </Accordion>
+  <Accordion title="Program de lucru">
+    Intervalele orare pe zile ale săptămânii în care un terapeut poate primi alocări. Există un program implicit al centrului și programe personale per terapeut. O zi fără interval = liber.
+  </Accordion>
+  <Accordion title="Șablon program">
+    Un slot recurent al zilei: procedură sau protocol, interval, specialitate, gen, opțiune, etichete. Din șabloane se populează programul general al fiecărui sejur.
+  </Accordion>
+  <Accordion title="Șablon terapeut">
+    Un terapeut fictiv (T1, F2, ASISTENT) cu gen și program pe ore, definit pe zilele sejurului. La fiecare sejur îi atribui un terapeut real, iar acesta este atașat sloturilor potrivite.
+  </Accordion>
+  <Accordion title="Șablon sejur">
+    Un pachet de șabloane de program și de terapeuți, aplicat dintr-o dată pe toate zilele unui sejur.
+  </Accordion>
+  <Accordion title="Slot P">
+    O oră marcată „P” în șablonul unui terapeut: oră liberă pentru procedurile individuale ale oaspeților. Nu se scrie nicăieri automat; oaspeții se adaugă manual în ea sau cu generatorul de alocare.
+  </Accordion>
+  <Accordion title="Oră fixată (înainte de generare)">
+    Ora la care îi spui generatorului să pună o anumită procedură pentru un oaspete. Se setează din „Fixează ore la proceduri”, se păstrează pe oaspete pe tot sejurul.
+  </Accordion>
+  <Accordion title="Oră blocată (după generare)">
+    O programare deja plasată, protejată cu lacăt ca să nu fie rescrisă de generările următoare. Se blochează din celulă sau din capul coloanei în tabelul oaspeților.
+  </Accordion>
+  <Accordion title="Bloc terapeut">
+    O rezervare manuală fără procedură în programul unui terapeut (pauză, ședință). Stă la baza calculului „ore în plus” / „ore de recuperat”.
+  </Accordion>
+  <Accordion title="Grup de sloturi terapeut">
+    Proceduri sau protocoale care se desfășoară împreună; celulele lor din tabelul terapeuților se unesc, iar o alegere de terapeut se scrie pe toate.
+  </Accordion>
+  <Accordion title="Grup de capacitate">
+    Mai multe proceduri care împart o limită comună de oaspeți simultan, pe tot centrul (ex. „balneo”: hidromasaj + BAS + BAG, maxim 4).
+  </Accordion>
+  <Accordion title="Generator de alocare">
+    Generatorul care atribuie terapeuți (fazele 1–3) și camere pe tot sejurul. Păstrează alocările manuale și rescrie doar ce a scris el, dacă nu alegi „Suprascrie și modificările manuale”.
+  </Accordion>
+  <Accordion title="Previzualizare (simulare)">
+    Rularea generatorului fără să salveze nimic: vezi cine ar rămâne neprogramat și ce avertismente apar. Disponibilă pentru versiunea V4.
+  </Accordion>
+  <Accordion title="Versiune algoritm">
+    V4 configurabil per centru (implicit), V3 optimizat, V2 îmbunătățit, V1 vechi. Se alege din butonul „Generează”.
+  </Accordion>
+  <Accordion title="Verificări">
+    Bara de pași din „Program v2”: verificări automate și pași de bifat manual, pe tab-uri, cu dependențe. Se configurează per centru.
+  </Accordion>
+  <Accordion title="Presetare export">
+    Setări salvate ale dialogului „Descarcă programul”: format, tip, coloane, aspect, culoare. Una poate fi implicită.
+  </Accordion>
+  <Accordion title="Neprogramate / neplasate">
+    Procedurile pe care generatorul nu le-a putut plasa. Apar în dialogul de rezultat cu motivul, iar în tabelul oaspeților sunt marcate cu „X”.
+  </Accordion>
+</AccordionGroup>
+
+## Vezi și
+
+- [Cum se construiește programul](/app-interface/program/introducere)
+- [Ore fixate vs ore blocate](/app-interface/program/ghiduri/fixarea-vs-blocarea-orelor)

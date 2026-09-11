@@ -1,0 +1,66 @@
+---
+title: "Versiunile algoritmului de generare (V1–V4)"
+description: "Cele patru versiuni ale generatorului de program din TEAMM (V1 Algoritm vechi, V2 Algoritm îmbunătățit, V3 Algoritm optimizat, V4 Configurabil per centru): ce le deosebește, de ce V4 este implicită, unde se alege versiunea și ce funcții sunt disponibile doar în V4."
+---
+
+**Unde în aplicație:** butonul „Generează” din pasul Oaspeți al paginii „Program v2 ⚡️” (`/admin/schedule/manage-v2`, versiune fixată pe V4) și meniul derulant al butonului „Generează” din „Creează programul” (`/admin/schedule/manage`).
+
+## Întrebări la care răspunde pagina
+
+- Ce înseamnă V1, V2, V3 și V4 în meniul butonului „Generează”?
+- De ce în Program v2 nu pot alege versiunea algoritmului?
+- Care versiune citește „Configurare programare”?
+- De ce „Previzualizare (simulare)” funcționează doar cu V4?
+- Ce versiune folosește „Repartizează pe zile” din pasul Repartizare?
+- Contează câmpul „Versiune algoritm” din configurare?
+
+## Pe scurt
+
+TEAMM păstrează patru versiuni ale generatorului de program al oaspeților. **V4 „Configurabil per centru”** este versiunea curentă: singura care citește „Configurare programare”, singura cu „Previzualizare (simulare)” și singura care aplică zilele speciale. Cu configurarea implicită (fără reguli), V4 reproduce exact rezultatul V3. Versiunile V1–V3 sunt păstrate pentru compatibilitate și se pot rula doar din pagina clasică „Creează programul”.
+
+## Cele patru versiuni
+
+| Versiune | Eticheta din meniu | Ce spune codul |
+|---|---|---|
+| V4 | „V4 - Configurabil per centru” | Citește configurarea activă a centrului (faze, cote, capacitate, ferestre de timp, substituții, terapeuți etc.). Cu configurarea implicită (o singură fază „all”, fără reguli, fără atribuire de terapeuți) generatorul este identic cu V3/baza. Întoarce un rezultat structurat: lista de erori (ca la V1–V3), plus programările create și cele neplasate, pe care se bazează simularea și dialogul de rezultat. |
+| V3 | „V3 - Algoritm optimizat” | Alocare dinamică pe ferestre de timp disponibile, cu urmărirea sloturilor alocate și a restricției de gen. Nu citește configurarea. |
+| V2 | „V2 - Algoritm îmbunătățit” | Versiune anterioară, păstrată pentru compatibilitate. Nu citește configurarea. |
+| V1 | „V1 - Algoritm vechi” | Prima versiune, păstrată pentru compatibilitate. Nu citește configurarea. |
+
+<Note>
+Codul sursă nu descrie în detaliu diferențele dintre V1, V2 și V3; etichetele din meniu sunt singura descriere. Pentru orice generare nouă folosește V4.
+</Note>
+
+## Ce este disponibil doar în V4
+
+| Funcție | V4 | V1–V3 |
+|---|---|---|
+| Citirea „Configurare programare” (configurarea activă a centrului) | da | nu |
+| „Previzualizare (simulare)” din tab-ul Configurare — rulare fără salvare | da (serverul rulează simularea doar când versiunea este V4) | nu |
+| „Zile speciale (proceduri scurtate)” și bifele lor din dialogul de generare | da | nu |
+| Rezultat structurat (create / neplasate) pentru dialogul de rezultat | da | doar lista de erori |
+| Repartizarea pe zile cu „nelimitat” proceduri pe zi și cu un subset de zile (celelalte zile se păstrează) | da | nu |
+
+<Info>
+Curățarea programărilor orfane (proceduri care nu mai apar în planul terapeutic) rulează la fiecare generare, indiferent de versiune, dar nu în simulare. Mesajul apare în dialogul de rezultat: „… a fost șters pentru … în ziua … pentru că nu mai apare în planul terapeutic curent”. Vezi [Avertismente și mesaje](/app-interface/program/referinta/avertismente-si-mesaje).
+</Info>
+
+## Unde se alege versiunea
+
+| Loc | Cum se alege |
+|---|---|
+| „Program v2 ⚡️” → pasul Oaspeți → „Generează” | Versiunea este **fixată pe V4**; meniul derulant cu versiuni este ascuns. Butonul deschide dialogul de opțiuni (proceduri, oaspeți, zile), apoi confirmarea „Generează programul” / „Regenerează programul”. |
+| „Creează programul” (clasic) → „Generează” | Butonul principal trimite „latest”, pe care serverul îl tratează cu generatorul de bază (fără configurare); meniul derulant din dreapta oferă „V4 - Configurabil per centru”, „V3 - Algoritm optimizat”, „V2 - Algoritm îmbunătățit”, „V1 - Algoritm vechi” și generează direct cu versiunea aleasă. |
+| „Program v2 ⚡️” → pasul Repartizare → „Repartizează pe zile” | Rulează întotdeauna cu **V4** (generatorul de zile V4, care citește configurarea și zilele speciale). Serverul mai păstrează un generator de zile V1 și unul de bază, folosite doar dacă un client trimite explicit altă versiune. |
+| „Configurare programare” → „Versiune algoritm” (în „Detalii tehnice”) | Câmp informativ, marcat „Neimplementat”. Versiunea de generator se alege la pornirea generării, nu din acest câmp — valoarea de aici nu influențează programarea. |
+
+<Warning>
+Dacă din pagina clasică generezi cu V1–V3 peste un program făcut cu V4, regulile din configurare (cote, ferestre de timp, capacitate condiționată etc.) nu se aplică. Pentru un rezultat consecvent, generează din Program v2.
+</Warning>
+
+## Vezi și
+
+- [Generarea programului](/app-interface/program/ghiduri/generare)
+- [Pasul 4 — Oaspeți](/app-interface/program/sejur/pasul-4-oaspeti)
+- [Configurare: faze, cote, capacitate, semințe și substituții](/app-interface/program/referinta/configurare-faze-cote-capacitate)
+- [Program clasic](/app-interface/program/ghiduri/program-clasic)

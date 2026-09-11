@@ -1,0 +1,136 @@
+---
+title: "Configurare: ferestre de timp, zile din săptămână, zile speciale, reguli demografice"
+description: "Referință pentru secțiunile „Intervale orare”, „Zile permise”, „Zile speciale (proceduri scurtate)” și „Reguli demografice” din „Configurare programare” în TEAMM: formatul HHmm, fusul orar al centrului, numărarea zilelor și bifele de la generare."
+---
+
+**Unde în aplicație:** meniul „Program” → „Configurare programare” (`/admin/schedule/config`), sau tab-ul „Configurare” din „Program v2 ⚡️” (`/admin/schedule/manage-v2`).
+
+## Întrebări la care răspunde pagina
+
+- Cum fac ca o consultație să fie programată mereu la 9:30?
+- Cum interzic o procedură între 12:00 și 13:00 (pauza de curățenie)?
+- Cum restricționez o procedură doar la luni, miercuri și vineri?
+- Cum scurtez procedurile individuale în ultima zi de sejur sau într-o vineri scurtă?
+- De ce la generare apare o bifă cu „Vineri scurtă (06.03): proceduri de max. 45 min”?
+- Cum semnalez că oaspeții peste 65 de ani ar trebui să aibă EKG în plan?
+
+## Pe scurt
+
+Secțiunile de pe această pagină decid **când** poate fi programată o procedură: la ce oră din zi („Intervale orare”), în ce zile ale săptămânii („Zile permise”) și cât durează în anumite zile ale sejurului („Zile speciale”). „Reguli demografice” nu programează nimic: doar semnalează, în simulare, oaspeții cărora le lipsește o procedură din plan. Toate orele se scriu în format `HHmm` (24 h, fără două puncte) și sunt interpretate în fusul orar al centrului.
+
+<Warning>
+Cele două numărători de zile sunt diferite: la „Zile speciale” câmpul „A câta zi din sejur” se numără **de la 1** (1 = prima zi a sejurului), iar la „Semințe implicite” câmpul „Ziua (index)” se numără **de la 0** (0 = prima zi). Detalii mai jos.
+</Warning>
+
+## Intervale orare
+
+Restricționează ora din zi la care o procedură poate fi programată. Folosește „Oră fixă” pentru o oră exactă, sau „Cel mai devreme” / „Cel mai târziu” pentru un interval permis. Orele se scriu în format de 24h, fără două puncte (ex. 0930 = 09:30) și sunt în fusul orar al centrului.
+
+| Câmp | Ce face | Exemplu |
+|---|---|---|
+| „Procedură” | Procedura pentru care se aplică această restricție de oră. | „Consultație” |
+| „Oră fixă (HHmm)” | Oră exactă la care se programează mereu (ex. 0930). Lasă gol dacă folosești un interval. | `0930` |
+| „Cel mai devreme (HHmm)” | Cea mai devreme oră permisă (ex. 0800). | `0800` |
+| „Cel mai târziu (HHmm)” | Cea mai târzie oră permisă (ex. 1800). | `1800` |
+| „Ferestre de evitat” → „De la (HHmm)” | Începutul intervalului evitat (HHmm, ex. 1200). De la această oră procedura nu se mai programează. | `1200` |
+| „Ferestre de evitat” → „Până la (HHmm)” | Sfârșitul intervalului evitat (HHmm, ex. 1300). De la această oră programările sunt din nou permise. | `1300` |
+
+Exemple:
+
+- Consultație cu oră fixă 0930 — se programează mereu la 9:30.
+- Împachetare cu nămol între 0800 și 1200, cu interval evitat 1000–1030 (pauza de curățenie).
+
+<Info>
+Validare la salvare: fiecare oră trebuie să fie un `HHmm` valid, „Cel mai devreme” nu poate fi după „Cel mai târziu”, iar la o fereastră de evitat „De la” trebuie să fie strict înainte de „Până la”. O procedură poate avea mai multe ferestre de evitat („Adaugă fereastră”).
+</Info>
+
+<Note>
+Formatul `HHmm` este același și la „Ore de lucru implicite” ale terapeuților și la ora fixată a unui oaspete. `0930` înseamnă 09:30; `1800` înseamnă 18:00. Nu se acceptă `9:30` sau `09:30`.
+</Note>
+
+## Zile permise
+
+Restricționează zilele din săptămână în care o procedură poate fi programată. Dacă nu selectezi nicio zi, procedura este permisă în orice zi.
+
+| Câmp | Ce face | Exemplu |
+|---|---|---|
+| „Procedură” | Procedura pentru care se restricționează zilele din săptămână. | „Consult medical” |
+| „Zile permise” | Zilele în care procedura poate fi programată (după fusul orar al centrului). Nicio zi selectată = permisă oricând. Opțiuni: „Luni”, „Marți”, „Miercuri”, „Joi”, „Vineri”, „Sâmbătă”, „Duminică”. | Luni, Miercuri, Vineri |
+
+Exemple:
+
+- Consult medical doar luni, miercuri și vineri — zilele în care medicul e în centru.
+- Împachetări fără weekend: selectezi luni–vineri, iar sâmbăta și duminica procedura nu se programează.
+
+<Tip>
+„Zile permise” se aplică la repartizarea pe zile (pasul Repartizare). Dacă zilele permise sunt puține și frecvența din plan este mare, repartizarea nu are unde să pună toate ședințele — vezi [De ce nu a fost plasată o procedură](/app-interface/program/depanare/proceduri-neplasate).
+</Tip>
+
+## Zile speciale (proceduri scurtate)
+
+Zile speciale din sejur (ex. ultima zi sau o vineri scurtă) în care procedurile de tipurile alese durează mai puțin decât de obicei. Durata efectivă este minimul dintre durata procedurii și durata zilei — regula doar scurtează, nu prelungește. Tipurile neselectate nu sunt afectate. Ziua se numără de la începutul sejurului: ziua 1 = prima zi.
+
+| Câmp | Ce face | Exemplu |
+|---|---|---|
+| „A câta zi din sejur” | A câta zi din sejur (1 = prima zi a sejurului, după fusul orar al centrului). | `12` (ultima joi) |
+| „Durată (minute)” | Durata maximă (minute) a procedurilor în acea zi, pentru tipurile alese. Între 5 și 240. | `40` |
+| „Tipuri de proceduri” | Tipurile de proceduri scurtate în acea zi (ex. Individuală; sau Individuală + Colectivă pentru a scurta și Bazin). Restul tipurilor păstrează durata lor normală. Opțiuni: „Individuală”, „Colectivă”, „Mixtă”, „Consultație”. | Individuală |
+| „Etichetă” | Etichetă afișată la generare (ex. „Vineri scurtă”). | `Vineri scurtă` |
+| „Opțională (se confirmă la generare)” | Activă doar la cerere: la generare apare o bifă (debifată implicit) și personalul decide per rulare. Debifat = regula se aplică mereu. | activ pentru vinerea scurtă |
+
+Exemple:
+
+- Ziua 12 (ultima joi), proceduri individuale de 40 min — se aplică mereu la generare.
+- Ziua 6 (vineri), individuale + colective (ex. Bazin) de 45 min, opțională — la generare apare o bifă și personalul decide dacă se aplică.
+
+### Cum se numără ziua
+
+În formular scrii ziua **de la 1**: „A câta zi din sejur” = 1 înseamnă prima zi a sejurului (data de început a sejurului, în fusul orar al centrului). În editorul JSON aceeași regulă apare cu `dayIndex` **de la 0** (0 = prima zi); formularul face conversia automat. Zilele speciale se raportează la **sejur**, nu la sejurul fiecărui oaspete.
+
+<Warning>
+Nu confunda cu „Semințe implicite”: acolo „Ziua (index)” se scrie de la 0 chiar și în formular (0 = prima zi de sejur a oaspetelui). Vezi [Configurare: faze, cote, capacitate, semințe și substituții](/app-interface/program/referinta/configurare-faze-cote-capacitate).
+</Warning>
+
+### Bifele din dialogul de generare
+
+Când una dintre zilele generate este o zi specială, dialogul „Generează programul” / „Regenerează programul” afișează câte o bifă pentru fiecare regulă care cade pe zilele respective. Eticheta bifei are forma:
+
+`Etichetă sau „Zi scurtă” (DD.MM): proceduri de max. N min (Individuală, Colectivă)`
+
+- dacă regula nu are „Etichetă”, se afișează „Zi scurtă”;
+- `DD.MM` este data zilei din sejur pe care cade regula;
+- în paranteză apar tipurile de proceduri scurtate.
+
+Regulile **fără** „Opțională” apar bifate; regulile **opționale** apar **debifate** implicit, iar personalul decide la fiecare rulare. Doar regulile bifate se aplică rulării respective.
+
+<Info>
+Aceeași confirmare apare și la „Repartizează pe zile” pentru procedurile individuale (pasul Repartizare), unde durata scurtată se aplică doar rulărilor pentru proceduri de tip individual. O singură regulă per zi: două reguli pe aceeași zi sunt refuzate la salvare.
+</Info>
+
+## Reguli demografice
+
+Cere ca anumiți oaspeți (după vârstă și/sau gen) să aibă o anumită procedură în plan. Generatorul doar semnalează lipsa în simulare — nu programează procedura automat. Lasă vârsta/genul gol pentru „oricare”.
+
+| Câmp | Ce face | Exemplu |
+|---|---|---|
+| „Vârstă peste” | Se aplică oaspeților cu vârsta strict mai mare decât această valoare. Gol = fără limită. | `65` |
+| „Vârstă sub” | Se aplică oaspeților cu vârsta strict mai mică decât această valoare. Gol = fără limită. | `40` |
+| „Gen” | Se aplică doar oaspeților cu acest gen. Lasă gol pentru toți oaspeții. | Feminin |
+| „Procedură necesară” | Procedura pe care oaspeții vizați trebuie să o aibă în plan. Lipsa ei e doar semnalată, nu corectată automat. | „EKG” |
+| „Activă” | Doar regulile active sunt verificate și semnalate în simulare. Când este inactivă, regula nu are momentan niciun efect. | activ |
+
+Exemple:
+
+- Vârstă peste 65 → EKG obligatoriu: pentru oaspeții de peste 65 de ani fără EKG în plan, simularea afișează un avertisment.
+- Gen F și vârstă sub 40 → consult de specialitate: semnalează oaspetele dacă procedura lipsește din plan.
+
+<Note>
+Regulile demografice nu adaugă nimic în planul terapeutic și nu blochează generarea. Avertismentul apare în secțiunea „Previzualizare (simulare)” de la finalul paginii de configurare. Procedura lipsă se adaugă manual în planul oaspetelui — vezi [Planul terapeutic](/app-interface/program/plan-terapeutic).
+</Note>
+
+## Vezi și
+
+- [Configurare: faze, cote, capacitate, semințe și substituții](/app-interface/program/referinta/configurare-faze-cote-capacitate)
+- [Configurare: reguli pentru terapeuți, alocarea colectivelor, grupuri de sloturi și setări generale](/app-interface/program/referinta/configurare-terapeuti)
+- [Pasul 4 — Oaspeți](/app-interface/program/sejur/pasul-4-oaspeti)
+- [De ce nu a fost plasată o procedură](/app-interface/program/depanare/proceduri-neplasate)

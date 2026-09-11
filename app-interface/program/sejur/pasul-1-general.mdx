@@ -1,0 +1,81 @@
+---
+title: "Pasul 1 — General: procedurile zilei"
+description: "Cum construiești programul general al unei zile de sejur în TEAMM: adaugi șabloane rapid sau cu modificări, aplici un șablon de sejur, editezi sloturi, verifici zilele cu program și duplici o zi pe alte date."
+---
+
+**Unde în aplicație:** „Program v2” → tab „General” (`/admin/schedule/manage-v2`). Programul general se vede și ca tabel plat în „Program general” (`/admin/schedule/table`).
+
+## Întrebări la care răspunde pagina
+
+- Cum adaug procedurile zilei în program?
+- Care este diferența dintre „Adaugă rapid” și „Adaugă cu modificări”?
+- Cum copiez programul unei zile pe celelalte zile ale sejurului?
+- De ce nu pot genera orarul oaspeților („Nu există program pentru această zi”)?
+- Dacă modific un șablon, se schimbă și sejurul curent?
+
+## Pe scurt
+
+Programul general este programul zilnic al centrului pentru acest sejur: sloturile colective, ora și publicul lor. Se populează din „Șabloane program” și este pasul de configurare de la care pornesc generatoarele. Un slot care lipsește aici nu poate primi oaspeți. Orele procedurilor colective vin exclusiv din aceste sloturi: generatorul le umple cu oaspeți, dar nu inventează sloturi noi.
+
+<Warning>
+Modificările făcute aici sunt valabile doar pentru sejurul curent. Șabloanele rămân neschimbate pentru sejururile viitoare, iar modificarea unui șablon nu schimbă programul unui sejur deja creat.
+</Warning>
+
+## Pași
+
+<Steps>
+  <Step title="Alege sejurul și ziua">
+    Selectorul de sejur și calendarul sunt în partea de sus a paginii. Zilele care au deja program sunt marcate în calendar.
+  </Step>
+  <Step title="Adaugă șabloanele zilei">
+    Pasul „Fă modificările necesare pentru acest sejur în șabloanele de program” deschide lista șabloanelor. Filtrează după etichetă, procedură sau protocol, apoi:
+    - **„Adaugă rapid”** pune șablonul în ziua curentă exact cum este.
+    - **„Adaugă cu modificări”** deschide formularul slotului ca să schimbi interval, gen, terapeuți sau număr de oaspeți doar pentru această zi.
+    - **„Adaugă toate șabloanele”** adaugă dintr-o dată toate șabloanele filtrate.
+    Șabloanele deja prezente în ziua curentă sunt marcate „Adăugat deja”.
+  </Step>
+  <Step title="Sau aplică un șablon de sejur">
+    Pasul „Aplică șablon sejur” construiește programul general pentru **toate zilele** sejurului dintr-o dată, din pachetul de șabloane ales. Bara laterală arată mai întâi acoperirea pe zile („Neacoperită de șablon” pentru zilele fără nimic), apoi aplici.
+    <Warning>
+    Dacă sejurul are deja program general, aplicarea șablonului îl șterge și îl reconstruiește, împreună cu programările individuale generate pe baza lui. Aplicația cere confirmare.
+    </Warning>
+  </Step>
+  <Step title="Editează sloturile zilei">
+    Click pe un slot deschide dialogul lui: procedură sau protocol, interval, specialitate, gen, terapeuți și medici, număr de oaspeți. La sloturile de consultație poți alege medicii: consultațiile din acel interval se programează doar cu medicii aleși; gol înseamnă orice medic disponibil.
+  </Step>
+  <Step title="Verifică zilele cu program">
+    Pasul „Zile cu program” arată câte zile ale sejurului au program (ex. „8 din 12 zile au program”). Pragul (număr minim de zile sau procent) se setează în configurare. Click deschide lista zilelor, cu „Are program” / „Fără program”.
+  </Step>
+  <Step title="Duplică ziua pe alte date">
+    Din bara laterală „Se va duplica programul general”: alegi ziua sursă („Din această zi”) și zilele destinație („În aceste zile”). Ziua sursă trebuie să aibă program și să fie diferită de zilele destinație. La final apare „Duplicare finalizată”.
+  </Step>
+</Steps>
+
+## Ștergerea programului
+
+- **„Șterge programul zilei”** elimină toate sloturile zilei curente.
+- **„Șterge tot programul general (toate zilele)”** golește programul general al întregului sejur. Acțiunea nu poate fi anulată și cere confirmare.
+
+## Reguli de reținut
+
+- Un slot poate fi restricționat la un gen: oaspeții și terapeuții alocați respectă automat restricția.
+- Un șablon cu etichete de zile ale săptămânii rulează doar în acele zile.
+- Un interval care amestecă consultații cu alte proceduri primește avertisment: ține consultațiile în intervale separate.
+- Verificarea „Program pentru zi” (ascunsă implicit) confirmă că ziua selectată are program general. Fără el, tab-ul „Oaspeți” afișează „Creează mai întâi programul general în pasul «Program general»”.
+
+## Exemple
+
+- Bazin în fiecare zi: 11:00 Femei, 15:00 Bărbați. Două șabloane cu aceeași procedură și gen diferit.
+- Cataplasmă doar în zilele configurate prin etichetele șablonului.
+- Într-o săptămână aglomerată adaugi manual un al doilea slot de bazin doar în acest sejur.
+
+<Tip>
+Verifică programul general înainte de a rula generatoarele. E mai ușor să ajustezi un slot acum decât să reprogramezi oaspeții după.
+</Tip>
+
+## Vezi și
+
+- [Șabloane program și etichete](/app-interface/program/configurare/sabloane-program)
+- [Șabloane sejur](/app-interface/program/configurare/sabloane-sejur)
+- [Program general (tabel)](/app-interface/program/ghiduri/program-general-tabel)
+- [Pasul 2 — Terapeuți](/app-interface/program/sejur/pasul-2-terapeuti)

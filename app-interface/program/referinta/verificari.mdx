@@ -1,0 +1,144 @@
+---
+title: "Lista pașilor de verificare"
+description: "Toți pașii predefiniți din bara „Verificări” a paginii Program v2 din TEAMM, pe tab-uri: ce verifică fiecare, dacă se bifează o dată pe sejur sau pe fiecare zi, care sunt opționali sau ascunși implicit, pragurile configurabile și dependențele dintre pași."
+---
+
+**Unde în aplicație:** meniul „Program” → „Program v2 ⚡️” (`/admin/schedule/manage-v2`), bara „Verificări”; configurarea pașilor în tab-ul „Configurare” → „Pași verificare (bara laterală din Program)” (`/admin/schedule/config`).
+
+## Întrebări la care răspunde pagina
+
+- Ce pași apar în bara „Verificări” pe fiecare tab și ce verifică fiecare?
+- Care pași se bifează o dată pe sejur și care pe fiecare zi?
+- Ce praguri pot seta la „Zile cu program” sau la „Terapeut, cameră, oră”?
+- De ce nu văd pasul „Program pentru zi” sau „Info: suprapuneri”?
+- De ce este blocat „Adaugă în programul oaspeților”?
+- Cum adaug un pas propriu, de exemplu „Confirmă meniul cu bucătăria”?
+
+## Pe scurt
+
+Bara „Verificări” afișează, pentru tab-ul curent al paginii Program v2, o listă de pași: verificări automate (cu numărătoare, listă de rânduri și culoare) și acțiuni pe care le bifezi tu. Fiecare pas predefinit are un tab implicit, un mod de bifare, eventual praguri și dependențe. Centrul poate rearanja, redenumi, ascunde sau completa lista din secțiunea „Pași verificare”. Cum funcționează bara (culori, click, blocare, numărătoarea „N de făcut”) este descris în [Program v2: pașii și bara „Verificări”](/app-interface/program/sejur/prezentare).
+
+Legendă pentru tabelele de mai jos:
+
+- **Bifare**: „O dată pe sejur” = o bifă acoperă tot sejurul; „Pe fiecare zi” = se bifează separat pentru fiecare zi. Centrul poate schimba modul, inclusiv la „Fără bifare”.
+- **Opțional**: pasul se afișează și se poate bifa, dar nu intră în numărătoarea „N de făcut”.
+- **Ascuns implicit**: verificarea rulează (datele și blocările ei rămân active), dar cardul nu apare până când centrul nu adaugă pasul în lista proprie.
+- **Praguri**: eticheta opțiunii = valoarea implicită (minim–maxim). Valoarea implicită reproduce comportamentul de dinainte ca pragul să fie configurabil.
+
+## Tab „Program general”
+
+| Pas | Ce verifică | Bifare | Opțional / Ascuns | Praguri |
+|---|---|---|---|---|
+| „Fă modificările necesare pentru acest sejur în șabloanele de program” | Deschide șabloanele de program pentru a le ajusta pentru acest sejur. | O dată pe sejur | — | „Șabloane minime” = 1 (0–999): sub acest număr de șabloane de program pasul arată eroare. |
+| „Aplică șablon sejur” | Aplică un șablon de sejur ca punct de plecare pentru programul zilelor. | O dată pe sejur | — | — |
+| „Zile cu program” | Câte zile ale sejurului au deja program. | O dată pe sejur | — | „Zile minime cu program” = 0 (0–366): numărul de zile care trebuie să aibă program (ex. 8 din 12); 0 = folosește procentul. „Procent minim (%)” = 80 (0–100): folosit doar când „Zile minime cu program” este 0; sub acest procent pasul arată eroare. |
+
+## Tab „Terapeuți”
+
+| Pas | Ce verifică | Bifare | Opțional / Ascuns | Praguri |
+|---|---|---|---|---|
+| „Setează disponibilitatea personalului” | Terapeuții marcați disponibili pentru sejur. | O dată pe sejur | — | „Terapeuți minimi” = 1 (0–999): sub acest număr de terapeuți disponibili pasul arată eroare. |
+| „Modificări în șabloanele terapeutilor” | Deschide tabelul de editare al șabloanelor terapeuților. | O dată pe sejur | — | — |
+| „Repartizează terapeuții la șabloane” | Repartizează terapeuți reali la șabloanele plasate. | O dată pe sejur | — | — |
+| „Adaugă pacienții în șabloane” | Adaugă pacienții în șabloanele terapeuților. | O dată pe sejur | — | — |
+| „Aplică șabloanele” | Aplică șabloanele care au deja un terapeut ales. | O dată pe sejur | — | — |
+| „Selectează camere” | Alege camera pentru fiecare procedură individuală din programul zilei. | Pe fiecare zi | — | — |
+| „Descarcă” | Descarcă programul terapeuților. | Pe fiecare zi | — | — |
+
+<Info>
+Iconița de informații la „Setează disponibilitatea personalului” explică: „Terapeuții marcați disponibili pentru acest sejur (pasul Disponibilitate). Deschide bara laterală pentru a-i edita.”
+</Info>
+
+## Tab „Repartizare”
+
+| Pas | Ce verifică | Bifare | Opțional / Ascuns | Praguri |
+|---|---|---|---|---|
+| „Consultații” | Câte consultații au proceduri programabile atașate. | O dată pe sejur | — | „Proceduri minime per consultație” = 1 (1–99): o consultație cu mai puține proceduri programabile decât atât e marcată în listă. |
+| „Terapeut, cameră, oră” | Oaspeții au terapeut, cameră și oră setate. | O dată pe sejur | — | „Oaspeți tolerați” = 0 (0–999): peste acest număr de oaspeți incompleți pasul arată eroare. |
+| „Ore la procedurile individuale” | Orele individuale setate corespund numărului de proceduri individuale. | O dată pe sejur | — | — |
+| „Proceduri în program” | Procedurile de tipul selectat apar în programul general. | O dată pe sejur | — | „Zile minime cu proceduri” = 1 (1–366): câte zile ale sejurului trebuie să aibă proceduri de acest tip. |
+| „Repartizează pe zile” | Procedurile au zile alese. | O dată pe sejur | — | „Planuri tolerate” = 0 (0–999): peste acest număr de planuri fără zile alese pasul arată eroare. |
+| „Adaugă în programul oaspeților” | Procedurile repartizate se regăsesc în programul oaspeților. | O dată pe sejur | — | „Planuri tolerate” = 0 (0–999): peste acest număr de proceduri care nu sunt în program pasul arată eroare. |
+| „Procedurile oaspeților” | Fiecare procedură din planul de terapie apare în programul oaspetelui. | O dată pe sejur | Ascuns implicit | „Oaspeți tolerați” = 0 (0–999): peste acest număr de oaspeți cu proceduri neprogramate pasul avertizează. |
+
+<Note>
+Când „Cameră preferențială per oaspete” este dezactivată în configurare, „Terapeut, cameră, oră” nu mai verifică camera. Vezi [Configurare: setări generale](/app-interface/program/referinta/configurare-terapeuti).
+</Note>
+
+## Tab „Oaspeți”
+
+| Pas | Ce verifică | Bifare | Opțional / Ascuns | Praguri |
+|---|---|---|---|---|
+| „Fixează orele anumitor proceduri (opțional)” | Înainte de generare: stabilește la ce oră să fie plasată o procedură. | O dată pe sejur | Opțional | — |
+| „Generează” | Rulează generarea programului oaspeților pentru ziua selectată. | Pe fiecare zi | — | — |
+| „Blochează orele care vrei să rămână așa.” | După generare: blochează orele care nu vrei să fie rescrise de următoarea generare. | Pe fiecare zi | — | — |
+| „Adaugă manual anumite proceduri în program (opțional)” | Adaugă în programul zilei proceduri pe care generatorul nu le plasează singur. | Pe fiecare zi | Opțional | — |
+| „Rezolvă manual eventualele erori” | Programările pe care generatorul nu le-a putut plasa, marcate cu „X” în tabel. | Pe fiecare zi | — | — |
+| „Descarcă” | Descarcă programul oaspeților pentru această zi. | Pe fiecare zi | — | — |
+| „Info: suprapuneri” | Suprapuneri de oaspete / terapeut / cameră în ziua curentă. | Pe fiecare zi | Ascuns implicit | „Suprapuneri tolerate” = 0 (0–999): peste acest număr de conflicte pasul arată eroare. |
+| „Program pentru zi” | Ziua selectată are program general (fără el nu se poate genera). | Pe fiecare zi | Ascuns implicit | „Elemente minime” = 1 (1–999): câte elemente de program trebuie să aibă ziua pentru a fi ok. |
+
+<Tip>
+„Fixează orele anumitor proceduri” se face **înainte** de generare (îi spui generatorului ora), iar „Blochează orele care vrei să rămână așa” se face **după** generare (protejezi orele deja plasate). Vezi [Fixarea vs. blocarea orelor](/app-interface/program/ghiduri/fixarea-vs-blocarea-orelor).
+</Tip>
+
+## Tab „Configurare”
+
+| Pas | Ce verifică | Bifare | Opțional / Ascuns | Praguri |
+|---|---|---|---|---|
+| „Șabloane de program” | Câte șabloane de program are centrul. | O dată pe sejur | — | „Număr minim” = 0 (0–999): sub acest număr pasul pică; 0 = doar informativ. |
+| „Proceduri în program” | Câte proceduri active sunt incluse în program. | O dată pe sejur | — | „Număr minim” = 0 (0–999): sub acest număr pasul pică; 0 = doar informativ. |
+| „Protocoale” | Câte protocoale are centrul. | O dată pe sejur | — | „Număr minim” = 0 (0–999): sub acest număr pasul pică; 0 = doar informativ. |
+| „Logici de procedură” | Câte logici de procedură are centrul. | O dată pe sejur | — | „Număr minim” = 0 (0–999): sub acest număr pasul pică; 0 = doar informativ. |
+
+Când un „Număr minim” este setat și numărul este sub el, cardul afișează „N din minimum M configurate”.
+
+## Dependențe implicite
+
+Un pas cu dependențe apare **blocat** („blocat de: …”) până când pașii de care depinde sunt în regulă. Lanțurile se propagă: o dependență ea însăși blocată blochează tot ce urmează.
+
+| Pas | Depinde de |
+|---|---|
+| „Terapeut, cameră, oră” | „Program pentru zi” |
+| „Proceduri în program” (Repartizare) | „Program pentru zi” |
+| „Repartizează pe zile” | „Proceduri în program” |
+| „Adaugă în programul oaspeților” | „Repartizează pe zile” |
+
+<Note>
+„Repartizează pe zile” nu așteaptă în mod intenționat „Terapeut, cameră, oră”: zilele pot fi distribuite înainte ca fiecare oaspete să aibă terapeut, cameră și oră. Un pas dezactivat de centru nu blochează niciodată nimic, la fel o dependență care nu a rulat în cererea curentă.
+</Note>
+
+## Configurarea pașilor
+
+Din „Configurare programare” → „Pași verificare (bara laterală din Program)” alegi ce pași predefiniți se afișează, în ce ordine și pe ce tab, îi redenumești și adaugi pași proprii cu text liber. Butoanele: „Alege pași predefiniți”, „Adaugă pas propriu”, „Încarcă pașii predefiniți” (pornește de la lista implicită) și „Revino la pașii impliciți” (șterge lista personalizată, cu confirmare: „Se șterge lista personalizată de pași. Bara de verificări va folosi din nou pașii predefiniți. Continui?”).
+
+| Câmp | Ce face |
+|---|---|
+| „Activ” | Dezactivat = pasul nu se mai afișează deloc în bara de verificări. |
+| „Verificare” | Verificarea predefinită pe care o afișează acest pas. Lasă gol („Pas propriu (text liber)”) pentru un pas propriu, cu titlu și descriere scrise de tine. |
+| „Titlu” / „Titlu (redenumire)” | Titlul afișat în bară. Gol = se folosește titlul predefinit al verificării. |
+| „Descriere” | Explicație mai lungă. La pașii proprii se deschide într-un dialog la click („Descriere (se deschide la click pe pas)”); la cei predefiniți apare la iconița de informații („Descriere (la iconița de informații)”). |
+| „Tab” | Tabul asistentului pe care apare pasul: „Program general”, „Terapeuți”, „Repartizare”, „Oaspeți”, „Configurare”. |
+| Ordinea | Ordinea în bară. Trage pașii pentru a-i rearanja. |
+| „Depinde de” | Pașii care trebuie finalizați înainte ca acesta să devină apăsabil. Gol = pasul nu este blocat niciodată. Dacă nu modifici nimic, se folosesc dependențele implicite ale verificării. Pașii dezactivați nu blochează niciodată, iar pașii proprii (text liber) nu pot fi aleși aici. |
+| „Opțional” | Pașii opționali („nice to have”) se afișează normal și pot fi bifați, dar nu intră în numărătoarea „N de făcut” din bară. Dacă nu modifici nimic, se folosește valoarea implicită a verificării. |
+| „Bifare” | „O dată pe sejur” = o bifă acoperă tot sejurul; „Pe fiecare zi” = se bifează separat pentru fiecare zi; „Fără bifare” = pasul nu se poate bifa. Bifa este comună întregii echipe. |
+| „Praguri” | Opțiunile numerice ale verificării (vezi coloanele „Praguri” de mai sus). Valorile în afara intervalului sunt refuzate la salvare. |
+
+În listă, fiecare pas poartă etichete: „Pas propriu”, „Bifare pe zi”, „Fără bifare”, „Opțional”, „Inactiv”.
+
+Exemple:
+
+- Muți „Zile cu program” pe primul loc, îl redenumești „Acoperirea sejurului” și îi ceri minimum 8 zile cu program din 12.
+- Adaugi un pas propriu „Confirmă meniul cu bucătăria”, cu o descriere lungă care se deschide într-un dialog când dai click pe el.
+
+<Warning>
+Reguli de validare la salvare: un pas propriu are nevoie de titlu, nu poate avea praguri și nu poate depinde de alți pași; o verificare predefinită nu poate apărea de două ori; un pas nu poate depinde de el însuși; dependențele nu pot forma un ciclu. Lista personalizată **înlocuiește** ordinea implicită a pașilor: centrul alege ce verificări predefinite se afișează, în ce ordine, pe ce tab și sub ce titlu.
+</Warning>
+
+## Vezi și
+
+- [Program v2: pașii și bara „Verificări”](/app-interface/program/sejur/prezentare)
+- [Configurare: reguli pentru terapeuți, alocarea colectivelor, grupuri de sloturi și setări generale](/app-interface/program/referinta/configurare-terapeuti)
+- [Avertismente și mesaje](/app-interface/program/referinta/avertismente-si-mesaje)
+- [Pasul 4 — Oaspeți](/app-interface/program/sejur/pasul-4-oaspeti)

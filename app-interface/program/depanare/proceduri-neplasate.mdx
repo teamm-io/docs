@@ -1,0 +1,84 @@
+---
+title: "De ce nu a fost plasată o procedură"
+description: "Lista de verificat, în ordine, când o procedură apare la „Neprogramate” sau cu X în tabelul oaspeților din TEAMM: program general, repartizare, capacitate, gen, terapeuți, ferestre de timp, frecvență, cote, logici."
+---
+
+## Întrebări la care răspunde pagina
+
+- De ce apare o procedură la „Neprogramate” după generare?
+- De ce are un oaspete „X” la o procedură în tabelul oaspeților?
+- Ce înseamnă „Slot full”, „Preferred slot full” sau „Per-therapist daily cap exceeded”?
+- De ce nu apare consultația în program?
+- De ce nu primește oaspetele toate ședințele din plan?
+
+## Pe scurt
+
+Generatorul nu pune niciodată o procedură cu forța peste o regulă. Când nu găsește loc, o raportează la „Neprogramate” (în dialogul de rezultat) și o marchează cu „X” în tabelul oaspeților. Cauza este aproape întotdeauna una dintre cele de mai jos. Verifică-le în ordine; primele sunt cele mai frecvente.
+
+## Lista de verificat
+
+<Steps>
+  <Step title="Procedura este inclusă în program?">
+    Doar procedurile marcate „inclusă în program” intră în generare. O procedură nebifată poate fi prescrisă la consultație, dar nu primește niciodată ore. Verifică în „Program” → „Proceduri” (`/admin/schedule/procedures`).
+  </Step>
+  <Step title="Ziua are program general?">
+    Fără program general pentru zi, tab-ul Oaspeți afișează „Creează mai întâi programul general în pasul «Program general»”. Pentru procedurile **colective**, orele vin exclusiv din sloturile programului general: dacă slotul lipsește în acea zi, procedura nu poate fi programată. Vezi [Pasul 1](/app-interface/program/sejur/pasul-1-general).
+  </Step>
+  <Step title="Procedura este repartizată în ziua respectivă?">
+    Generatorul de ore lucrează doar cu procedurile repartizate în ziua curentă. Verifică în tab-ul Repartizare că oaspetele are procedura în acea zi („Repartizează pe zile” sau „Adaugă procedură într-o zi”).
+    <Warning>
+    **Consultațiile** se plasează exclusiv din zilele alese. O consultație fără zi repartizată nu apare niciodată în program.
+    </Warning>
+  </Step>
+  <Step title="Capacitatea slotului este plină?">
+    Mesajele „Slot full on … at 09:00, 12:00” sau „Preferred slot full” înseamnă că toate locurile de la orele disponibile erau ocupate. Capacitatea unui slot este **minimul dintre plafon (numărul de oaspeți al procedurii) și numărul de terapeuți din acea oră × capacitatea pe terapeut**. Un slot fără niciun terapeut, la o procedură cu capacitate pe terapeut, are capacitate 0.
+    Verifică: „Număr de oaspeți” pe procedură; suprascrierile de capacitate și grupurile de capacitate din „Configurare programare”; câți terapeuți sunt pe slot în acea oră.
+  </Step>
+  <Step title="Restricția de gen?">
+    Genul este regulă strictă. Un slot „Femei” nu primește oaspeți bărbați și nici terapeuți bărbați. Dacă singurul slot al procedurii din acea zi are alt gen, oaspetele rămâne neplasat. La procedurile cu „doar același gen”, participanții simultani trebuie să fie de același gen.
+  </Step>
+  <Step title="Terapeutul cerut există și este disponibil?">
+    Verifică: terapeutul este bifat în „Disponibilitate terapeuți & medici” pentru sejur; programul lui de lucru acoperă ora (gol = programul implicit al centrului, o zi fără interval = liber); nu are un bloc (pauză, ședință) la acea oră; nu este blocat de o procedură de grup („Blochează în timpul ședințelor de grup”); nu a atins plafonul zilnic („Per-therapist daily cap exceeded”, afișat ca „Peste norma terapeutului”). Dacă procedura cere un rol (medic) și nu există niciunul disponibil, opțiunea „roleFallback” din configurare permite orice terapeut.
+  </Step>
+  <Step title="Fereastra de timp sau ziua săptămânii?">
+    O procedură cu „Oră fixă”, „Cel mai devreme” / „Cel mai târziu” sau interval evitat poate să nu aibă niciun slot valid în ziua respectivă. La fel o procedură restricționată la anumite zile ale săptămânii. Verifică secțiunile „Ferestre de timp” și „Zile din săptămână” din configurare.
+  </Step>
+  <Step title="Durata încape în ziua de lucru?">
+    O procedură de 90 de minute ocupă două celule de oră și se așază doar unde ambele ore sunt libere, pentru oaspete și pentru terapeut. La zilele speciale (scurte), durata este scurtată la durata zilei.
+  </Step>
+  <Step title="Frecvența este mai mare decât zilele disponibile?">
+    „Pachet de 8 ședințe” pe un sejur de 6 zile, sau „de 3 ori pe săptămână” cu o cotă „Max 1 / zi” și puține zile permise: repartizarea nu are unde să le pună. Mesajul „Insufficient total capacity: N allocations needed” indică o cerere totală mai mare decât locurile disponibile în sejur. Ajustează frecvența în plan sau capacitatea.
+  </Step>
+  <Step title="Cotele?">
+    „Max / zi” este limită strictă: a doua procedură din aceeași categorie în aceeași zi nu se pune. „Min / sejur” ridică ținta oaspetelui; dacă nu se atinge, diferența apare la „Neprogramate”.
+  </Step>
+  <Step title="Regulile și logicile?">
+    „Necesită” / „evită”, „înainte” / „după” / „în aceeași zi”, pauze obligatorii. Prea multe reguli stricte pot face o procedură neplasabilă: generatorul o raportează în loc să încalce regula. Verifică `/admin/medical/procedure-logics`.
+  </Step>
+  <Step title="Ora fixată sau ora individuală este ocupată?">
+    Cu politica „strict”, generatorul nu acceptă altă oră decât cea preferată. Mesajul „PREFERRED_HOUR_CONTENTION” / „Mutate în altă zi” înseamnă că ora era ocupată și procedura a fost pusă în altă zi (nu se pierde nimic). Schimbă politica în „sameDayFallback” sau eliberează ora.
+  </Step>
+  <Step title="Substituția a intervenit?">
+    Dacă există o regulă de substituție, procedura poate apărea înlocuită cu alta („Când capacitatea e plină” / „Când nu poate fi plasată”). Nu este o eroare; verifică secțiunea „Substituții”.
+  </Step>
+</Steps>
+
+## Cum citești rezultatul generării
+
+| Grup | Ce înseamnă | Ce faci |
+|---|---|---|
+| Neprogramate | Nu a mai fost loc nici în ziua planificată, nici în altă zi | Adaugă manual sau rezolvă cauza de mai sus și regenerează |
+| Peste norma terapeutului | Programate, dar terapeutul depășește maximul de proceduri pe zi | Mută la alt terapeut sau ridică plafonul zilnic |
+| Mutate în altă zi | Ziua sau ora preferată era ocupată, procedura a fost mutată | Nimic, dacă noua zi convine |
+| Alte atenționări | Situații care nu se încadrează mai sus | Citește detaliul |
+
+<Tip>
+Rulează „Previzualizare” din tab-ul Configurare după orice modificare de regulă: vezi cine ar rămâne neprogramat și de ce, fără să salvezi nimic.
+</Tip>
+
+## Vezi și
+
+- [Pasul 4 — Oaspeți](/app-interface/program/sejur/pasul-4-oaspeti)
+- [Avertismente și mesaje](/app-interface/program/referinta/avertismente-si-mesaje)
+- [Tipuri de proceduri, plafon și capacitate pe terapeut](/app-interface/program/tipuri-de-proceduri-si-capacitate)
+- [Întrebări frecvente](/app-interface/program/depanare/intrebari-frecvente)

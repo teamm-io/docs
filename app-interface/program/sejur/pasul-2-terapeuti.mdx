@@ -1,0 +1,90 @@
+---
+title: "Pasul 2 — Terapeuți: program pe terapeut"
+description: "Cum stabilești cine lucrează în sejur în TEAMM: disponibilitatea terapeuților și medicilor, șabloanele de terapeuți (T1, F2…), atribuirea terapeuților reali, adăugarea pacienților în orele P, aplicarea șabloanelor, camerele și exportul programului terapeuților."
+---
+
+**Unde în aplicație:** „Program v2” → tab „Terapeuți” (`/admin/schedule/manage-v2`). Disponibilitatea are și pagina ei: `/admin/schedule/therapist-availability`.
+
+## Întrebări la care răspunde pagina
+
+- Cum aleg ce terapeuți și medici lucrează în acest sejur?
+- Cum atribui un terapeut real unui șablon (T1, F2)?
+- Cum adaug pacienți în orele „P” ale unui terapeut și cum îi fixez la el?
+- Ce face butonul „Aplică șabloanele”?
+- Cum văd ocuparea sălilor pe ore și cum aleg camera?
+- Cum inversez repartizările a doi terapeuți sau copiez echipa dintr-o altă zi?
+
+## Pe scurt
+
+Tab-ul „Terapeuți” arată o matrice terapeuți × ore pentru ziua aleasă. Aici marchezi cine este disponibil, aduci șabloanele de terapeuți în tabel, atribui persoanele reale, adaugi pacienții în orele libere „P”, aplici șabloanele și alegi camerele. Alocarea automată (fazele 1–3) este descrisă separat în [Alocarea automată a terapeuților](/app-interface/program/sejur/pasul-2b-alocare-automata).
+
+## Pași
+
+<Steps>
+  <Step title="Setează disponibilitatea personalului">
+    Pasul „Setează disponibilitatea personalului” deschide bara laterală „Disponibilitate terapeuți & medici” (aceeași ca pagina „Disponibilitate”, `/admin/schedule/therapist-availability`). Bifezi terapeuții activi și medicii activi pentru acest sejur; tot restul modulului (tabele, alocare, sloturi de consultație) folosește doar persoanele bifate. Poți folosi „Duplică echipa dintr-un alt sejur” ca să preiei aceeași echipă. Pragul „Terapeuți minimi” (implicit 1) se setează în configurare.
+    <Note>
+    Fără terapeuți disponibili, sloturile de consultație și alocarea nu au din cine alege: „Niciun practician disponibil în acest sejur. Adaugă-i din Terapeuți → Disponibilitate.”
+    </Note>
+  </Step>
+  <Step title="Adaugă șabloanele de terapeuți în tabel">
+    „Adaugă șabloane” aduce în tabel șabloanele alese (T1, F2…) ca terapeuți fictivi, filtrabile după etichete. Un rând de șablon are program pe ore: protocoale sau proceduri fixe și ore libere „P” pentru oaspeți.
+  </Step>
+  <Step title="Modifică șabloanele doar pentru acest sejur (opțional)">
+    Pasul „Modificări în șabloanele terapeutilor” deschide editorul „Editează șabloanele pentru sejur”: rânduri = șabloane, coloane = ore. Modificările se salvează cu „Salvează pentru sejur” și nu ating șabloanele centrului. Un rând „Program modificat pentru acest sejur” poate fi readus la șablon.
+  </Step>
+  <Step title="Repartizează terapeuții la șabloane">
+    Pasul „Repartizează terapeuții la șabloane”: în prima coloană a tabelului alegi câte un terapeut real pentru fiecare șablon (T1 → Maria). Genul șablonului restrânge lista.
+  </Step>
+  <Step title="Adaugă pacienții în șabloane">
+    Pasul „Adaugă pacienții în șabloane”: în locurile marcate „P” adaugi pacienții care fac proceduri individuale la acel terapeut. Dacă un pacient trebuie neapărat să rămână la terapeutul alocat, apasă lacătul de lângă nume („Fixează oaspetele la acest terapeut (nu-l muta)”); generatorul de alocare nu îl va muta.
+  </Step>
+  <Step title="Aplică șabloanele">
+    Pasul „Aplică șabloanele” atribuie toate șabloanele care au deja un terapeut ales: terapeutul este atașat sloturilor din programul general care se potrivesc cu orele lui.
+    <Warning>
+    Atribuirea **nu creează sloturi**. Dacă o oră din șablon nu are slot corespunzător în ziua respectivă, primești o avertizare; slotul se creează din pasul „General”. Orele „P” nu se scriu nicăieri: oaspeții se pun manual sau cu generatorul de alocare.
+    </Warning>
+    Atribuirea **adaugă, nu înlocuiește**: terapeutul se pune peste cine este deja pe slot. La o nouă aplicare pentru același șablon, doar terapeutul pus anterior de acel șablon este înlocuit; cei adăugați manual rămân.
+  </Step>
+  <Step title="Selectează camere">
+    Pasul „Selectează camere”: pentru procedurile individuale alegi camera direct în celulă (butonul „Cameră”) sau deschizi vizualizarea „Săli” pentru ocuparea camerelor pe ore. Camerele se pot aloca și automat („Repartizare camere”). Dacă centrul nu folosește cameră per oaspete, opțiunea din „Configurare programare” ascunde coloana și verificarea.
+  </Step>
+  <Step title="Descarcă">
+    Pasul „Descarcă” deschide dialogul de export cu tipul „Terapeuți” preselectat. Vezi [Descarcă programul](/app-interface/program/ghiduri/descarca-programul).
+  </Step>
+</Steps>
+
+## Vizualizări și afișare
+
+- **Tabel / Compact / Carduri / Cronologie**: tabelul clasic, tabelul compact cu abrevieri („Tabel compact (stil Docs)”), carduri per terapeut, sau cronologie pe ore. În cronologie activezi editarea ca să tragi programările („Trage pentru a muta”).
+- **Săli**: aceeași matrice, dar pe camere × ore.
+- **Afișare**: doar orele de lucru configurate, abrevierile, opțiunile / notițele, vârsta pacientului, ora unei proceduri de referință înaintea numelui pacientului (procedura se alege în „Configurare programare”).
+- **Sortare**: alfabetic, după gen, după numărul de pacienți sau de programări.
+- **Format nume**: „Nume Prenume”, „Prenume Nume”, doar numele, doar prenumele. Se setează pentru tot centrul în „Configurare programare”.
+- Terapeuții cu programări suprapuse sunt marcați: „Terapeuți cu programări suprapuse — verifică în tabel.”
+
+## Alte acțiuni
+
+- **Inversează terapeuți** (meniul „Alte acțiuni”, doar în vizualizarea tabel): alegi „Primul terapeut” și „Al doilea terapeut” și inversezi toate repartizările lor pentru întregul sejur, în toate zilele. Sunt incluse programările, pacienții repartizați, blocajele și șabloanele din acest sejur.
+- **Duplică** („Copiază repartizarea terapeuților dintr-o altă zi”): alegi ziua sursă („Copiază din ziua”), ce se copiază (blocaje recurente 🔒, proceduri pe tipuri, protocoale, grupuri de proceduri) și ce se întâmplă dacă ziua curentă are deja repartizări: „Suprascrie ce există” sau „Completează doar golurile”. Procedurile individuale ale oaspeților nu se ating.
+- **Setări terapeut**: creionul de pe rândul terapeutului deschide „Setări program”: culoare, gen, cameră preferată și program de lucru personal. „Fără program setat — terapeutul este considerat mereu disponibil”; o zi fără interval înseamnă că nu lucrează în acea zi. Orele din afara programului apar estompate în tabel.
+- **Blochează un interval**: click pe o celulă goală („Atribuie un slot sau blochează intervalul”) rezervă timp fără procedură (pauză, ședință, concediu). Balanța orelor („În plus” / „De recuperat”) se vede pe pagina „Disponibilitate”. Vezi [Blocuri terapeut, ore în plus și ore de recuperat](/app-interface/program/sejur/blocuri-si-ore-terapeuti).
+
+## Reguli de reținut
+
+- **Genul este regulă strictă** în toate fazele: la sloturile cu restricție de gen, terapeutul trebuie să aibă genul grupului. Generatorul nu poate ocoli regula.
+- Programul de lucru personal și intervalele blocate sunt respectate de toate fazele alocării.
+- Sloturile completate din șabloane sunt tratate de generatorul de alocare drept modificări manuale: nu sunt suprascrise decât cu „Suprascrie și modificările manuale”.
+
+## Exemple
+
+- F2, gen feminin: 09:00 BAP · 10:00 P · 11:00 GIM · 12:00 P · 15:00 P · 16:00 P. Două activități fixe, restul orelor pentru oaspeți.
+- Terapeut cu program L–V 08:00–16:00: nu primește alocări sâmbăta și nici după 16:00.
+- Bazin Femei la 11:00: doar terapeutele sunt candidate pentru slot.
+
+## Vezi și
+
+- [Șabloane terapeuți (T1, F2…) și sloturile P](/app-interface/program/configurare/sabloane-terapeuti)
+- [Terapeuți & medici](/app-interface/program/configurare/terapeuti-si-medici)
+- [Alocarea automată a terapeuților (fazele 1–3) și a camerelor](/app-interface/program/sejur/pasul-2b-alocare-automata)
+- [Pasul 3 — Repartizare](/app-interface/program/sejur/pasul-3-repartizare)

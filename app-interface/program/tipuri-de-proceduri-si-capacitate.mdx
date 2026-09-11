@@ -1,0 +1,108 @@
+---
+title: "Tipuri de proceduri, plafon și capacitate pe terapeut"
+description: "Cum programează TEAMM fiecare tip de procedură (individuală, colectivă, comună, consultație), ce înseamnă capacitatea simultană (plafonul), locurile per terapeut, necesarul de terapeuți „1 + câte 1 la fiecare N oaspeți” și prioritatea 1–5."
+---
+
+**Unde în aplicație:** meniul „Program” → „Proceduri” (`/admin/schedule/procedures`), secțiunea „Program” a fiecărei proceduri (`/admin/schedule/procedures/:id`).
+
+## Întrebări la care răspunde pagina
+
+- Care este diferența dintre o procedură individuală, colectivă, comună și o consultație în program?
+- Ce înseamnă „Capaticate simultană” și când este ea depășită sau redusă?
+- Cum funcționează „Locuri / terapeut” — de ce la BAP încap doar 2 oaspeți când sunt 2 terapeuți?
+- Câți terapeuți primește un slot cu „1 + câte 1 la fiecare 5 oaspeți”?
+- Ce face prioritatea 1…5?
+- De ce o oră fără terapeut nu primește niciun oaspete?
+
+## Pe scurt
+
+Tipul procedurii decide **cum** este așezată în program: individuală — un oaspete cu terapeutul lui, la o oră proprie; colectivă — grup de oaspeți la orele fixe din „Șabloane program”; comună — mai mulți oaspeți în paralel, cu terapeuți repartizați în faza 3 a alocării; consultație — programată la medic. Capacitatea unui slot este limitată de **plafon** (câți oaspeți simultan) și, opțional, de **câți terapeuți sunt pe ora respectivă** („Locuri / terapeut”). Necesarul de terapeuți și prioritatea completează regulile după care generatoarele aleg ordinea și personalul.
+
+## Tipurile de proceduri
+
+| Tip („Tip”) | Cum este programată | Cine o execută |
+|---|---|---|
+| „Individuală” | Fiecare oaspete primește un interval propriu, calculat din „Durata” procedurii; generatorul de ore îl așază doar unde ora e liberă pentru oaspete și pentru terapeut. | Un terapeut per oaspete; sloturile individuale se ocupă cu terapeuți din tab-ul „Repartizare” / orele „P” ale șabloanelor de terapeuți. |
+| „Colectivă” | Apare exclusiv la orele fixe din „Șabloane program” / „Program general” (ex. Bazin 11:00 Femei). Oaspeții sunt grupați într-un slot, până la capacitate. | Un terapeut (sau mai mulți, după necesar) conduce tot slotul; toți oaspeții din slot primesc același terapeut. Alocat în faza 1. |
+| „Comună” | Mai mulți oaspeți în paralel, într-un slot comun din programul general. | Terapeuții sunt repartizați în faza 3 a alocării („mixte & protocoale”). |
+| „Consultație” | Se programează la medic, în sloturile de consultație din programul general; fiecare apariție din plan are durata ei (vezi [Planul terapeutic](/app-interface/program/plan-terapeutic)). | Un medic (rol „medic”), nu un terapeut; medicii de pe slot sunt lista din care se aleg consultațiile. |
+| „Colectare date medicale”, „Altele” | Nu au tratament special în generatoare. | Sloturile care nu se încadrează în nicio categorie (colectiv / comună / protocol) primesc avertismentul „slotul nu se încadrează în nicio categorie … — nu a fost alocat automat.” |
+
+<Note>
+Un slot din programul general care amestecă proceduri colective și individuale este tratat ca „altele”: nicio fază a alocării automate nu îl ocupă cu terapeuți. Ține sloturile omogene.
+</Note>
+
+## Plafonul: „Capaticate simultană”
+
+Câmpul „Capaticate simultană” („Număr de oaspeți care participipă simultan la această procedură”) este **plafonul** slotului: generatorul de ore nu depășește niciodată acest număr pe același interval. Plafonul poate fi suprascris sau condiționat din „Configurare programare” (ex. „Saună 8/oră, dar 4/oră pentru oaspeții care au și împachetări în plan”) și poate fi împărțit cu alte proceduri printr-un grup de capacitate comună.
+
+- „Programări suprapuse / distanțate”: numărul maxim de oaspeți se consideră câți pacienți vin în același timp, nu și cât stă fiecare după aceea.
+- „Intervalul minim între oaspeți (min)”: distanța minimă între doi oaspeți succesivi la aceeași procedură (implicit 5 minute).
+
+## Capacitatea pe terapeut: „Locuri / terapeut”
+
+„Locuri / terapeut” spune câți oaspeți simultan poate prelua un terapeut la această procedură. Când e completat, capacitatea unei ore devine:
+
+**capacitate efectivă = min(nr. terapeuți alocați în acea oră × „Locuri / terapeut”, „Capaticate simultană”)**
+
+Terapeuții se iau din programul slotului (cei atribuiți în tab-ul „General” / „Terapeuți”, pe ora respectivă sau pe tot slotul). Gol = capacitatea nu depinde de numărul de terapeuți și este exact plafonul.
+
+<Warning>
+Cu „Locuri / terapeut” completat, o oră **fără niciun terapeut** are capacitate **0**: niciun oaspete nu este plasat în acea oră. Dacă vezi proceduri neplasate cu motiv de capacitate, verifică întâi dacă slotul are terapeuți pe ora respectivă.
+</Warning>
+
+### Exemplu lucrat — BAP
+
+Procedura „BAP” are „Capaticate simultană” = 2 și „Locuri / terapeut” = 1.
+
+| Terapeuți pe ora 10:00 | Calcul | Oaspeți admiși la 10:00 |
+|---|---|---|
+| 0 | min(2, 0 × 1) | 0 |
+| 1 | min(2, 1 × 1) | 1 |
+| 2 | min(2, 2 × 1) | 2 |
+| 3 | min(2, 3 × 1) | 2 (plafonul) |
+
+Același slot admite mai puțini oaspeți la orele cu mai puțini terapeuți.
+
+## Necesarul de terapeuți
+
+Trei câmpuri stabilesc câți terapeuți cere un slot:
+
+| Câmp | Semnificație |
+|---|---|
+| „Număr de terapeuți” | Minimul fix: 0 = fără terapeut, 1 = un terapeut, 2+ = mai mulți terapeuți pe interval. |
+| „Un terapeut în plus la câți oaspeți” | Se adaugă încă un terapeut pentru fiecare X oaspeți din interval. Lasă gol pentru număr fix. |
+| „Terapeut doar când există programări” | Ora apare în tabelul terapeuților și cere terapeut doar dacă un oaspete este programat la acea oră. |
+
+Necesarul efectiv pentru un slot cu G oaspeți este: **minim + ⌊G ÷ X⌋**.
+
+- Necesar „1 + câte 1 la fiecare 5 oaspeți”: un slot cu 12 oaspeți primește 3 terapeuți (1 minim + 2 pentru cei 12 oaspeți).
+- Cu minim 0, procedura nu primește terapeut deloc.
+- Cu „Terapeut doar când există programări”, o oră a slotului fără nicio programare cere 0 terapeuți și dispare din tabelul „Terapeuți”.
+
+## Prioritatea
+
+„Prioritate” (număr mai mic = întâietate la programare) influențează ordinea în care procedurile primesc ore: 1 este cea mai mare prioritate și se programează prima, 5 este cea mai mică; implicit 3. Dă prioritate mare procedurilor greu de plasat (durată lungă, capacitate mică).
+
+Exemplu: „Împachetări” cu prioritate 1 primește ore înaintea „Masaj” cu prioritate 5 — își alege primele intervalele libere ale zilei.
+
+## Alte reglaje care schimbă orarul
+
+- „Durata” (minute): o procedură de 90 de minute se întinde pe 2 ore în tabelele pe ore și se așază doar unde ambele ore sunt libere.
+- „Blochează toată ora pentru pacient”: pentru o procedură mai scurtă de o oră, blochează întreaga oră a pacientului, ca să nu i se programeze altceva în acea oră; capacitatea resursei nu este afectată — ceilalți pacienți împart în continuare ora.
+- „Doar persoane de același sex”: participanții simultani trebuie să fie de același gen, iar terapeutul alocat trebuie să aibă genul grupului — regulă strictă.
+- „Grupează oaspeții cât mai aproape”: oaspeții sunt grupați compact (continuitate); dezactivat, sunt distribuiți pe parcursul zilei.
+- „Recuperează decalaje”: pauză periodică fără oaspeți noi (ex. 5 minute la fiecare 30), calculată de la începutul fiecărui interval din program; restricționează doar ora de început.
+
+## Reguli de reținut
+
+- Plafonul este limita absolută; „Locuri / terapeut” poate doar să o **reducă**, niciodată să o crească.
+- Tipul „Consultație” folosește medici, nu terapeuți; fazele alocării automate de terapeuți nu ating sloturile de consultație.
+- Dacă o procedură rămâne neplasată, verifică în această ordine: e inclusă în program? durata încape în programul zilei? capacitatea nu e deja plină? terapeutul cerut există și e disponibil?
+
+## Vezi și
+
+- [Proceduri în program](/app-interface/program/configurare/proceduri)
+- [Alocarea automată a terapeuților (fazele 1–3) și a camerelor](/app-interface/program/sejur/pasul-2b-alocare-automata)
+- [Configurare programare: politica centrului](/app-interface/program/configurare/configurare-programare)
+- [De ce nu a fost plasată o procedură](/app-interface/program/depanare/proceduri-neplasate)

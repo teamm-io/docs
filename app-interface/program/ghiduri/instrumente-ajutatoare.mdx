@@ -1,0 +1,58 @@
+---
+title: "Instrumente ajutătoare: importuri și transformare"
+description: "Pagina „Instrumente ajutătoare” din modulul Program al TEAMM: transformarea unui program general din CSV într-un program individual (Excel sau DOCX cu bilețele pe rând sau pe carduri), cu verificarea suprapunerilor de ore."
+---
+
+**Unde în aplicație:** meniul „Program” → „Instrumente ajutătoare” (`/admin/schedule/utils`).
+
+## Întrebări la care răspunde pagina
+
+- La ce folosește pagina „Instrumente ajutătoare”?
+- Cum transform un program general ținut în CSV într-un program pe oaspeți?
+- Care este diferența dintre „Transformă în program individual” și varianta „(v2)”?
+- Ce înseamnă „Verifică suprapunerile de ore” și de ce îmi blochează descărcarea?
+- Pot alege data și culoarea bilețelelor?
+
+## Pe scurt
+
+Pagina este un set de unelte independente de sejururile din aplicație: încarci un fișier CSV cu programul general și primești, la alegere, un fișier Excel cu programul pe oaspeți sau un document DOCX cu bilețele individuale (pe rânduri sau pe carduri). Nu scrie nimic în programul din TEAMM; este utilă când programul a fost construit în afara aplicației.
+
+## Cele trei carduri
+
+| Card | Ce încarci | Ce primești |
+|---|---|---|
+| „CSV => Google Sheets” | „Încarcă programul general (CSV)” | Un fișier Excel (`patients-schedule.xlsx`) cu programul transformat pe oaspeți, prin butonul „Transformă în program individual” |
+| „CSV => DOCX” (rânduri) | „Încarcă programul general (CSV)” + „Text” | Un DOCX cu câte un bilețel pe rând pentru fiecare oaspete, prin „Transformă în program individual (v2)” |
+| „CSV => DOCX” (carduri) | „Încarcă programul general (CSV)” + „Text” + „Alege data” + „Alege o culoare accent” | Un DOCX cu bilețele sub formă de carduri, prin „Transformă în program individual (v2) carduri” |
+
+Câmpul „Text” (placeholder „textul care va fi afișat sub fiecare bilețel”) apare la subsolul fiecărui bilețel. „Alege data” este precompletată cu ziua de mâine și dă numele fișierului: „Program individual DD-MM-YYYY”. Culoarea accent pornește de la culoarea principală a aplicației.
+
+## Verificarea suprapunerilor
+
+Comutatorul „Verifică suprapunerile de ore” este activ implicit la ambele carduri DOCX. Înainte de descărcare, aplicația caută oaspeții care au mai multe proceduri la aceeași oră; dacă găsește, blochează descărcarea și afișează, pentru fiecare, „Pacientul «nume» are mai multe proceduri la aceeași oră: HH:MM, …”. Dezactivează comutatorul doar dacă vrei fișierul chiar și cu suprapuneri.
+
+<Note>
+Transformarea în Excel face aceeași verificare pe server și oprește procesarea cu un mesaj similar.
+</Note>
+
+## Formatul CSV
+
+- Separator: virgulă.
+- Primul rând este antetul; fiecare rând următor este un oaspete (numele în prima coloană), iar celulele conțin procedurile cu ora în format `HH:MM`.
+- La transformarea în Excel, ghilimelele și trecerile la rând din celule sunt curățate automat.
+
+<Warning>
+Dacă nu ai selectat un fișier, apare „Please select a file”; dacă fișierul nu conține date, „No data found”.
+</Warning>
+
+## Reguli de reținut
+
+- Uneltele lucrează doar pe fișierul încărcat; nu citesc și nu modifică sejururile din aplicație.
+- Pentru programul construit în TEAMM folosește [Descarcă programul](/app-interface/program/ghiduri/descarca-programul), nu această pagină.
+- Importurile de oaspeți, camere și recomandări nu sunt disponibile în această pagină.
+
+## Vezi și
+
+- [Descarcă programul](/app-interface/program/ghiduri/descarca-programul)
+- [Program general (tabel)](/app-interface/program/ghiduri/program-general-tabel)
+- [Introducere în modulul Program](/app-interface/program/introducere)

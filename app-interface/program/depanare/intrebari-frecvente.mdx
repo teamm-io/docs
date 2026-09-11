@@ -1,0 +1,75 @@
+---
+title: "Întrebări frecvente"
+description: "Răspunsuri scurte la cele mai des întâlnite nelămuriri din modulul Program al TEAMM: regenerare care rescrie orele, șabloane care nu se reflectă în sejur, consultații lipsă, diferența dintre Program v2 și varianta clasică, duplicarea zilelor și altele."
+---
+
+## Întrebări la care răspunde pagina
+
+- Am regenerat ziua și mi-au dispărut orele puse manual. De ce?
+- Am modificat un șablon, dar sejurul curent nu s-a schimbat. De ce?
+- De ce nu apare consultația în program?
+- Care este diferența dintre „Program v2” și „Creează programul”?
+- Ce se întâmplă dacă duplic o zi de două ori?
+- Cum întreb un asistent AI despre TEAMM?
+
+## Întrebări și răspunsuri
+
+<AccordionGroup>
+  <Accordion title="Am regenerat ziua și mi-au dispărut orele puse manual. De ce?">
+    Regenerarea înlocuiește programul generat automat al zilei. Se păstrează doar elementele **blocate** (🔒) și cele **adăugate manual** din „Instrumente”. Înainte de a regenera, blochează orele care trebuie să rămână: lacătul din celulă pentru o oră, lacătul din capul coloanei pentru toată procedura. Vezi [Ore fixate vs ore blocate](/app-interface/program/ghiduri/fixarea-vs-blocarea-orelor).
+  </Accordion>
+  <Accordion title="Am modificat un șablon de program, dar sejurul curent nu s-a schimbat. De ce?">
+    Șabloanele populează programul general **la crearea lui**. Un sejur deja creat are propria copie, editabilă în pasul „General”. Modificarea unui șablon afectează sejururile viitoare; pentru sejurul curent ajustezi sloturile direct în pasul „General” sau adaugi din nou șablonul modificat.
+  </Accordion>
+  <Accordion title="Am aplicat șablonul de terapeut, dar terapeutul nu apare pe unele ore. De ce?">
+    Atribuirea atașează terapeutul doar sloturilor care există deja în programul general. Dacă o oră din șablon nu are slot corespunzător în ziua respectivă, primești o avertizare; creează slotul din pasul „General”. Orele „P” nu se scriu nicăieri automat.
+  </Accordion>
+  <Accordion title="De ce nu apare consultația unui oaspete în program?">
+    Consultațiile se plasează exclusiv din zilele alese (repartizare). Fără o zi repartizată, consultația nu apare nici la generarea orelor. În tab-ul Repartizare, alege tipul „consultație” și rulează „Repartizează pe zile” sau adaugă ziua cu „Adaugă procedură într-o zi” (poți alege durata și medicul). Verifică și că oaspetele are medic disponibil în „Disponibilitate terapeuți & medici”.
+  </Accordion>
+  <Accordion title="Care este diferența dintre „Program v2” și „Creează programul”?">
+    Aceleași tab-uri (General, Terapeuți, Repartizare, Oaspeți) și aceleași date. „Program v2” adaugă bara „Verificări” cu pași, praguri și dependențe, plus tab-ul „Configurare”. Tab-ul activ este partajat între cele două versiuni. Vezi [Creează programul (varianta clasică)](/app-interface/program/ghiduri/program-clasic).
+  </Accordion>
+  <Accordion title="Ce se întâmplă dacă duplic programul general al unei zile pe o zi care are deja program?">
+    Sloturile se adaugă peste cele existente. Un slot identic (aceeași procedură, opțiuni, protocol, specialitate, gen și interval) deja prezent în ziua destinație nu se dublează; sloturile diferite se adaugă. Duplicarea copiază doar programul general (sloturile), nu programările oaspeților. Verifică ziua destinație după duplicare.
+  </Accordion>
+  <Accordion title="De ce nu pot genera orarul oaspeților („Nu există program pentru această zi”)?">
+    Ziua nu are program general. Adaugă șabloanele zilei în pasul „General” sau aplică un șablon de sejur, apoi revino în „Oaspeți”.
+  </Accordion>
+  <Accordion title="Generatorul pune oaspetele la alt terapeut decât cel obișnuit. Cum îl păstrez?">
+    Activează „Continuitate” în „Configurare programare” → „Reguli terapeuți” (preferă terapeuții deja asociați oaspetelui) sau fixează oaspetele la terapeut din tab-ul Terapeuți (lacătul de lângă nume: „Fixează oaspetele la acest terapeut (nu-l muta)”). Alocările manuale sunt păstrate de generator.
+  </Accordion>
+  <Accordion title="Cum șterg repartizarea doar de mâine înainte, fără să ating zilele deja trecute?">
+    „Șterge repartizarea pe zile” → „Doar zilele viitoare (păstrează ziua de azi și cele trecute)”. Vezi [Pasul 3 — Repartizare](/app-interface/program/sejur/pasul-3-repartizare).
+  </Accordion>
+  <Accordion title="De ce cere aplicația confirmare la „Regenerează inclusiv zilele trecute”?">
+    Implicit, ziua de azi și zilele trecute nu se rescriu la repartizare, ca să nu se piardă programul deja livrat oaspeților. Bifarea opțiunii suprascrie și acele zile: „Aceasta va suprascrie programul pentru ziua de azi și zilele trecute. Continuați?”
+  </Accordion>
+  <Accordion title="Un slot de bazin are plafon 20, dar generatorul pune doar 4 oaspeți. De ce?">
+    Capacitatea efectivă este minimul dintre plafon și numărul de terapeuți din acea oră × capacitatea pe terapeut. Cu 2 terapeuți × 2 oaspeți pe terapeut, slotul primește 4. Adaugă terapeuți pe slot sau elimină „Capacitate pe terapeut” de pe procedură. Verifică și „Suprascrieri de capacitate” și „Grupuri de capacitate” din configurare.
+  </Accordion>
+  <Accordion title="De ce nu văd coloana „Cameră” în tabele?">
+    Centrul are dezactivată opțiunea „cameră per oaspete la procedurile individuale” din „Configurare programare” (setări generale). Când este dezactivată, coloana este ascunsă și verificările de cameră nu rulează.
+  </Accordion>
+  <Accordion title="Ce înseamnă „Peste norma terapeutului” în rezultatul generării?">
+    Procedurile au fost programate, dar terapeutul depășește numărul maxim de proceduri pe zi definit în „Plafoane zilnice per terapeut”. Mută o parte la alt terapeut sau ridică plafonul.
+  </Accordion>
+  <Accordion title="Bifa unui pas din „Verificări” a dispărut. De ce?">
+    Bifele sunt comune întregii echipe și au un domeniu: „O dată pe sejur” sau „Pe fiecare zi”. Un pas bifat „pe zi” apare nebifat pe altă zi. Un coleg poate să fi debifat pasul.
+  </Accordion>
+  <Accordion title="Cum verific o configurare nouă fără să stric programul?">
+    Tab-ul „Configurare” → „Previzualizare”: alegi sejurul și ziua, iar generatorul rulează în simulare (V4) fără să salveze nimic. Vezi lista celor neprogramați și avertismentele.
+  </Accordion>
+  <Accordion title="Cum întreb un asistent AI (ChatGPT, Claude, Gemini) despre TEAMM?">
+    Această documentație este publică și poate fi citită de asistenții AI. Două variante:
+    - Lipește adresa paginii (ex. `https://help.teamm.work/app-interface/program/sejur/pasul-4-oaspeti`) în conversație și pune întrebarea în română.
+    - Adaugă documentația ca sursă (conector MCP) în asistentul tău: `https://help.teamm.work/mcp`. După aceea poți întreba direct, fără să lipești adrese.
+    Documentația nu conține date despre oaspeții sau programul centrului tău; asistentul răspunde despre cum funcționează aplicația, nu despre datele tale.
+  </Accordion>
+</AccordionGroup>
+
+## Vezi și
+
+- [De ce nu a fost plasată o procedură](/app-interface/program/depanare/proceduri-neplasate)
+- [Avertismente și mesaje](/app-interface/program/referinta/avertismente-si-mesaje)
+- [Glosar](/app-interface/program/glosar)

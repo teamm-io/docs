@@ -1,0 +1,77 @@
+---
+title: "Terapeuți & medici: culoare, gen, cameră preferată, program de lucru"
+description: "Setările per persoană din TEAMM folosite de generatorul de alocare: genul (regulă strictă), culoarea terapeutului, camera preferată și programul de lucru personalizat, plus pagina „Disponibilitate terapeuți” a fiecărui sejur."
+---
+
+**Unde în aplicație:** meniul „Program” → „Terapeuți & medici” (`/admin/schedule/practitioners`). Disponibilitatea pe sejur: butonul „Disponibilitate terapeuți” (`/admin/schedule/therapist-availability`).
+
+## Întrebări la care răspunde pagina
+
+- Unde setez genul, culoarea și camera preferată a unui terapeut?
+- Cum îi dau unui terapeut program de lucru L–V 08:00–16:00 și ce înseamnă o zi fără interval?
+- Ce se întâmplă dacă nu setez niciun program de lucru?
+- Ce influențează efectiv generarea și ce este doar vizual?
+- Unde bifez cine lucrează într-un sejur și unde văd balanța orelor?
+
+## Pe scurt
+
+„Terapeuți & medici” listează persoanele cu rol de terapeut sau medic și setările lor de program: „Gen”, „Culoare”, „Cameră preferată” și „Program de lucru”. Acestea sunt setările per persoană folosite de generatorul de alocare; regulile generale (continuitate, distribuție) se setează în „Configurare programare”. Cine lucrează efectiv într-un anumit sejur se bifează separat, în „Disponibilitate terapeuți”.
+
+## Tabelul și dialogul „Setări program”
+
+Tabelul are coloanele „Prenume”, „Nume”, „Status”, „Rol”, „Gen”, „Culoare”, „Cameră preferată”, „Program de lucru”, plus butoanele „Șabloane terapeuți” și „Disponibilitate terapeuți”. Acțiunea de editare deschide dialogul „Setări program - Nume Prenume” („Culoare, gen, cameră preferată și program de lucru — folosite la generarea orarului.”):
+
+| Câmp | Ce face |
+|---|---|
+| „Gen” | Regulă strictă: la procedurile sau sloturile cu restricție de gen, terapeutul alocat trebuie să aibă genul grupului. Regula nu poate fi ocolită de generator. Tot genul restrânge lista la repartizarea terapeuților pe șabloane cu „Gen necesar”. |
+| „Culoare terapeut” | „Folosită în tabelul de program — rândul oaspetelui care are acest terapeut va avea această culoare.” Pur vizual, nu influențează generarea. |
+| „Cameră preferată” | A treia regulă la repartizarea camerelor (după camera oaspetelui și camera implicită a procedurii): dacă e liberă și compatibilă, procedurile terapeutului ajung în ea. |
+| „Program de lucru” | Editorul de program de lucru personal, descris mai jos. |
+
+## Program de lucru personalizat
+
+<Steps>
+  <Step title="Activează programul de lucru personalizat">
+    Cu comutatorul oprit, editorul afișează „Fără program setat — terapeutul este considerat mereu disponibil.” — persoana nu are program propriu și primește programul implicit al centrului din „Configurare programare” (dacă nici acesta nu este setat, contează ca disponibilă toată ziua). Pornirea comutatorului precompletează Luni–Vineri 09:00–17:00.
+  </Step>
+  <Step title="Ajustează zilele">
+    Pentru fiecare zi (Luni … Duminică) poți adăuga unul sau mai multe intervale („Adaugă interval”) sau le poți șterge pe toate. „Zilele fără interval înseamnă că terapeutul nu lucrează în acea zi.” — ziua apare „Nu lucrează”.
+  </Step>
+  <Step title="Salvează">
+    Programul de lucru personal limitează orele în care persoana poate fi alocată; este respectat de toate fazele alocării și de generatorul de ore.
+  </Step>
+</Steps>
+
+<Note>
+Același editor apare și în „Setări terapeut” din tab-ul „Terapeuți” al sejurului. Intervalele blocate manual (concedii, pauze, alte sarcini) se fac separat, din blocaje, și sunt la fel respectate de toate fazele alocării — persoana nu primește nimic atunci.
+</Note>
+
+## Disponibilitate terapeuți (pe sejur)
+
+Pagina „Disponibilitate terapeuți” (și bara laterală „Disponibilitate terapeuți & medici” din tab-ul „Terapeuți”) stabilește cine este activ într-un sejur. Alegi sejurul, apoi bifezi persoanele în coloanele „Medici femei” / „Medici bărbați”, „Terapeute” și „Terapeuți”, cu „Selectează tot” / „Deselectează tot”, căutare („Caută terapeut sau medic…”) și „Selectează doar practicienii cu oaspeți”. „Duplică echipa dintr-un alt sejur” → „Folosește aceeași echipă ca în sejurul …” preia echipa altui sejur. Salvezi cu „Salvează și închide” („Disponibilitatea a fost salvată.”).
+
+<Warning>
+Toate celelalte vederi ale programului (tabelul „Terapeuți”, atribuirea per oaspete, dialogurile de personal, căutările de practicieni) folosesc doar persoanele bifate. Un sejur fără nimeni bifat nu arată pe nimeni — intenționat.
+</Warning>
+
+Tot pe această pagină, sub liste, se află „Balanța orelor (blocaje manuale)”: „Orele provin doar din blocajele manuale din tabelul Terapeuți: blocajele ocupate = ore lucrate în plus, blocajele libere = ore de recuperat.” Detalii în [Blocuri terapeut, ore în plus și ore de recuperat](/app-interface/program/sejur/blocuri-si-ore-terapeuti).
+
+## Reguli de reținut
+
+- Genul este regulă strictă în toate fazele alocării.
+- Program de lucru gol = programul implicit al centrului; o zi fără interval = liber în acea zi.
+- Formatul numelui în tabele și exporturi (nume-prenume, prenume-nume, doar prenume…) se setează o singură dată pentru tot centrul, în „Configurare programare”.
+- La procedurile colective, rotirea terapeuților între sejururi ține încărcarea echitabilă; modul (unul ia tot / câte un slot fiecare) se alege în „Configurare programare”.
+
+## Exemple
+
+- Terapeut cu program L–V 08:00–16:00 → generatorul nu îi dă alocări sâmbăta și nici după 16:00.
+- Bazin Femei la 11:00 → doar terapeutele femei sunt candidate pentru slot.
+- Terapeut blocat miercuri 12:00–14:00 (ședință) → orele individuale ale oaspeților lui se mută automat în afara intervalului.
+
+## Vezi și
+
+- [Pasul 2 — Terapeuți: program pe terapeut](/app-interface/program/sejur/pasul-2-terapeuti)
+- [Blocuri terapeut, ore în plus și ore de recuperat](/app-interface/program/sejur/blocuri-si-ore-terapeuti)
+- [Săli medicale și alocarea automată a camerelor](/app-interface/program/configurare/camere)
+- [Configurare programare: politica centrului](/app-interface/program/configurare/configurare-programare)

@@ -1,0 +1,89 @@
+---
+title: "Protocoale și reguli/logici de proceduri"
+description: "Protocoalele (tratamente compuse, programate ca un bloc) și regulile „necesită / evită, înainte / după / în aceeași zi” dintre proceduri în TEAMM: câmpurile lor și cum le respectă generatoarele de repartizare și de ore."
+---
+
+**Unde în aplicație:** meniul „Medical” → „Protocoale” (`/admin/medical/protocols`) și „Medical” → „Reguli și logici” (`/admin/medical/procedure-logics`).
+
+## Întrebări la care răspunde pagina
+
+- Ce este un protocol și prin ce diferă de o procedură?
+- Ce înseamnă „Durata (o subîmpărțire, dacă este cazul)” la un protocol?
+- Cum scriu o regulă de tipul „masajul necesită kinetoterapie înainte, în aceeași zi”?
+- Ce este o regulă cu „Pauză” și cum se citește durata ei?
+- Ce se întâmplă dacă regulile fac o procedură imposibil de plasat?
+
+## Pe scurt
+
+Un **protocol** grupează mai multe proceduri într-un tratament compus, programat cu reguli proprii: are durată, culoare, abreviere și opțiunea „Terapeut doar când există programări”. În program apare ca slot de protocol în „Șabloane program” / „Program general” și în șabloanele de terapeuți, iar terapeuții lui se repartizează în faza 3 a alocării. **Regulile și logicile** descriu relații între proceduri — ordinea și compatibilitatea lor în timp — și sunt respectate automat de generatoare, la fel ca regulile de gen sau disponibilitate.
+
+## Protocoale
+
+Se adaugă cu „Adaugă protocol” și se editează în dialogul „Modifică protocol”. Tabelul se poate filtra după nume și descriere („Caută după nume și descriere...”), „Durată minimă” și „Durată maximă”.
+
+| Câmp | Ce face |
+|---|---|
+| „Nume”, „Descriere” | Denumirea (traductibilă — „Adaugă traducere”) și descrierea protocolului. |
+| „Durata (o subîmpărțire, dacă este cazul)” | Durata unei reprize, în minute (opțional). Dacă protocolul se repetă în mai multe reprize, treci durata **unei singure reprize**, nu suma lor. La generarea programului se rezervă acest interval, exact ca la o procedură simplă. |
+| „Terapeut doar când există programări” | Protocolul rămâne programat pe tot intervalul, dar terapeuții sunt necesari și apar în tabel doar la orele cu oaspeți programați. |
+| „Culoare” | Culoare de evidențiere în tabelul terapeuților și în șabloane. Dacă e goală, se folosește culoarea automată. |
+| Abreviere | Codul scurt al protocolului apare în tabelele compacte de program și în exporturi; dacă lipsește, se generează automat din nume. |
+
+<Info>
+Un slot din „Șabloane program” poate fi definit fie pe una sau mai multe proceduri, fie pe un protocol. Terapeuții pentru sloturile de protocol se repartizează în **faza 3** a generatorului de alocare, împreună cu procedurile comune, cu echilibrarea încărcării totale între terapeuți; potrivirea de gen rămâne regulă strictă, iar blocajele și repartizările existente sunt respectate.
+</Info>
+
+Exemple:
+
+- „Program cardio” = bandă + bicicletă + exerciții: programul îl tratează ca un bloc cu durata lui totală.
+- Terapeut doar când există programări: un protocol de patru ore poate avea terapeut doar în orele în care sunt programați oaspeți.
+
+## Reguli și logici
+
+O regulă leagă una sau mai multe proceduri („Procedură”) de alte proceduri („Procedură 2”) sau de o pauză. Dialogul „Adaugă regulă” o construiește ca o **propoziție** editabilă, iar sub ea apare recitirea „Se citește ca”:
+
+**[Succesiune] [Procedură], timp de [Durata] minute, [Acțiune] [Regula se referă la] [Procedură 2]**
+
+| Câmp | Valori | Semnificație |
+|---|---|---|
+| „Nume” | text | Numele regulii (folosit la căutare). |
+| „Succesiune” | „Înainte de”, „După”, „În aceeași zi” (se pot bifa mai multe) | Când se aplică regula: generatorul de ore ordonează procedurile în zi, iar generatorul de repartizare le desparte pe zile când regula o cere. |
+| „Procedură” | una sau mai multe proceduri | Procedura „părinte”, cea față de care se măsoară fereastra. |
+| „Durata” | minute | Lungimea ferestrei de timp înainte / după procedura părinte în care se verifică regula. |
+| „Acțiune” | „Necesar”, „Evită” | „Necesar”: procedura trebuie însoțită de cealaltă; „Evită”: nu trebuie programată împreună cu ea. |
+| „Regula se referă la” | „Procedură”, „Pauză” | Ținta regulii: o altă procedură sau o pauză (timp liber garantat). |
+| „Procedură 2” | una sau mai multe proceduri | Procedura „copil”; nu apare când ținta este „Pauză”. |
+
+### Pauză în loc de procedură
+
+O regulă poate cere o pauză (timp liber garantat) înainte / după o procedură, nu neapărat o altă procedură — fereastra de durata setată rămâne liberă de orice altă procedură a oaspetelui. Generatorul de ore verifică pauza din ambele direcții: când plasează procedura părinte, ferestrele cerute trebuie să fie libere; când plasează orice altă procedură a oaspetelui, aceasta nu poate cădea în pauza unui părinte deja programat.
+
+<Note>
+O regulă „Evită” cu ținta „Pauză” se salvează, dar nu impune nicio constrângere la nivelul orelor.
+</Note>
+
+### Unde se aplică
+
+Regulile sunt verificate în ambele generatoare: la repartizarea pe zile (ce proceduri pot coexista într-o zi) și la punerea orelor (în ce ordine se așază în ziua respectivă). Dacă procedura-pereche nu este încă programată în ziua respectivă, verificarea se face atunci când este plasată cealaltă parte.
+
+<Warning>
+Prea multe reguli stricte pot face o procedură neplasabilă — generatorul o raportează la „neplasate” în loc să încalce regula. Verifică avertismentele după fiecare generare.
+</Warning>
+
+## Exemple
+
+- „Înainte de Masaj, timp de 60 minute, Necesar Kinetoterapie” + „În aceeași zi” → în orice zi cu masaj, kinetoterapia e programată mai devreme în acea zi.
+- „În aceeași zi Împachetare, …, Evită Bazin” → repartizarea le pune în zile diferite ale sejurului.
+- „După Cataplasmă, timp de 30 minute, Necesar Duș” → dușul primește o oră imediat după cataplasmă.
+- „După Împachetare, timp de 30 minute, Necesar Pauză” → oaspetele nu primește nimic în cele 30 de minute de după împachetare.
+
+<Tip>
+Folosește „Evită” pentru contraindicații (două proceduri solicitante în aceeași zi) și „Necesar” pentru pregătiri sau continuări obligatorii.
+</Tip>
+
+## Vezi și
+
+- [Proceduri în program](/app-interface/program/configurare/proceduri)
+- [Șabloane program și etichete](/app-interface/program/configurare/sabloane-program)
+- [Alocarea automată a terapeuților (fazele 1–3) și a camerelor](/app-interface/program/sejur/pasul-2b-alocare-automata)
+- [De ce nu a fost plasată o procedură](/app-interface/program/depanare/proceduri-neplasate)

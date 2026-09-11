@@ -1,0 +1,82 @@
+---
+title: "Proceduri în program"
+description: "Pagina „Proceduri” din modulul Program al TEAMM: ce proceduri intră în generarea orarului, cum adaugi una în program și ce înseamnă fiecare câmp din secțiunea „Program” a unei proceduri (durată, capacitate, prioritate, necesar terapeuți, cameră implicită)."
+---
+
+**Unde în aplicație:** meniul „Program” → „Proceduri” (`/admin/schedule/procedures`); pagina fiecărei proceduri: `/admin/schedule/procedures/:id`. Aceleași proceduri se editează complet (traduceri, opțiuni, scrisoare medicală) din „Medical” → „Proceduri” (`/admin/medical/procedures`).
+
+## Întrebări la care răspunde pagina
+
+- De ce nu apare o procedură în lista de proceduri din Program?
+- Cum adaug o procedură existentă în program?
+- Ce coloane văd în tabelul de proceduri din Program și ce înseamnă fiecare?
+- Unde setez durata, capacitatea, prioritatea și camera implicită a unei proceduri?
+- Ce câmpuri din pagina procedurii influențează generatoarele?
+
+## Pe scurt
+
+Pagina „Proceduri” din Program este o vedere concentrată pe programare: listează doar procedurile **nearhivate** și **incluse în program**, cu coloanele relevante pentru generatoare, și deschide pentru fiecare pagina cu setările de program. Setările de program ale procedurilor sunt folosite de toate generatoarele de orar (repartizare pe zile, ore, terapeuți și camere) și se editează per procedură din acest tabel.
+
+## Tabelul
+
+Tabelul arată coloanele: numele procedurii, „Abreviere”, „Culoare”, „Tip”, „Inclus în program”, „Durata”, „Capaticate simultană”, „Prioritate”, „Frecvență implicită”, „Număr de terapeuți” și „Cameră implicită”. Nu are butoane de adăugare sau descărcare — procedurile noi se creează din „Medical” → „Proceduri”. Butonul de informații din antet deschide explicațiile pentru fiecare câmp.
+
+<Steps>
+  <Step title="Caută procedura">
+    Scrie numele în căutare. Tabelul filtrează procedurile incluse în program; sub tabel apare lista „Proceduri neincluse în program” cu procedurile nearhivate care se potrivesc căutării, dar nu sunt încă în program.
+  </Step>
+  <Step title="Adaugă în program">
+    La o procedură din lista „Proceduri neincluse în program”, apasă „Adaugă în program”. Procedura este marcată „Inclus în program” și intră imediat în tabel.
+  </Step>
+  <Step title="Deschide setările de program">
+    Acțiunea de editare din rând deschide `/admin/schedule/procedures/:id` — pagina procedurii doar cu secțiunea „Program”. Butonul cu „i” din antet („See all info”) afișează explicațiile tuturor câmpurilor. Salvează cu butonul de salvare.
+  </Step>
+</Steps>
+
+<Note>
+Doar procedurile marcate ca incluse în program apar la generarea orarului și pot fi programate pentru pacienți. O procedură nebifată poate fi prescrisă la consultație, dar nu va primi niciodată ore în program.
+</Note>
+
+## Câmpurile secțiunii „Program”
+
+| Câmp | Ce face în program |
+|---|---|
+| „Inclus în program” | Procedurile incluse în program au o frecvență și pot fi folosite la generarea automată a programului. |
+| „Tip” | Individuală (ore proprii per oaspete), Colectivă (slot de grup), Comună, Consultație etc. Fiecare generator tratează tipurile diferit — vezi [Tipuri de proceduri](/app-interface/program/tipuri-de-proceduri-si-capacitate). |
+| „Abreviere” | Cod scurt afișat pe programul comprimat și în legendă. Dacă e gol, se generează automat din denumire. |
+| „Culoare” | Culoare de evidențiere în tabelul terapeuților și în șabloane. Dacă e goală, se folosește culoarea automată. |
+| „Generează programul în funcție de opțiuni” | Va ține cont de opțiuni la generarea programului. Atenție, șabloanele trebuie create cu opțiuni! |
+| „Prioritate” | Număr mai mic = întâietate la programare; 1 se programează prima, 5 ultima. |
+| „Durata” (minute) | Folosită pentru a calcula intervalele orare și pentru a evita suprapunerile în program. |
+| „Durate disponibile (consultații)” | Durate alternative (ex. 15, 30, 45) din care medicul alege per apariție în planul terapeutic; „Durata” rămâne valoarea implicită. |
+| „Capaticate simultană” | Câți oaspeți pot fi programați simultan — capacitatea unui slot (plafonul). |
+| „Locuri / terapeut” | Câți oaspeți simultan poate prelua un terapeut. Când e completat, capacitatea unei ore devine min(nr. terapeuți alocați în acea oră × această valoare, capacitatea simultană). Gol = capacitatea nu depinde de numărul de terapeuți. |
+| „Intervalul minim între oaspeți (min)” | Distanța minimă între doi oaspeți succesivi (implicit 5). |
+| „Programări suprapuse / distanțate” | Numărul maxim de oaspeți se va considera câți pacienți vin în același timp, nu și cât stă fiecare după aceea. |
+| „Blochează toată ora pentru pacient” | Pentru o procedură mai scurtă de o oră, blochează întreaga oră a pacientului; capacitatea resursei nu este afectată. |
+| „Doar persoane de același sex” | Permite doar programarea simultană a persoanelor de același sex; terapeutul trebuie să aibă genul grupului. |
+| „Grupează oaspeții cât mai aproape” | Grupează oaspeții cât mai aproape posibil (continuitate). Dezactivează pentru a-i distribui pe parcursul zilei. |
+| „Recuperează decalaje” | Pauză periodică fără oaspeți noi: „Durata pauzei (min)” la fiecare „La fiecare (min)”. Se calculează de la începutul fiecărui interval din program și restricționează doar ora de început. |
+| „Număr de terapeuți” | 0 = fără terapeut, 1 = un terapeut, 2+ = mai mulți terapeuți pe interval. |
+| „Terapeut doar când există programări” | Ora apare în tabelul terapeuților și cere terapeut doar dacă un oaspete este programat la acea oră. |
+| „Un terapeut în plus la câți oaspeți” | Se adaugă încă un terapeut pentru fiecare X oaspeți din interval. Lasă gol pentru număr fix. |
+| „Cameră implicită” | Camera preferată la repartizarea automată a camerelor: după camera setată manual pe oaspete, înaintea camerei preferate a terapeutului. |
+
+Alte câmpuri legate de program, editabile din „Medical” → „Proceduri”: „Frecvență implicită” (propusă automat când adaugi procedura în planul unui pacient, ex. „zilnic” pentru un tratament recurent) și „Afișează în planul de terapie” (procedura va fi disponibilă pentru bifat la consultații).
+
+## Exemple
+
+- „Masaj parțial”: individuală, 20 min, capacitate 3/oră, 1 terapeut → în aceeași oră terapeutul primește până la 3 oaspeți, unul după altul.
+- „Bazin”: colectivă, 60 min, capacitate 20, doar același gen → apare exclusiv la orele din șabloane (ex. 11:00 Femei, 15:00 Bărbați), iar terapeuții alocați au genul grupului.
+- „Împachetări” cu prioritate 1 primește ore înaintea „Masaj” cu prioritate 5.
+
+<Tip>
+Dacă o procedură rămâne neplasată, verifică în această ordine: e inclusă în program? durata încape în programul zilei? capacitatea nu e deja plină? terapeutul cerut există și e disponibil?
+</Tip>
+
+## Vezi și
+
+- [Tipuri de proceduri, plafon și capacitate pe terapeut](/app-interface/program/tipuri-de-proceduri-si-capacitate)
+- [Planul terapeutic și frecvența](/app-interface/program/plan-terapeutic)
+- [Săli medicale și alocarea automată a camerelor](/app-interface/program/configurare/camere)
+- [Configurare programare: politica centrului](/app-interface/program/configurare/configurare-programare)

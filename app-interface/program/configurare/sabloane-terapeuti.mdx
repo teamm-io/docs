@@ -1,0 +1,105 @@
+---
+title: "Șabloane terapeuți (T1, F2…) și sloturile P"
+description: "Șabloanele de terapeuți din TEAMM: terapeuți fictivi (T1, F2, ASISTENT) cu gen și program pe ore pe zilele sejurului, celulele Activitate / P / Bloc, grupele de zile și legarea orelor P, editorul tabelar și ce se întâmplă la aplicarea lor pe un sejur."
+---
+
+**Unde în aplicație:** meniul „Program” → „Șabloane terapeuți” — editorul tabelar „Șabloane terapeuți — editare tabel” (`/admin/schedule/therapist-templates`), lista „Listă” (`/admin/schedule/therapist-templates/list`) și „Etichete șabloane terapeuți” (`/admin/schedule/therapist-templates/tags`).
+
+## Întrebări la care răspunde pagina
+
+- Ce este un șablon de terapeut și de ce îl numesc T1, F2 sau ASISTENT?
+- Ce înseamnă o oră „P” și ce se întâmplă cu ea la aplicare?
+- Cum dau unui șablon program diferit în ziua 1 față de restul sejurului?
+- Ce sunt grupele de zile și de ce primesc „nepotriviri P” între grupele legate?
+- Ce se creează efectiv în sejur când aplic șabloanele: sloturi, terapeuți, blocaje?
+- Cum copiez sau schimb celule între ore fără să le refac?
+
+## Pe scurt
+
+Un șablon de terapeut este un terapeut fictiv (ex. T1) cu program pe ore. La fiecare sejur îi atribui un terapeut real, iar acesta este atașat automat sloturilor care se potrivesc. Șablonul are un nume, genul necesar și programul pe ore: la fiecare oră, protocoalele și/sau procedurile pe care le face, o oră liberă **P** pentru procedurile oaspeților, sau un **bloc** (pauză, ședință). Programul se definește pe **zilele sejurului** (ziua 1, ziua 2…), nu pe zilele săptămânii.
+
+## Ce conține un șablon
+
+Dialogul „Adaugă un șablon de terapeut” / „Editează șablonul de terapeut” („Un terapeut fictiv (ex. T1) cu program pe ore. La fiecare sejur îi atribui un terapeut real.”):
+
+| Câmp | Ce face |
+|---|---|
+| „Denumire” | Numele fictiv, ex. „T1, F2, ASISTENT”. Numește șabloanele ca pe hârtie: la atribuire alegi terapeutul real pentru fiecare, iar restul se completează singur. |
+| „Gen necesar” | Genul pe care trebuie să-l aibă terapeutul real atribuit; „Toți” = oricare. Restrânge lista de terapeuți la repartizare. |
+| „Ziua 1 începe” | Ziua săptămânii în care cade de obicei ziua 1 a sejurului — doar ajutor vizual, ca cipurile zilelor să arate și ziua săptămânii. |
+| „Etichete” | Etichete pentru grupare și filtrare (administrate în „Etichete șabloane terapeuți”); tab-ul „Terapeuți” din sejur filtrează șabloanele după ele. |
+| Planuri („Program pe ore”) | Unul sau mai multe planuri, fiecare cu „Zilele sejurului” pe care le acoperă și rânduri oră → tip. |
+
+### Tipurile unei celule (ore)
+
+| Tip | Ce înseamnă | La aplicare |
+|---|---|---|
+| „Activitate” | Protocoale și/sau proceduri fixe în acea oră (o celulă poate combina mai multe, ex. „MM + Spălare ligheane + Parafină mâini”). | Terapeutul real este atașat slotului din programul general care se potrivește (oră + protocol/procedură). |
+| „Oaspeți (P)” | „Oră liberă pentru procedurile oaspeților — se repartizează manual sau cu generatorul.” | Nu se scrie nicăieri. |
+| „Bloc” | Rezervare fără procedură, cu text liber („Ex.: Pauză, Ședință, Recuperare...”). Bifa „Ore libere (compensare)” marchează blocul ca ore libere (recuperare), excluse din numărătoarea orelor ocupate. | Devine un blocaj real al terapeutului atribuit, în acea oră. |
+| gol | Oră fără celulă — terapeutul este liber. | Nimic. |
+
+### Zilele sejurului și planurile
+
+În editorul unui șablon, fiecare plan are „Zilele sejurului” cu una dintre țintele:
+
+- „Implicit (toate)” — „Plan implicit — se aplică în orice zi neacoperită de celelalte planuri.”
+- „Grup de zile” — „Grupul definește ce zile ale sejurului acoperă (din configurarea programării).”
+- „Zile specifice” — zile alese explicit: „Ziua 1 este prima zi a sejurului — ziua săptămânii vine din „Ziua 1 începe”." O zi deja folosită de alt plan apare „Zi folosită de alt plan”.
+
+<Note>
+Programul se definește pe zilele sejurului, nu pe zilele săptămânii — prima duminică a sejurului diferă de a doua. Un plan fără zile bifate este planul implicit, folosit în orice zi neacoperită. Exemplu: „ASISTENT” cu plan implicit pentru toate zilele, plus un plan separat pentru ziua 1 (ziua de sosire), când programul e mai scurt.
+</Note>
+
+## Editorul tabelar
+
+„Șabloane terapeuți — editare tabel”: rânduri = șabloane, coloane = ore. Alege o grupă de zile pentru a edita programul acelei grupe.
+
+<Steps>
+  <Step title="Definește grupele de zile (opțional)">
+    Panoul „Grupe de zile”: „Fiecare zi a sejurului aparține cel mult unei grupe. Zilele nealocate folosesc planul „Implicit”." Cu „Adaugă grupă” creezi o grupă cu „Nume grupă”, culoare și zilele sejurului bifate (o zi ocupată de altă grupă apare „Zi folosită de altă grupă”); „Șterge grupa” o elimină. Grupele se salvează în configurarea de programare activă și sunt comune tuturor șabloanelor.
+  </Step>
+  <Step title="Alege tab-ul">
+    Tab-ul „Implicit” arată programul comun: „se aplică rândurilor marcate „toate zilele” în fiecare zi, iar celorlalte doar în zilele care nu aparțin niciunei grupe." Un tab de grupă editează programul acelei grupe.
+  </Step>
+  <Step title="Separă sau readu la comun un rând">
+    Un rând „toate zilele” („Același program în toate zilele”) are același program în fiecare zi; „Separă” („Separă rândul”) îi copiază programul comun într-un plan propriu al grupei, ca să poată diferi — rândul devine „pe grupe” („Program separat pentru fiecare grupă de zile”). „Readu la comun” („Readu rândul la comun”) renunță la planul separat.
+  </Step>
+  <Step title="Completează celulele">
+    Click pe o celulă deschide editorul cu „Activitate” / „P” / „Bloc”; din hover poți pune direct „Oră de oaspeți (P)”, „Copiază în altă celulă” („Lipește celula”), „Schimbă cu altă celulă” („Schimbă celulele”) sau „Golește ora”. Coloane de oră se adaugă din „Adaugă coloană oră:” și se pot șterge cu „Șterge coloana”. „Adaugă șablon” creează un rând nou.
+  </Step>
+  <Step title="Salvează">
+    „Salvează” scrie toate șabloanele; „Modificări nesalvate” te avertizează la ieșire. În varianta din sejur („Editează șabloanele pentru sejur”), „Salvează pentru sejur” salvează o copie doar pentru acel sejur: „Modificările se salvează doar pentru acest sejur, ca o copie a șabloanelor schimbate. Celelalte șabloane rămân neatinse.”
+  </Step>
+</Steps>
+
+### Legarea grupelor (ore P comune)
+
+Fiecare grupă are câmpul „Legare P” („Grupele legate trebuie să ofere aceleași ore P”). Grupele legate între ele („Legare grupe”) trebuie să ofere, pentru fiecare șablon, aceleași ore P; activitățile și blocurile pot diferi liber. Dacă nu se potrivesc, antetul arată „N nepotriviri P” („Orele P nu se potrivesc între grupele legate”), iar la salvare se deschide dialogul „Nepotriviri ale orelor P între grupele legate”: „Grupele legate trebuie să ofere aceleași ore P (oaspeți). Aliniază fiecare șablon sau salvează oricum.” — „Salvează” după aliniere sau „Salvează oricum”.
+
+<Info>
+Motivul regulii: orele P sunt orele în care generatorul de alocare pune oaspeții la terapeut; dacă diferă între zile legate, repartizarea oaspeților ar aluneca de la o zi la alta.
+</Info>
+
+## Ce se întâmplă la aplicare în sejur
+
+Aplicarea se face din tab-ul „Terapeuți” al sejurului (vezi [Pasul 2 — Terapeuți](/app-interface/program/sejur/pasul-2-terapeuti)):
+
+- **Nu creează sloturi.** Atribuirea doar atașează terapeutul la sloturile care există deja în program. Dacă o oră din șablon nu are slot corespunzător în ziua respectivă, primești o avertizare — slotul trebuie creat din „Program general”.
+- **Orele P rămân libere.** Orele marcate P nu se scriu nicăieri: repartizarea oaspeților pe ele rămâne manuală sau se face cu generatorul de alocare.
+- **Blocurile devin blocaje.** Fiecare celulă „Bloc” creează un blocaj real al terapeutului atribuit, în acea oră, cu textul din celulă; blocurile „Ore libere (compensare)” sunt marcate ca ore libere. La o reaplicare, blocul creat anterior de același șablon este actualizat, nu dublat.
+- **Adaugă, nu înlocuiește.** Atribuirea adaugă terapeutul peste cine este deja pe slot. La o nouă atribuire pentru același șablon, doar terapeutul pus anterior de acel șablon este înlocuit — cei adăugați manual rămân. O reaplicare fără schimbări nu modifică nimic.
+- **Șablon vs. generator.** Sloturile completate din șabloane sunt tratate de generatorul de alocare drept modificări manuale: nu sunt suprascrise la o nouă rulare decât dacă alegi „Suprascrie și modificările manuale”.
+
+## Exemple
+
+- **F2**, gen feminin: 09:00 BAP · 10:00 P · 11:00 GIM · 12:00 P · 15:00 P · 16:00 P — două activități fixe, restul orelor pentru oaspeți.
+- **F4**: la 15:00 o singură oră cu **MM + Spălare ligheane + Parafină mâini** — mai multe proceduri în aceeași celulă.
+- Grupa „Zile pline” (zilele 2–11) legată cu grupa „Zi scurtă” (ziua 12): T1 poate avea activități diferite în cele două grupe, dar aceleași ore P.
+
+## Vezi și
+
+- [Pasul 2 — Terapeuți: program pe terapeut](/app-interface/program/sejur/pasul-2-terapeuti)
+- [Blocuri terapeut, ore în plus și ore de recuperat](/app-interface/program/sejur/blocuri-si-ore-terapeuti)
+- [Șabloane sejur](/app-interface/program/configurare/sabloane-sejur)
+- [Configurare programare: politica centrului](/app-interface/program/configurare/configurare-programare)

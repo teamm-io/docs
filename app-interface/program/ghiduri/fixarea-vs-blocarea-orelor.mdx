@@ -1,0 +1,73 @@
+---
+title: "Ore fixate vs ore blocate"
+description: "Diferența dintre a fixa ora unei proceduri înainte de generare și a bloca o oră deja plasată după generare, în modulul Program din TEAMM."
+---
+
+**Unde în aplicație:** „Program v2” → tab „Oaspeți”. Fixarea: „Fixează ore la proceduri” (pas sau iconița de lacăt din bara tabelului). Blocarea: lacătul din celulă sau din capul coloanei.
+
+## Întrebări la care răspunde pagina
+
+- Care este diferența dintre „Fixează orele anumitor proceduri” și „Blochează orele care vrei să rămână așa”?
+- Cum fac ca generatorul să pună masajul mereu la 10:00 pentru un oaspete?
+- Cum împiedic generarea să îmi rescrie orele pe care le-am aranjat manual?
+- Ce înseamnă „Flexibil” în panoul de fixare a orelor?
+- De ce văd „Oră fixată pentru X, dar oaspetele nu mai are această procedură în plan”?
+
+## Pe scurt
+
+Sunt două mecanisme diferite, în momente diferite ale zilei de lucru:
+
+| | Oră fixată | Oră blocată |
+|---|---|---|
+| Când | **Înainte** de generare | **După** generare |
+| Ce spune | „Pune procedura X la ora Y” | „Nu mai atinge această programare” |
+| Unde se setează | „Fixează ore la proceduri” | Lacătul din celulă / capul coloanei |
+| Pe ce se păstrează | Pe oaspete, pentru tot sejurul | Pe programarea din ziua respectivă |
+| Efect la regenerare | Generatorul plasează procedura la ora fixată | Programarea rămâne neschimbată |
+
+## Ora fixată (înainte de generare)
+
+Se face **înainte** de generare: îi spui generatorului la ce oră să pună o anumită procedură, iar el o plasează acolo.
+
+<Steps>
+  <Step title="Deschide panoul">
+    Click pe pasul „Fixează orele anumitor proceduri (opțional)” sau pe iconița de lacăt din bara tabelului oaspeților. Se deschide „Fixează ore la proceduri”.
+  </Step>
+  <Step title="Alege tipul, apoi procedura">
+    Lista se restrânge la oaspeții care au procedura în acest sejur.
+  </Step>
+  <Step title="Setează ora pentru unul sau mai mulți oaspeți">
+    Fiecare oaspete poate avea „Oră fixată” (o oră precisă) sau „Flexibil” (generatorul alege). „Elimină fixarea” revine la flexibil. Salvarea afișează „Orele fixate au fost salvate.”
+  </Step>
+</Steps>
+
+Fixarea se păstrează pe oaspete pe tot sejurul. Dacă nu fixezi nimic, generatorul alege singur orele.
+
+<Note>
+Politica „individualHourPolicy” din „Configurare programare” decide ce face generatorul când ora preferată este ocupată: doar ora preferată, în alte zile („strict”); altă oră liberă în aceeași zi („sameDayFallback”); orice oră, orice zi („anyHourAnyDay”).
+</Note>
+
+## Ora blocată (după generare)
+
+Se face **după** generare: orele blocate nu mai sunt rescrise de generările următoare, așa că poți regenera restul zilei fără să pierzi ce ai stabilit deja.
+
+- **O singură oră**: click pe lacătul din celulă („Blochează ora pentru generările următoare”). Confirmarea: „Ora a fost blocată pentru generările viitoare.”
+- **Toată procedura**: lacătul din capul coloanei („Blochează coloana” / „Deblochează coloana”).
+- Deblocarea se face din același loc.
+
+La regenerare, aplicația reamintește: elementele blocate (🔒) se păstrează, restul programului generat automat va fi înlocuit.
+
+## Mesaje legate de ore fixate
+
+Verificarea „Ore la procedurile individuale” din tab-ul Repartizare poate afișa:
+
+- **„Oră fixată pentru «Masaj», dar oaspetele nu mai are această procedură în plan”**: planul s-a schimbat după fixare. Elimină fixarea.
+- **„Ora fixată 10:00 nu se regăsește în orele oaspetelui — re-rulează Faza 2 (Ore individuale)”**: alocarea terapeuților nu a fost refăcută după fixare.
+- **„N proceduri flexibile cad în aceeași zi, dar au o singură oră comună — nu încap toate”**: adaugă ore individuale oaspetelui sau fixează unele proceduri.
+- **„Are proceduri flexibile, dar nicio oră comună setată pentru ele”**: setează ora individuală a oaspetelui în tab-ul Repartizare.
+
+## Vezi și
+
+- [Pasul 4 — Oaspeți](/app-interface/program/sejur/pasul-4-oaspeti)
+- [Pasul 3 — Repartizare](/app-interface/program/sejur/pasul-3-repartizare)
+- [Glosar](/app-interface/program/glosar)

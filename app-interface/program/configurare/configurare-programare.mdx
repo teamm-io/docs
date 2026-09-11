@@ -1,0 +1,95 @@
+---
+title: "Configurare programare: politica centrului"
+description: "Pagina „Configurare programare” din TEAMM: ce este politica de programare a centrului, de ce contează doar configurarea activă, editarea în „Formular” sau „JSON”, „Previzualizare (simulare)” și harta celor 16 secțiuni (faze, cote, capacitate, intervale orare, terapeuți, verificări)."
+---
+
+**Unde în aplicație:** meniul „Program” → „Configurare programare” (`/admin/schedule/config`); în „Program v2” apare ca tab-ul „Configurare”, marcat „O singură dată”.
+
+## Întrebări la care răspunde pagina
+
+- Ce este configurarea de programare și ce influențează ea?
+- Pot avea mai multe configurări și care dintre ele este folosită?
+- Care este diferența dintre „Formular” și „JSON” și ce se poate edita doar în JSON?
+- Cum testez o modificare fără să stric programul?
+- Ce câmpuri din configurare nu au niciun efect asupra generatorului?
+- Unde găsesc detalii despre fiecare secțiune?
+
+## Pe scurt
+
+Configurarea de programare este politica pe care o urmează generatoarele — valabilă pentru tot centrul: faze, cote, capacitate, ferestre de timp, reguli de terapeuți, zile speciale, verificări. Se setează o singură dată, nu se reface la fiecare sejur. Doar configurarea **activă** este folosită; poți păstra mai multe variante și activa una. Pagina se editează ca formular sau ca JSON și are o simulare pe un sejur și o zi, care nu salvează nimic.
+
+## Mai multe configurări, una activă
+
+<Steps>
+  <Step title="Alege configurarea">
+    Selectorul „Configurare” listează configurările centrului; cea activă apare cu „(activă)” și cu insigna „Activă”. Centrul poate avea mai multe configurări. Cea „activă” este folosită de generator.
+  </Step>
+  <Step title="Creează sau încarcă">
+    „Configurare nouă” pornește o configurare goală „(nesalvată)”; „Încarcă implicit” aduce valorile implicite; „Reîncarcă” reia ultima versiune salvată; „Renunță la modificări” — „Configurarea revine la ultima versiune salvată.”; „Șterge” o elimină.
+  </Step>
+  <Step title="Salvează">
+    „Salvează” (Ctrl+S) scrie configurarea („Configurarea a fost salvată.”). Cât timp există modificări nesalvate, antetul arată „Modificări nesalvate” și „Modificările nu sunt salvate — apasă „Salvează” (Ctrl+S)."; la ieșire primești „Ai modificări nesalvate în configurarea de programare. Ieși fără să salvezi?”. Înainte de salvare, lista „De verificat înainte de salvare:” arată erorile de validare (ex. „Faze: cel puțin o fază trebuie să fie activă.”).
+  </Step>
+  <Step title="Activează">
+    „Setează ca activă” face configurarea curentă cea folosită de generator („Configurarea a fost activată.”). Trebuie salvată înainte: „Salvează configurarea înainte de a o activa.” Starea „Activă” nu se editează direct.
+  </Step>
+</Steps>
+
+Exemplu: două configurări — „Sezon estival” (activă vara, cu limite de capacitate mai mari) și „Standard” — doar cea activă e folosită.
+
+## „Formular” și „JSON”
+
+Comutatorul din antet alege modul de editare. Modificările din formular se sincronizează automat cu vizualizarea JSON. Câmpurile avansate per fază (strategie, parametri) rămân editabile doar din JSON, la fel ca `individualHourPolicy` — cum tratează generatorul ora preferată a oaspetelui (din datele medicale) când e ocupată: „strict” = doar ora preferată, caută în alte zile la aceeași oră; „sameDayFallback” = acceptă altă oră liberă în aceeași zi; „anyHourAnyDay” = orice oră liberă, în orice zi. O eroare de sintaxă în JSON apare ca „Eroare de parsare:”, iar respingerile serverului sub „Configurarea nu a putut fi salvată:”.
+
+<Info>
+Câmpurile marcate „Neimplementat” sunt definite în model, dar nu sunt încă citite de generator — nu au niciun efect: „Versiune” din General (versiunea v4 se alege la pornirea generării), „strategie” și „parametri” pe fiecare fază (se folosește strategia generală, „Cheie strategie”), respectiv „Cheie fază” și „Poate fi înlocuită” la semințele implicite.
+</Info>
+
+## „Previzualizare (simulare)”
+
+Cardul „Previzualizare (simulare)” rulează generatorul în mod simulare pe un sejur și o zi: vezi cine ar rămâne neprogramat și ce avertismente apar, fără să se salveze nimic. Alegi „Sejur” și „Dată”, apoi „Previzualizare”; rezultatul arată „S-ar programa N programări, N neprogramate.”, erorile și lista „Oaspeți neprogramați” cu motivele (sau „Toți oaspeții au fost programați în simulare.”).
+
+<Warning>
+Simularea reflectă plasarea pe o singură zi (faze, intervale orare, capacitate, substituții, terapeuți). *Cotele*, *semințele implicite* și *zilele permise* se aplică la generarea planurilor de tratament (repartizarea pe zile), deci efectul lor nu apare aici.
+</Warning>
+
+<Tip>
+După ce modifici o cotă sau o capacitate, rulează din nou simularea pentru a verifica efectul înainte de salvare — apoi rulează generatorul din sejur tot în modul de previzualizare.
+</Tip>
+
+## Secțiunile configurării
+
+| Secțiune | Pe scurt | Detalii |
+|---|---|---|
+| „General” | Numele, descrierea, strategia și versiunea configurării; „Cameră preferențială per oaspete” (afișează coloana „Cameră” și verificările de cameră); „Format nume terapeuți”; antetul implicit al tabelului oaspeților; „Procedură pentru ora oaspetelui” (procedura de referință a cărei oră apare înaintea numelui în tabelul terapeuților). | această pagină |
+| „Faze” | Generatorul programează în etape succesive: fiecare fază rulează în ordinea dată și plasează doar procedurile selectate în ea; „Blochează procedurile” amână altele până se încheie faza. | [Faze, cote și capacitate](/app-interface/program/referinta/configurare-faze-cote-capacitate) |
+| „Cote” | Minim pe sejur / maxim pe zi pentru o procedură sau categorie, opțional condiționate demografic (vârstă, gen). | [Faze, cote și capacitate](/app-interface/program/referinta/configurare-faze-cote-capacitate) |
+| „Substituții” | O procedură de rezervă: dacă procedura dorită nu poate fi programată, generatorul o înlocuiește automat cu alta. | [Faze, cote și capacitate](/app-interface/program/referinta/configurare-faze-cote-capacitate) |
+| „Semințe implicite” | Pre-plasează o procedură într-o anumită zi a sejurului (0 = prima zi), înainte ca generatorul să umple restul. | [Faze, cote și capacitate](/app-interface/program/referinta/configurare-faze-cote-capacitate) |
+| „Capacitate condiționată” | Locuri pe oră per procedură, opțional în funcție de ce alte proceduri sunt sau nu în planul oaspetelui. | [Faze, cote și capacitate](/app-interface/program/referinta/configurare-faze-cote-capacitate) |
+| „Capacitate partajată (grup)” | Câți pacienți pot fi programați simultan dintr-un set de proceduri, pe tot centrul. | [Faze, cote și capacitate](/app-interface/program/referinta/configurare-faze-cote-capacitate) |
+| „Reguli demografice” | Cere ca anumiți oaspeți (după vârstă și/sau gen) să aibă o anumită procedură în plan; generatorul doar semnalează lipsa în simulare. | [Timp și zile](/app-interface/program/referinta/configurare-timp-si-zile) |
+| „Intervale orare” | Per procedură: „Oră fixă (HHmm)”, „Cel mai devreme” / „Cel mai târziu”, intervale de evitat; orele în format 24h fără două puncte (0930 = 09:30), în fusul orar al centrului. | [Timp și zile](/app-interface/program/referinta/configurare-timp-si-zile) |
+| „Zile permise” | Zilele săptămânii în care o procedură poate fi programată; nicio zi selectată = orice zi. | [Timp și zile](/app-interface/program/referinta/configurare-timp-si-zile) |
+| „Zile speciale (proceduri scurtate)” | Zile ale sejurului în care procedurile de tipurile alese durează mai puțin; regula doar scurtează. Regulile „Opțională (se confirmă la generare)” se confirmă la fiecare rulare. | [Timp și zile](/app-interface/program/referinta/configurare-timp-si-zile) |
+| „Reguli terapeut” | „Atribuie terapeuți”, continuitate, „Un terapeut per oaspete, apoi completează”, „Blochează în timpul ședințelor de grup”, „Rezervă după rol”, plafoane zilnice, plus „Ore de lucru implicite” pentru terapeuții fără program propriu. | [Terapeuți](/app-interface/program/referinta/configurare-terapeuti) |
+| „Grupuri de proceduri pentru terapeuți” | Grupează proceduri/protocoale care se desfășoară împreună: celulele lor pe fiecare oră se unesc, iar o alegere de terapeut se scrie pe toate sloturile grupului. | [Terapeuți](/app-interface/program/referinta/configurare-terapeuti) |
+| „Alocare proceduri colective” | Cum împarte faza 1 sloturile unei proceduri colective între terapeuți (unul ia tot / câte un slot fiecare), cu rotire între sejururi. | [Terapeuți](/app-interface/program/referinta/configurare-terapeuti) |
+| „Pași verificare (bara laterală din Program)” | Ce pași predefiniți apar în bara „Verificări”, în ce ordine și pe ce tab; pași proprii cu text liber; praguri. | [Verificări](/app-interface/program/referinta/verificari) |
+| „Previzualizare (simulare)” | Simularea generatorului pe un sejur și o zi, fără salvare. | această pagină |
+
+## Exemple
+
+- Cotă: „Împachetări — minim 6 pe sejur, maxim 1 pe zi” → repartizarea le întinde pe 6 zile diferite.
+- Capacitate condiționată: „Saună 8/oră, dar 4/oră pentru oaspeții care au și împachetări în plan”.
+- Grup de capacitate: „Bazin + Aqua gym — maxim 25 de oaspeți simultan”, indiferent în care din ele sunt.
+- Fereastră de timp: „Cataplasmă cel târziu la 12:00”; zi permisă: „Consult de control doar lunea”.
+- Zi specială: „În ziua 5 a sejurului, procedurile individuale se scurtează la 30 de minute” — vinerea scurtă.
+- Substituție: „Dacă bazinul e plin, oaspetele primește hidroterapie la cadă în locul lui”.
+
+## Vezi și
+
+- [Configurare — faze, cote și capacitate](/app-interface/program/referinta/configurare-faze-cote-capacitate)
+- [Configurare — timp și zile](/app-interface/program/referinta/configurare-timp-si-zile)
+- [Configurare — terapeuți](/app-interface/program/referinta/configurare-terapeuti)
+- [Verificări](/app-interface/program/referinta/verificari)

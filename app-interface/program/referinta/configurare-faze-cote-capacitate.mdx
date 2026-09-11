@@ -1,0 +1,164 @@
+---
+title: "Configurare: faze, cote, capacitate, semințe și substituții"
+description: "Referință pentru secțiunile „Faze”, „Cote”, „Capacitate condiționată”, „Capacitate partajată (grup)”, „Semințe implicite” și „Substituții” din „Configurare programare” în TEAMM: fiecare câmp, ce face generatorul v4 cu el și exemple."
+---
+
+**Unde în aplicație:** meniul „Program” → „Configurare programare” (`/admin/schedule/config`), sau tab-ul „Configurare” din „Program v2 ⚡️” (`/admin/schedule/manage-v2`).
+
+## Întrebări la care răspunde pagina
+
+- Cum fac ca generatorul să plaseze mai întâi consultațiile și abia apoi restul procedurilor?
+- Ce înseamnă „Min / sejur” și „Max / zi” la o cotă și care dintre ele este limită strictă?
+- Cum îi spun generatorului că hidromasajul are 4 locuri pe oră doar când nu se face contrast?
+- Cum limitez câți pacienți pot fi simultan în zona de balneo, indiferent de procedură?
+- Cum fac ca o consultație să cadă mereu în prima zi de sejur?
+- Ce se întâmplă când o procedură nu poate fi plasată și am definit o substituție?
+
+## Pe scurt
+
+„Configurare programare” este politica de programare a centrului: se setează o singură dată și este citită de generatorul v4 la fiecare generare. Pagina de față descrie secțiunile care decid **ce** se programează și **cât**: ordinea fazelor, cotele minime și maxime, capacitatea pe oră (fixă, condiționată sau partajată între proceduri), procedurile pre-plasate într-o anumită zi și înlocuirile automate. Fiecare secțiune are în aplicație o descriere, două exemple și o iconiță de informații pe fiecare câmp; textele de mai jos sunt aceleași.
+
+<Note>
+Doar configurarea **activă** (badge „Activă”, butonul „Setează ca activă”) este folosită de generator. Modificările se salvează cu „Salvează” (Ctrl+S); cât timp există modificări nesalvate, pagina afișează „Modificări nesalvate”.
+</Note>
+
+## Faze
+
+Generatorul programează în etape succesive, numite faze. Fiecare fază rulează în ordinea dată și plasează doar procedurile selectate în ea, apoi trece la următoarea. Astfel poți prioritiza anumite proceduri (ex. mai întâi consultațiile, apoi terapiile). Configurarea implicită are o singură fază, „all”, cu selector gol (toate procedurile).
+
+| Câmp | Ce face | Exemplu |
+|---|---|---|
+| „Cheie” | Numele intern al fazei (ex. „all”, „consultatii”). Folosit și de „Semințe implicite”. | `consultatii` |
+| „Ordine” | Ordinea de execuție. Faza cu numărul mai mic rulează prima. | `0` pentru consultații, `1` pentru restul |
+| „Activă” | Dacă e dezactivată, faza este ignorată complet de generator. | Cel puțin o fază trebuie să rămână activă |
+| „Selector — Proceduri” | Procedurile programate în această fază. Se combină cu categoriile: o procedură intră în fază dacă se potrivește pe oricare criteriu. Selector complet gol = toate procedurile. | Gol la faza „all” |
+| „Selector — Categorii” | Categoriile de proceduri incluse în această fază, pe lângă procedurile alese explicit. E suficientă potrivirea pe un singur criteriu. | Categoria „Consultații” |
+| „Blochează procedurile” | Procedurile din această listă sunt amânate: generatorul le programează abia după ce faza curentă se încheie, indiferent de faza din care fac parte. | „Contrast” blocat de faza „consultatii” |
+
+Exemple:
+
+- Faza „consultatii” (ordine 0) cu categoria Consultații, apoi faza „all” (ordine 1) cu selector gol — consultațiile primesc primele cele mai bune ore.
+- Faza „consultatii” cu „Blochează” pe procedura Contrast: contrastul se programează abia după ce toate consultațiile au fost plasate.
+
+<Note>
+Câmpurile `strategy` și `params` ale unei faze (vizibile doar în editorul JSON) sunt definite în model, dar momentan necitite de generator — nu au efect. Se folosește strategia generală („Cheie strategie” din secțiunea General).
+</Note>
+
+<Warning>
+La salvare, configurarea este validată: două faze nu pot avea aceeași cheie, cel puțin o fază trebuie să fie activă, iar o fază care blochează o procedură trebuie să aibă o ordine **mai mică** decât faza care selectează acea procedură. Altfel apare „Configurarea nu a putut fi salvată”.
+</Warning>
+
+## Cote
+
+Stabilește un număr minim sau maxim de programări pentru o procedură sau o categorie. „Min / sejur” forțează generatorul să programeze cel puțin atâtea pe durata sejurului; „Max / zi” pune o limită superioară pe zi.
+
+| Câmp | Ce face | Exemplu |
+|---|---|---|
+| „Se aplică la” | Alege dacă această cotă se referă la o procedură anume („Procedură”) sau la o întreagă categorie de proceduri („Categorie”). | „Categorie” |
+| „Categorie” | Categoria de proceduri pentru care se aplică această cotă. | „Băi” |
+| „Procedură” | Procedura pentru care se aplică această cotă. | „Hidromasaj” |
+| „Min / sejur” | Numărul minim pe durata sejurului. Generatorul ridică ținta oaspetelui pentru a atinge minimul; dacă nu reușește, diferența apare la „neprogramați”. | `6` |
+| „Max / zi” | Numărul maxim într-o singură zi. Limită strictă: programările peste această limită nu se fac în acea zi. | `1` |
+
+Exemple:
+
+- Categoria „Băi” cu min 6 / sejur: generatorul ridică ținta oaspetelui ca fiecare să primească cel puțin 6 băi pe sejur.
+- Hidromasaj cu max 1 / zi: chiar dacă planul cere mai multe, într-o zi se programează cel mult una.
+
+<Info>
+Validare la salvare: o singură cotă per procedură sau categorie (a doua ar ascunde-o pe prima), valorile nu pot fi negative, iar „Min / sejur” nu poate depăși „Max / zi”.
+</Info>
+
+<Tip>
+Cotele, semințele implicite și zilele permise se aplică la **repartizarea pe zile** (pasul Repartizare), nu la generarea orelor unei singure zile. De aceea efectul lor nu apare în „Previzualizare (simulare)”, care reflectă doar plasarea pe o zi.
+</Tip>
+
+## Capacitate condiționată
+
+Modifică numărul de locuri pe oră pentru o procedură, opțional în funcție de ce alte proceduri sunt sau nu programate în acea zi. Ex.: hidromasaj 3/oră în mod normal, dar 4/oră când nu se face contrast general.
+
+| Câmp | Ce face | Exemplu |
+|---|---|---|
+| „Procedură” | Procedura a cărei capacitate pe oră este modificată de această regulă. | „Hidromasaj” |
+| „Locuri / oră (implicit)” | Capacitatea implicită pe oră, folosită când nicio condiție de mai jos nu se potrivește. | `3` |
+| Condiții → „Când LIPSESC procedurile” | Condiția se aplică doar dacă NICIUNA dintre aceste proceduri nu e programată în acea zi. | „Contrast general” |
+| Condiții → „Când SUNT prezente procedurile” | Condiția se aplică doar dacă TOATE aceste proceduri sunt programate în acea zi. | „Aerosoli” |
+| Condiții → „Locuri / oră” | Capacitatea pe oră folosită când condiția se potrivește. | `4` |
+
+Exemple:
+
+- Hidromasaj 3/oră implicit, 4/oră când Contrast general lipsește din ziua respectivă (condiție „absente”).
+- Bazin 6/oră implicit, 4/oră când se fac și Aerosoli în aceeași zi (condiție „prezente” — personalul e împărțit).
+
+<Note>
+Fără nicio regulă aici, capacitatea unui slot este cea de pe procedură („Număr de oaspeți”), combinată cu capacitatea pe terapeut. Vezi [Tipuri de proceduri, plafon și capacitate pe terapeut](/app-interface/program/tipuri-de-proceduri-si-capacitate).
+</Note>
+
+## Capacitate partajată (grup)
+
+Limitează câți pacienți pot fi programați simultan dintr-un set de proceduri, pe tot centrul (indiferent de cameră/program). Suprapunerea se calculează după durata fiecărei proceduri. Ex.: hidromasaj + BAS + BAG împreună maxim 4 pacienți în același timp.
+
+| Câmp | Ce face | Exemplu |
+|---|---|---|
+| „Cheie” | Numele intern al grupului (ex. „balneo”). Trebuie să fie unic. | `balneo` |
+| „Max simultan” | Numărul maxim de pacienți care pot avea în derulare oricare procedură din grup, în același timp. | `4` |
+| „Proceduri în grup” | Procedurile care împart această limită de capacitate simultană. | Hidromasaj, BAS, BAG |
+
+Exemple:
+
+- Grupul „balneo” (Hidromasaj, BAS, BAG) cu maxim 4: în orice minut, cel mult 4 pacienți au una dintre aceste proceduri în derulare.
+- Grupul „sauna” (Saună uscată, Saună umedă) cu maxim 6 — limita comună a zonei de saune.
+
+<Info>
+Diferența față de „Capacitate condiționată”: acolo limita este pe oră și pe **o singură** procedură; aici limita este comună **mai multor** proceduri și ține cont de durata fiecăreia. Validare: cheia este obligatorie și unică, grupul are cel puțin o procedură, „Max simultan” este cel puțin 1.
+</Info>
+
+## Semințe implicite
+
+Pre-plasează („însămânțează”) o procedură într-o anumită zi a sejurului, înainte ca generatorul să umple restul programului. Util pentru proceduri care trebuie să cadă mereu într-o anumită zi.
+
+| Câmp | Ce face | Exemplu |
+|---|---|---|
+| „Procedură” | Procedura care va fi plasată automat. | „Consultație inițială” |
+| „Ziua (index)” | A câta zi din sejur, începând de la 0 (0 = prima zi). | `0` |
+| „Cheie fază” | Definit în model, dar momentan necitit de generator — nu are efect asupra programării. | — |
+| „Poate fi înlocuită” | Definit în model, dar momentan necitit de generator — nu are efect asupra programării. | — |
+
+Exemple:
+
+- Consultație inițială cu ziua 0: fiecare oaspete primește consultația în prima zi de sejur.
+- EKG cu ziua 1 în faza „all”: investigația se plasează a doua zi, la o oră aleasă normal de generator.
+
+<Warning>
+„Ziua (index)” la semințe se numără **de la 0** (0 = prima zi a **sejurului oaspetelui**). La „Zile speciale” numărătoarea este diferită: acolo ziua 1 = prima zi a sejurului. Vezi [Configurare: ferestre de timp, zile din săptămână, zile speciale](/app-interface/program/referinta/configurare-timp-si-zile).
+</Warning>
+
+<Note>
+Câmpurile „Cheie fază” și „Poate fi înlocuită” sunt marcate „Neimplementat” în formular: nu influențează programarea. Dacă totuși completezi „Cheie fază”, ea trebuie să corespundă unei faze existente, altfel salvarea este refuzată.
+</Note>
+
+## Substituții
+
+Definește o procedură de rezervă: dacă procedura dorită nu poate fi programată, generatorul o înlocuiește automat cu alta. Util când o procedură e plină sau imposibil de plasat.
+
+| Câmp | Ce face | Exemplu |
+|---|---|---|
+| „Procedură” | Procedura care, dacă nu poate fi programată, va fi înlocuită. | „Hidromasaj” |
+| „Înlocuiește cu” | Procedura de rezervă folosită în locul celei de mai sus. | „Baie de plante” |
+| „Când se aplică” | Momentul în care se face înlocuirea: „Când nu poate fi plasată” acoperă orice motiv (procedura nu e oferită, fără slot liber etc.), iar „Când capacitatea e plină” se aplică doar când procedura era oferită în acea zi, dar toate locurile erau ocupate. | „Când capacitatea e plină” |
+
+Exemple:
+
+- Hidromasaj → Baie de plante, „Când capacitatea e plină”: dacă hidromasajul era oferit dar toate locurile s-au ocupat, oaspetele primește baie de plante.
+- Procedură sezonieră → alternativă permanentă, „Când nu poate fi plasată”: acoperă orice motiv, inclusiv lipsa completă a sloturilor.
+
+<Info>
+O procedură înlocuită nu este o eroare: în simulare apare cu procedura de rezervă. O substituție cu aceeași procedură în ambele câmpuri este refuzată la salvare („nu are efect”).
+</Info>
+
+## Vezi și
+
+- [Configurare: ferestre de timp, zile din săptămână, zile speciale, reguli demografice](/app-interface/program/referinta/configurare-timp-si-zile)
+- [Configurare: reguli pentru terapeuți, alocarea colectivelor, grupuri de sloturi și setări generale](/app-interface/program/referinta/configurare-terapeuti)
+- [Pasul 3 — Repartizare](/app-interface/program/sejur/pasul-3-repartizare)
+- [De ce nu a fost plasată o procedură](/app-interface/program/depanare/proceduri-neplasate)

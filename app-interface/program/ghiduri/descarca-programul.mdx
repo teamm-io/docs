@@ -1,0 +1,76 @@
+---
+title: "Descarcă programul"
+description: "Cum descarci programul din TEAMM ca .docx, .pdf sau .csv: tipurile de export (Individual, Colectiv, Terapeuți, Pe ore), aspectul tabel sau carduri, culoarea accent, coloanele personalizate, presetările de export per centru și butonul „Descarcă tot”."
+---
+
+**Unde în aplicație:** „Program v2” → butonul „Descarcă” din antet sau pasul „Descarcă” din tab-urile „Terapeuți” și „Oaspeți” (`/admin/schedule/manage-v2`). „Descarcă tot” rulează presetările sejurului pentru pasul curent.
+
+## Întrebări la care răspunde pagina
+
+- Cum scot programul oaspeților pe hârtie, cu câte un bilețel pentru fiecare?
+- Ce diferență este între exportul „Individual”, „Colectiv”, „Terapeuți” și „Pe ore”?
+- Cum salvez setările de export ca să nu le refac de fiecare dată?
+- Ce face „Descarcă tot”?
+- Cum obțin câte o coloană pentru fiecare medic la consultații?
+- Ce nume primește fișierul descărcat?
+
+## Pe scurt
+
+Dialogul „Descarcă programul · Terapeuți” sau „Descarcă programul · Oaspeți” construiește un fișier din programul zilei curente. Alegi tipul, aspectul, formatul și opțiunile de afișare; poți salva combinația ca **presetare** a centrului, iar presetarea implicită se aplică automat la deschiderea dialogului. „Descarcă tot” rulează toate presetările sejurului pentru pasul curent, într-o singură apăsare.
+
+## Dialogul de export
+
+<Steps>
+  <Step title="Alege sau aplică o presetare (opțional)">
+    Selectul „Presetare” listează presetările centrului; cea implicită are prefixul ★ și este aplicată automat la deschidere. Butoane: „Actualizează presetarea”, „Setează ca presetare implicită” (devine „Presetare implicită” când este deja), „Șterge presetarea” (confirmare „Sigur ștergi presetarea „X”?"). Pentru una nouă: „Numele presetării” + „Salvează ca presetare”.
+    <Note>
+    Presetările sunt per centru, cu câte o presetare implicită pentru fiecare scop de export (terapeuți vs oaspeți).
+    </Note>
+  </Step>
+  <Step title="„Tipul exportului”">
+    | Tip | Ce conține |
+    |---|---|
+    | Individual | Programul fiecărui oaspete, unul după altul |
+    | Colectiv | Tabelul zilei cu toți oaspeții |
+    | Terapeuți | Tabelul terapeuților, exact ca pe ecran; preselectat pe pasul „Terapeuți” |
+    | Pe ore | Grupat pe ora de început, câte un rând per programare (procedură, cameră, terapeut); disponibil doar când ziua are programări |
+  </Step>
+  <Step title="„Aspect” și „Formatul exportului”">
+    Pentru „Individual”: „Tabel orizontal” sau „Carduri”. Format: .docx (implicit), .csv sau .pdf.
+  </Step>
+  <Step title="Opțiuni de afișare">
+    - „Alege o culoare accent” (DOCX/PDF): precompletată cu culoarea grupului de zile; „Elimină culoarea accent”.
+    - „Titlu personalizat”.
+    - „Consultații pe coloane separate per medic”: la exportul colectiv în modul oaspeți, împarte coloana de consultații în câte una per medic.
+    - „Coloane personalizate”: alegi și ordonezi coloanele; coloana cu numele este mereu prima.
+    - Modul Terapeuți: „Orientare vedere (landscape)” (activ implicit), „Include rândul „Neatribuite””, „Afișează vârsta pacientului”, „Afișează notițe / opțiuni în celule”.
+    - Modul Oaspeți: „Afișează opțiunile în celule”, „Afișează notițele în celule”.
+    - „Text suplimentar” (placeholder „Acesta va afișat în partea de jos”).
+  </Step>
+  <Step title="„Descarcă”">
+    „Anulează” închide fără export. Fișierul se numește „Session «nume» - DD-MM-YYYY”, „Terapeuți - «nume» - DD-MM-YYYY” sau „Pe ore - …”.
+  </Step>
+</Steps>
+
+## „Descarcă tot”
+
+Butonul „Descarcă tot” (tooltip „Descarcă toate exporturile presetate ale sejurului pentru acest pas”) rulează, una după alta, toate presetările sejurului pentru pasul curent. Progresul apare ca „Se descarcă exporturile… (i/n)”. La final: „N exporturi presetate au fost descărcate.” Dacă nu există presetări: „Acest sejur nu are presetări de export pentru acest pas.”
+
+## Reguli de reținut
+
+- Exportul „Terapeuți” este WYSIWYG: ce vezi în tabel, aia iese; programările de mai multe ore sunt repetate în fiecare coloană de oră, iar „Neatribuite” este ultimul rând.
+- „Pe ore” apare doar dacă ziua are programări.
+- Presetarea implicită se aplică singură la deschiderea dialogului; verifică setările înainte de „Descarcă” dacă vrei altceva.
+- „Alege o culoare accent” apare doar pentru .docx și .pdf.
+
+## Exemple
+
+- Bilețele pentru oaspeți: tip „Individual”, aspect „Carduri”, .docx, cu „Text suplimentar” pentru mesajul de la subsol.
+- Foaia recepției: tip „Pe ore”, .pdf, ca să vadă ce începe la fiecare oră.
+- Tabelul medicilor: tip „Colectiv”, modul oaspeți, cu „Consultații pe coloane separate per medic”.
+
+## Vezi și
+
+- [Pasul 4 — Oaspeți: generează orarul zilei](/app-interface/program/sejur/pasul-4-oaspeti)
+- [Pasul 2 — Terapeuți: program pe terapeut](/app-interface/program/sejur/pasul-2-terapeuti)
+- [Instrumente ajutătoare: importuri și transformare](/app-interface/program/ghiduri/instrumente-ajutatoare)

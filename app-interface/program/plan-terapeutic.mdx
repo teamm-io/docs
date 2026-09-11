@@ -1,0 +1,85 @@
+---
+title: "Planul terapeutic și frecvența"
+description: "Ce prescrie medicul în planul terapeutic din TEAMM și cum ajunge în program: procedurile bifate, tipurile de frecvență (zilnic, la rând, la interval, număr total, zile alese), durata aleasă la consultații, opțiunile și mențiunile."
+---
+
+**Unde în aplicație:** meniul „Oaspeți” → date medicale → tab „Plan terapeutic” (`/admin/guests/medical`). Pe harta din „Prezentare generală” apare ca nivelul 2, „Plan terapeutic”.
+
+## Întrebări la care răspunde pagina
+
+- Ce trebuie să bifez în planul terapeutic ca o procedură să apară în program?
+- Ce înseamnă frecvențele „Zilnic”, „La rând”, „La un interval specificat”, „Un număr total” și „În zile alese manual”?
+- De ce nu văd câmpul „Frecvența” la o anumită procedură?
+- Cum aleg durata unei consultații dacă procedura are mai multe durate?
+- Contează opțiunile și mențiunile pentru program?
+- Ce se întâmplă cu programul dacă medicul schimbă planul la consultația de control?
+
+## Pe scurt
+
+Planul terapeutic este prescripția per oaspete, făcută de medic la consultație — a doua sursă de date a generatorului, alături de configurarea centrului. Doar procedurile și protocoalele bifate în plan intră în generare; ce nu e prescris nu apare în orarul oaspetelui. Pentru fiecare procedură bifată, medicul stabilește **frecvența**, iar generatorul de repartizare o transformă în zile concrete ale sejurului.
+
+## Ce intră în program
+
+- O procedură intră în program doar dacă este **bifată** în planul oaspetelui **și** este marcată „Inclus în program” în setările procedurii. La procedurile neincluse în program, secțiunea „Frecvența” nici nu se afișează în plan.
+- Lângă numele procedurii bifate se afișează un rezumat al frecvenței alese (ex. „zilnic”, „4”).
+
+<Note>
+Dacă centrul lucrează cu consultații în planul terapeutic („Consultații în planul terapeutic” din setările centrului), fiecare modificare a planului se face într-o consultație nouă: „Consultație nouă” → modificări → „Termină consultația”. Pentru program și generarea tabelelor se folosește întotdeauna versiunea din **ultima consultație**; „Păstrează ca versiune principală” influențează doar scrisoarea medicală și planul terapeutic al pacientului.
+</Note>
+
+## Frecvența
+
+Câmpul „Frecvența” („Alege frecvența”) oferă doar tipurile activate în setările centrului („Opțiunile pentru periodicitate (plan de terapie)”). Procedura poate propune automat o valoare prin „Frecvență implicită”.
+
+| Opțiune în plan | Cum o interpretează generatorul de repartizare | Câmpuri suplimentare |
+|---|---|---|
+| „Zilnic” | În fiecare zi în care procedura are program (slot în „Program general”) — se plasează direct, fără să concureze cu celelalte proceduri. | — |
+| „Zilnic (toate zilele sejurului)” | În fiecare zi calendaristică a sejurului — se plasează direct, fără să concureze cu celelalte proceduri. | — |
+| „La rând” | Procedurile „la rând” ale oaspetelui se rotesc: câte una pe zi, una după alta, pe toată durata sejurului. | — |
+| „La un interval specificat” | De X ori la fiecare Y zile. | „De” (câte ori) și „La” (câte zile) |
+| „Un număr total” | Un număr fix de ședințe, întinse pe zilele sejurului. | „Numărul de proceduri” |
+| „În zile alese manual” | Doar în zilele bifate în calendarul planului (zilele alese, limitate la perioada sejurului). | calendarul cu zile |
+
+Exemple de „La un interval specificat”: „De 1 · La 2 zile” = o dată la două zile; „De 2 · La 1 zi” = de două ori pe zi; „De 1 · La 11 zile” = o dată pe sejur de 11 zile.
+
+<Warning>
+Verifică frecvențele înainte de generare: o frecvență prea mare față de zilele sejurului duce la proceduri neplasate.
+</Warning>
+
+## Zilele alese și consultațiile
+
+Zilele bifate la „În zile alese manual” sunt „zilele alese” ale procedurii (în aplicație: *customDates*). Generatorul de repartizare le respectă ca atare, iar tab-ul „Repartizare” din sejur lucrează tot cu ele — fiecare zi în care apare procedura este o astfel de zi aleasă.
+
+Procedurile de tip **consultație** folosesc întotdeauna zile alese: la bifare, frecvența devine automat „În zile alese manual”, iar fiecare zi bifată este o apariție separată pentru care alegi:
+
+- **„Durata”** — una dintre „Duratele disponibile (consultații)” configurate pe procedură (ex. 15, 30, 45). Durata aleasă determină intervalul rezervat în program; fără alegere se folosește durata implicită a procedurii.
+- **medicul** — medicul fixat pentru acea apariție; fără alegere, îl stabilește alocarea automată.
+
+Ora exactă a consultației nu se alege în plan — o generează programul.
+
+## Opțiuni și mențiuni
+
+- **„Opțiuni”**: opțiunile bifate în plan pot influența programarea când procedura are activ „Generează programul în funcție de opțiuni” (atunci și șabloanele trebuie create cu opțiuni). Altfel, opțiunile sunt doar informative.
+- **„Mențiuni”** (indicațiile medicului) însoțesc programarea în tabele și exporturi; „Mențiuni interne” nu apar la pacient.
+- La procedurile marcate ca obligatorii, planul afișează „Sunt necesare notițe sau opțiuni pentru această procedură.” până când completezi una dintre ele.
+
+## Modificări ulterioare
+
+Planul se poate schimba la consultațiile de control. Modificările se reflectă la următoarea rulare a generatoarelor pentru zilele rămase — programul deja generat nu se rescrie singur. După modificarea planului, rulează din nou repartizarea (tab „Repartizare”) și apoi generatorul de ore pentru zilele afectate.
+
+<Tip>
+Modificările făcute de o consultație (opțiuni, mențiuni, frecvență) se pot vedea în ecranul de modificări ale planului, cu valoarea „înainte / după” pentru fiecare câmp; personalul poate confirma cu „Am văzut modificările”.
+</Tip>
+
+## Exemple
+
+- Kinetoterapie de 3 ori pe săptămână + masaj zilnic → repartizarea alege zilele de kineto și pune masajul în fiecare zi.
+- Pachet de 6 ședințe („Un număr total” = 6) pe un sejur de 12 zile → câte o ședință la două zile.
+- Consultație de control bifată în zilele 3 și 8, cu durata 15 min la prima și 30 min la a doua → două apariții separate, fiecare cu intervalul ei.
+
+## Vezi și
+
+- [Cum se construiește programul](/app-interface/program/introducere)
+- [Proceduri în program](/app-interface/program/configurare/proceduri)
+- [Pasul 3 — Repartizare](/app-interface/program/sejur/pasul-3-repartizare)
+- [De ce nu a fost plasată o procedură](/app-interface/program/depanare/proceduri-neplasate)

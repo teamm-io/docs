@@ -1,0 +1,170 @@
+---
+title: "Configurare: reguli pentru terapeuți, alocarea colectivelor, grupuri de sloturi și setări generale"
+description: "Referință pentru secțiunile „Reguli terapeut”, „Alocare proceduri colective”, „Grupuri de proceduri pentru terapeuți” și „General” din „Configurare programare” în TEAMM: atribuirea automată, continuitate, limite zilnice, ore de lucru implicite, format nume, antet tabel, politica orei individuale."
+---
+
+**Unde în aplicație:** meniul „Program” → „Configurare programare” (`/admin/schedule/config`), sau tab-ul „Configurare” din „Program v2 ⚡️” (`/admin/schedule/manage-v2`).
+
+## Întrebări la care răspunde pagina
+
+- Cum fac ca generatorul să atribuie automat terapeuți la programări?
+- Cum păstrez același terapeut pentru un oaspete pe tot sejurul?
+- Cum limitez un terapeut la maximum 8 masaje pe zi?
+- Ce program de lucru se folosește pentru un terapeut care nu are ore proprii definite?
+- Cum decid dacă un terapeut ține toate sloturile de Bazin sau se rotesc mai mulți?
+- Cum schimb formatul numelor terapeuților sau antetul tabelului oaspeților?
+- Ce înseamnă „strict”, „sameDayFallback” și „anyHourAnyDay” la ora individuală?
+
+## Pe scurt
+
+Secțiunea „Reguli terapeut” spune generatorului **dacă** și **cum** atribuie terapeuți programărilor generate. „Alocare proceduri colective” decide cum împarte alocatorul sloturile unei proceduri colective între terapeuți. „Grupuri de proceduri pentru terapeuți” unește celulele mai multor proceduri în tabelul terapeuților. Secțiunea „General” conține identitatea configurării și câteva setări de afișare care nu influențează generarea, plus politica orei individuale (editabilă doar în JSON).
+
+## Reguli terapeut
+
+Controlează modul în care generatorul atribuie terapeuți programărilor. Dacă atribuirea e dezactivată, programările se creează fără terapeut, iar acesta se alege ulterior manual.
+
+| Câmp | Ce face | Implicit |
+|---|---|---|
+| „Atribuie terapeuți” | Activează atribuirea automată a terapeuților. Dacă e oprită, restul regulilor de mai jos nu au efect. | dezactivat |
+| „Continuitate” | Preferă terapeuții deja asociați oaspetelui (din fișa acestuia), pentru continuitate pe sejur. E o preferință: dacă niciunul nu e disponibil, se alege alt terapeut. | activ |
+| „Un terapeut per oaspete, apoi completează” | Împarte oaspeții uniform între terapeuți la fiecare procedură: fiecare terapeut primește câte un oaspete înainte ca vreunul să primească al doilea. | activ |
+| „Blochează în timpul ședințelor de grup” | Cât timp un terapeut conduce o procedură de grup, nu este atribuit altor programări simultane. | activ |
+| „Rezervă după rol” | Dacă nu există niciun terapeut cu rolul cerut de procedură (medic/terapeut), alege orice terapeut disponibil ca variantă de rezervă. | activ |
+
+Exemple:
+
+- Continuitate activă: un oaspete care a început masajul cu Maria rămâne cu Maria pe tot sejurul, cât timp e disponibilă.
+- Limită zilnică: maxim 8 masaje pe zi per terapeut — al nouălea masaj se mută la alt terapeut sau rămâne neatribuit.
+
+<Note>
+În configurarea implicită „Atribuie terapeuți” este **dezactivat**: generatorul nu atribuie terapeuți, iar restul opțiunilor nu au efect până nu îl activezi. Alocarea manuală și șabloanele de terapeuți din pasul Terapeuți funcționează independent de această secțiune.
+</Note>
+
+### Ore de lucru implicite
+
+Programul de lucru săptămânal folosit pentru terapeuții care NU au ore de lucru proprii definite. Fără el, un astfel de terapeut e considerat disponibil toată ziua. Implicit fiecare zi 09:00–17:00. O zi fără interval înseamnă „nu lucrează” în acea zi.
+
+| Câmp | Ce face | Exemplu |
+|---|---|---|
+| Intervalele pe fiecare zi (Luni … Duminică) | Zero sau mai multe intervale `HHmm` de la–până la; „de la” trebuie să fie înainte de „până la”, fără trecere peste miezul nopții. | Luni `0900`–`1700` |
+
+<Info>
+Un terapeut cu program propriu (din „Terapeuți & medici”) îl folosește pe al lui; șablonul de aici este doar rezerva pentru cei fără program. Vezi [Terapeuți și medici](/app-interface/program/configurare/terapeuti-si-medici).
+</Info>
+
+### Limite zilnice per terapeut
+
+Limitează câte programări de un anumit fel poate avea un terapeut într-o zi. Poți limita pe procedură, categorie sau genul terapeutului.
+
+| Câmp | Ce face | Exemplu |
+|---|---|---|
+| „Procedură” | Limita se aplică doar acestei proceduri. Lasă gol pentru a limita după categorie sau gen. | „Masaj” |
+| „Categorie” | Limita se aplică tuturor procedurilor din această categorie. Lasă gol dacă limitezi după procedură sau gen. | „Masaje” |
+| „Gen” | Limita se aplică doar terapeuților cu acest gen (genul terapeutului, nu al oaspetelui). Lasă gol pentru toți. | gol |
+| „Max” | Numărul maxim de programări de acest fel per terapeut pe zi. Dacă mai multe limite se potrivesc, se aplică prima. | `8` |
+
+<Warning>
+La repartizarea pe zile, depășirea limitei este raportată, nu blocată în orice condiții: generatorul preferă o zi în care terapeutul este sub limită; dacă nu există, procedura rămâne programată peste limită și apare în dialogul de rezultat la „Peste norma terapeutului” („terapeutul X depășește norma zilnică pentru această procedură”). Vezi [Avertismente și mesaje](/app-interface/program/referinta/avertismente-si-mesaje).
+</Warning>
+
+## Alocare proceduri colective
+
+Cum împarte generatorul de alocare (faza „Repartizează procedurile colective”) sloturile unei proceduri colective între terapeuți. Terapeuții se rotesc de la un sejur la altul, ca procedurile să fie distribuite echitabil în timp. Genul se respectă automat: un slot pentru femei primește doar terapeuți femei (regulă fixă, fără excepții) — nu se configurează aici.
+
+| Câmp | Ce face | Implicit |
+|---|---|---|
+| „Mod implicit” | Modul implicit aplicat tuturor procedurilor colective: „Un terapeut ia tot” (un terapeut ține toate sloturile procedurii) sau „Fiecare slot alt terapeut” (sloturile se împart pe rând). | „Un terapeut ia tot” |
+| „Excepții per procedură” → „Procedură” | Procedura colectivă pentru care se folosește un mod diferit de cel implicit. | — |
+| „Excepții per procedură” → „Mod” | Modul de alocare folosit doar pentru această procedură, în locul celui global. | — |
+
+Exemple:
+
+- Mod „Un terapeut ia tot”: la Bazin, un singur terapeut ține toate sloturile procedurii pe tot sejurul (separat pe gen dacă sloturile sunt împărțite pe gen) — model cu terapeut dedicat.
+- Mod „Fiecare slot alt terapeut”: la Cataplasmă, fiecare slot merge la alt terapeut pe rând; rotația între sejururi împarte încărcarea uniform.
+- Excepție per procedură: modul global e „Un terapeut ia tot”, dar pentru Aerosoli alegi „Fiecare slot alt terapeut”.
+
+<Info>
+Această secțiune este citită de alocarea automată din pasul Terapeuți, nu de generatorul orelor oaspeților. O procedură poate avea o singură excepție. Vezi [Pasul 2b — Alocare automată](/app-interface/program/sejur/pasul-2b-alocare-automata).
+</Info>
+
+## Grupuri de proceduri pentru terapeuți
+
+Grupează proceduri/protocoale care se desfășoară împreună, ca să le repartizezi ușor terapeuților în tabelul de terapeuți. Celulele lor pe fiecare oră se unesc într-una singură — o alegere de terapeut(i) se scrie pe toate sloturile grupului pentru acea oră. Grupurile se păstrează de la un sejur la altul.
+
+| Câmp | Ce face | Exemplu |
+|---|---|---|
+| „Nume grup” | Numele grupului, afișat pe celula unită din tabelul de terapeuți. Se completează automat din proceduri dacă îl lași gol. | „Inhalații + Vibromasaj” |
+| „Proceduri” | Procedurile ale căror sloturi fac parte din acest grup. | Inhalații, Vibromasaj |
+| „Protocoale” | Protocoalele ale căror sloturi fac parte din acest grup. | — |
+
+Exemple:
+
+- Grupul „Inhalații + Vibromasaj”: la fiecare oră vezi o singură celulă; alegi un terapeut o dată și se aplică ambelor proceduri.
+- Ore diferite, terapeuți diferiți: la 10:00 grupul e la terapeutul A, la 11:00 la terapeutul B — o acțiune pe oră.
+
+<Note>
+Un grup trebuie să conțină cel puțin o procedură sau un protocol. Grupul afectează doar afișarea și repartizarea din tabelul terapeuților (pasul Terapeuți), nu generarea orelor.
+</Note>
+
+## General
+
+Identifică politica de programare a centrului. Aceste valori spun generatorului ce strategie și ce versiune de algoritm să folosească. De obicei nu trebuie modificate.
+
+### Alegerea configurării
+
+| Element | Ce face |
+|---|---|
+| „Configurare” (selector din antet) | Centrul poate avea mai multe configurări. Cea „activă” este folosită de generator. În listă, cea activă apare cu sufixul „(activă)”. |
+| „Setează ca activă” | Doar configurarea activă este folosită de generator. Se schimbă prin acest buton, nu direct. |
+| „Configurare nouă” / „Șterge” | Creează o configurare nouă, respectiv o șterge (cu confirmare: „Sigur vrei să ștergi configurarea „…”?"). |
+| „Formular” / „JSON” | Comută între editorul cu câmpuri și editorul JSON al aceleiași configurări. |
+| „Reîncarcă”, „Încarcă implicit”, „Renunță la modificări”, „Salvează” | Reîncarcă de pe server, încarcă valorile implicite, revine la ultima versiune salvată, respectiv salvează (Ctrl+S). |
+
+### Câmpurile secțiunii
+
+| Câmp | Ce face | Implicit |
+|---|---|---|
+| „Nume configurare” | Numele afișat al acestei configurări (ex. „Sezon estival”, „Implicit”). Obligatoriu. | „Implicit” |
+| „Descriere” | Notă opțională despre când/de ce se folosește această configurare. | gol |
+| „Cameră preferențială per oaspete” | Dacă centrul folosește o cameră preferențială pentru procedurile individuale ale fiecărui oaspete. Când e activ, tabelele afișează coloana „Cameră” iar verificările cer ca oaspeții să aibă o cameră aleasă. Când e dezactivat, coloana „Cameră” e ascunsă și camera nu mai e verificată. | activ |
+| „Format nume terapeuți” | Cum se afișează numele terapeuților în tabelele de program (Terapeuți și Repartizare) și în exporturi: „Nume Prenume”, „Prenume Nume”, „Doar numele” sau „Doar prenumele”. | „Nume Prenume” |
+| „Antet tabel programare” | Ce se afișează implicit în antetul coloanelor din tabelul de programare al oaspeților: „Proceduri” (numele procedurii) sau „Ore”. Este doar o valoare implicită — fiecare utilizator o poate schimba din tabel, iar alegerea lui se păstrează în browser. | „Proceduri” |
+| „Procedură pentru ora oaspetelui” | Procedura de referință pentru afișarea orei în tabelul terapeuților. Când un utilizator activează setarea de afișare, ora acestei proceduri apare înaintea numelui fiecărui oaspete care o are programată în ziua selectată. Lasă gol pentru a nu afișa nicio oră. | gol |
+
+### „Detalii tehnice”
+
+| Câmp | Ce face |
+|---|---|
+| „Cheie strategie” | Numele intern al strategiei de programare (ex. „default”). Leagă configurarea de algoritmul potrivit. |
+| „ID centru” | Centrul căruia îi aparține această configurare. Se completează automat și nu ar trebui schimbat. |
+| „Versiune algoritm” (marcat „Neimplementat”) | Câmp informativ. Versiunea de generator (v4) se alege la pornirea generării, nu din acest câmp — valoarea de aici nu influențează programarea. |
+
+Exemple:
+
+- Configurare unică „Implicit” cu strategia „default” — comportamentul standard al generatorului v4.
+- Două configurări: „Sezon estival” (activă vara, cu limite de capacitate mai mari) și „Standard” — doar cea activă e folosită.
+
+### Politica orei individuale (doar JSON)
+
+Câmpul `individualHourPolicy` nu apare în formular; se editează din tab-ul „JSON”. Cum tratează generatorul ora preferată a oaspetelui (din datele medicale) când e ocupată:
+
+| Valoare | Ce face |
+|---|---|
+| `strict` (implicit) | Doar ora preferată; caută în alte zile la aceeași oră. |
+| `sameDayFallback` | Acceptă altă oră liberă în aceeași zi. |
+| `anyHourAnyDay` | Orice oră liberă, în orice zi. |
+
+<Tip>
+Dacă în dialogul de rezultat apar multe „Mutate în altă zi” cu nota „ora preferată era ocupată”, politica `strict` este cauza cea mai probabilă: generatorul a refuzat altă oră în aceeași zi. Schimbă în `sameDayFallback` sau eliberează ora. Vezi [Fixarea vs. blocarea orelor](/app-interface/program/ghiduri/fixarea-vs-blocarea-orelor).
+</Tip>
+
+<Warning>
+Tab-ul „Configurare” din Program v2 și pagina de configurare rețin modificările nesalvate. La părăsire apare „Ai modificări nesalvate în configurare. Continui fără să le salvezi?” („Continuă fără salvare” / „Rămâi la editare”); bara pașilor arată „Configurarea are modificări nesalvate”.
+</Warning>
+
+## Vezi și
+
+- [Configurare: faze, cote, capacitate, semințe și substituții](/app-interface/program/referinta/configurare-faze-cote-capacitate)
+- [Configurare: ferestre de timp, zile din săptămână, zile speciale, reguli demografice](/app-interface/program/referinta/configurare-timp-si-zile)
+- [Pasul 2 — Terapeuți](/app-interface/program/sejur/pasul-2-terapeuti)
+- [Lista pașilor de verificare](/app-interface/program/referinta/verificari)

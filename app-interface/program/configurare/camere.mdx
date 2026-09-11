@@ -1,0 +1,90 @@
+---
+title: "Săli medicale și alocarea automată a camerelor"
+description: "Sălile medicale din TEAMM (camerele de proceduri și procedurile permise în fiecare) și regulile repartizării automate a camerelor: cameră oaspete → cameră implicită a procedurii → cameră terapeut → automat, cu dialogul „Repartizare camere”."
+---
+
+**Unde în aplicație:** meniul „Medical” → „Camere” (`/admin/medical/rooms/medical`). Repartizarea automată: „Program v2” → tab „Repartizare” → dialogul de generare → „Pasul 3 · Repartizează camerele”; camera per programare se alege și manual în tab-ul „Terapeuți”.
+
+## Întrebări la care răspunde pagina
+
+- Cum spun aplicației ce proceduri se pot face într-o sală?
+- În ce ordine alege generatorul camera unei programări?
+- De ce o programare a rămas „Fără cameră”?
+- Ce se întâmplă cu camerele pe care le-am pus manual când rulez repartizarea camerelor?
+- Ce înseamnă „Cameră oaspete”, „Cameră implicită”, „Cameră terapeut” și „Automat” în raport?
+- Cum ascund coloana de cameră dacă centrul nu lucrează cu cameră per oaspete?
+
+## Pe scurt
+
+Sălile medicale sunt camerele disponibile pentru proceduri. Repartizarea automată a camerelor (Pasul 3) alege pentru fiecare programare o cameră compatibilă și liberă, urmând o ordine fixă de reguli, fără să suprarezerve o cameră ocupată și fără să atingă camerele setate manual (decât dacă ceri explicit).
+
+## Sălile medicale
+
+Tabelul „Camere” din „Medical” listează camerele de tip „Procedură” (nu cele de hotel). Câmpurile relevante pentru program:
+
+| Câmp | Ce face |
+|---|---|
+| „Număr”, „Nume” | Identificarea camerei în tabele și exporturi. |
+| „Tipul camerei” | Pentru săli medicale: „Procedură” (sau „Protocol”, „Altceva”). |
+| „Proceduri” („Ce proceduri se pot face în această cameră”) | Lista procedurilor pe care le poate găzdui camera — generatorul de camere alege doar dintre camerele compatibile cu procedura; o cameră fără procedura respectivă nu e luată în calcul. O cameră fără nicio procedură setată permite orice procedură. |
+| „Statusul camerei” | „Disponibilă” / „Indisponibilă”. |
+| „Etichete”, „Etaj”, „Clădire”, „Ordonare” | Organizare și afișare. |
+
+Exemplu: camera „Kineto 1” permite doar kinetoterapie și masaj → generatorul nu va programa niciodată împachetări acolo.
+
+## Ordinea regulilor la repartizarea automată
+
+La repartizarea automată, camera se alege în ordinea de mai jos; prima regulă care găsește o cameră liberă (și compatibilă cu procedura) câștigă. În raportul dialogului, fiecare alocare afișează regula care a decis-o:
+
+| # | Regula | Eticheta din raport |
+|---|---|---|
+| 1 | Camera aleasă manual a oaspetelui (camera lui pentru proceduri individuale, din datele medicale) | „Cameră oaspete” |
+| 2 | „Cameră implicită” a procedurii | „Cameră implicită” |
+| 3 | „Cameră preferată” a terapeutului alocat | „Cameră terapeut” |
+| 4 | Camera compatibilă cea mai puțin folosită | „Automat” |
+
+- **Ocupare**: o cameră ocupată la ora respectivă nu e supra-rezervată: generatorul trece la următoarea regulă și, dacă nicio cameră permisă nu e liberă, programarea rămâne fără cameră și primești un avertisment.
+- **Colective**: o procedură colectivă este o singură clasă — toți oaspeții aceluiași slot primesc aceeași cameră, rezervată o singură dată; două grupe paralele ale aceleiași proceduri la aceeași oră (ex. Femei / Bărbați) primesc camere distincte.
+- **Camere setate manual**: o cameră aleasă manual nu este atinsă de generator — rămâne exact cum ai pus-o, dacă nu forțezi explicit realocarea.
+
+## Rularea repartizării camerelor
+
+<Steps>
+  <Step title="Deschide dialogul de generare din Repartizare">
+    În tab-ul „Repartizare”, cu tipul de procedură activ, alege zilele (rulează doar pe zilele selectate — „Selectează cel puțin o zi.”) și, opțional, un subset de proceduri, apoi apasă „Pasul 3 · Repartizează camerele”.
+  </Step>
+  <Step title="Verifică previzualizarea">
+    Dialogul „Repartizare camere” arată „Alocări propuse” (oaspete — procedură, ora, camera dinainte → camera propusă și regula), „Setate manual — păstrate (N)”, „Atenționări (N)” și, pe camere, „Ocupare totală” cu bare de utilizare. Nimic nu este scris încă.
+  </Step>
+  <Step title="Aplică">
+    „Aplică” scrie alocările; titlul devine „Repartizare camere — aplicat”. Bifa „Suprascrie și camerele setate manual” include în aplicare și programările cu cameră pusă manual. „Anulează” / „Închide” lasă programul neschimbat.
+  </Step>
+</Steps>
+
+<Warning>
+La reluarea repartizării, o programare căreia i se eliberează camera pentru replanificare, dar pentru care nu se mai găsește nicio cameră permisă și liberă, rămâne **fără cameră** (camera veche nu este păstrată), tocmai ca să nu apară rezervări duble. Verifică lista de atenționări.
+</Warning>
+
+## Alegerea manuală a camerei
+
+În tab-ul „Terapeuți”, la procedurile individuale alegi camera direct în celulă (butonul „Cameră”; opțiunea „Fără cameră” o golește) sau deschizi vizualizarea „Săli” pentru ocuparea camerelor pe ore. Camerele setate manual sunt raportate ca „Setate manual — păstrate” la următoarea repartizare automată.
+
+<Note>
+Dacă centrul nu alocă o cameră per oaspete la procedurile individuale, opțiunea din „Configurare programare” ascunde coloana de cameră și dezactivează verificările de cameră.
+</Note>
+
+## Exemple
+
+- Oaspetele are camera 204 aleasă manual → păstrează 204 chiar dacă terapeutul alocat are altă cameră preferată.
+- „Masaj” are camera implicită „Masaj 2”, dar la 10:00 e ocupată → se încearcă camera preferată a terapeutului, apoi camera compatibilă cea mai liberă.
+
+<Tip>
+Dă fiecărui terapeut o cameră preferată: oaspeții lui își vor primi procedurile individuale în aceeași cameră, iar programul devine previzibil pentru echipă.
+</Tip>
+
+## Vezi și
+
+- [Terapeuți & medici](/app-interface/program/configurare/terapeuti-si-medici)
+- [Proceduri în program](/app-interface/program/configurare/proceduri)
+- [Alocarea automată a terapeuților (fazele 1–3) și a camerelor](/app-interface/program/sejur/pasul-2b-alocare-automata)
+- [Pasul 3 — Repartizare](/app-interface/program/sejur/pasul-3-repartizare)

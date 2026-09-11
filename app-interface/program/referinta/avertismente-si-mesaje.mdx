@@ -1,0 +1,120 @@
+---
+title: "Avertismente și mesaje: ce înseamnă și ce faci"
+description: "Toate mesajele pe care le poate afișa modulul Program din TEAMM: grupurile din dialogul de rezultat al generării („Neprogramate”, „Peste norma terapeutului”, „Mutate în altă zi”), detaliile brute în engleză („Slot full on”, „Preferred slot full”, „Per-therapist daily cap exceeded”), mesajele pașilor de verificare și dialogurile de confirmare, fiecare cu semnificație și acțiune recomandată."
+---
+
+**Unde în aplicație:** dialogul de rezultat de după „Generează” (pasul Oaspeți) și „Repartizează pe zile” (pasul Repartizare), bara „Verificări” și dialogurile de confirmare din „Program v2 ⚡️” (`/admin/schedule/manage-v2`).
+
+## Întrebări la care răspunde pagina
+
+- Ce înseamnă „N atenționări — M proceduri nu au putut fi programate”?
+- Ce înseamnă „ora 09:00 era ocupată (capacitate 9) și nicio altă zi nu avea loc liber”?
+- Ce înseamnă „Slot full on”, „Preferred slot full”, „Per-therapist daily cap exceeded” sau „Insufficient total capacity”?
+- Ce înseamnă „EXISTING DATA OVER-CAPACITY” și „High capacity utilization”?
+- Ce fac când bara „Verificări” spune „3 oaspeți au date lipsă” sau „2 planuri fără date selectate”?
+- Ce se întâmplă dacă apăs „Regenerează” — pierd orele blocate?
+- De ce spune dialogul că o procedură „a fost șters pentru … pentru că nu mai apare în planul terapeutic curent”?
+
+## Pe scurt
+
+Generatorul nu forțează niciodată o procedură peste o regulă: când nu găsește loc, o raportează. Mesajele apar în patru locuri: (1) dialogul de rezultat, care grupează atenționările în categorii ușor de citit; (2) detaliul brut, în engleză, păstrat pentru fiecare atenționare; (3) cardurile din bara „Verificări”; (4) dialogurile de confirmare dinaintea acțiunilor care șterg sau suprascriu. Pentru cauzele unei proceduri neplasate, în ordinea frecvenței, vezi [De ce nu a fost plasată o procedură](/app-interface/program/depanare/proceduri-neplasate).
+
+## 1. Dialogul de rezultat: grupurile de atenționări
+
+Dialogul se intitulează „Programul a fost generat cu succes!” sau „Erori la generarea programului” și afișează „Proceduri programate”, „Oaspeți programați”, secțiunea „Atenționări (N)”, „Pași următori” și, dacă există, „Erori întâlnite (N)”. Atenționările sunt grupate pe tip de problemă, apoi pe oaspete; zilele sunt scrise ca în tabel (ex. `27.07 (Lu)` sau `27.07 (Lu) → 28.07 (Ma)`), iar liniile identice ale aceluiași oaspete sunt unite într-una singură cu toate zilele.
+
+Titlul de deasupra grupurilor:
+
+| Titlu | Ce înseamnă |
+|---|---|
+| „N atenționări — M proceduri nu au putut fi programate; restul au fost programate, unele în altă zi.” | Există proceduri lipsă din program (grupul „Neprogramate”). Restul atenționărilor sunt informative. |
+| „N atenționări — toate procedurile au fost programate, unele în altă zi decât cea planificată.” | Nimic nu lipsește; unele proceduri au fost mutate. |
+| „N atenționări.” | Doar atenționări din celelalte grupuri. |
+
+Grupurile, în ordinea afișării (cele care cer acțiune primele):
+
+| Grup | Ce înseamnă (textul din dialog) | Nota de pe rând | Ce faci |
+|---|---|---|---|
+| „Neprogramate” | „Nu a mai fost loc nici în ziua planificată, nici în altă zi — aceste proceduri lipsesc din program și trebuie adăugate manual.” | „ora 09:00 era ocupată” sau „orele 09:00, 12:00 erau ocupate” sau „toate locurile din zi erau ocupate”, urmat opțional de „(capacitate N)” și de „și nicio altă zi nu avea loc liber” | Adaugă procedura manual în program sau rezolvă cauza (capacitate, ore, terapeuți) și regenerează. |
+| „Peste norma terapeutului” | „Procedurile au fost programate, dar terapeutul depășește numărul maxim de proceduri pe zi.” | „terapeutul Maria depășește norma zilnică pentru această procedură” (fără nume dacă terapeutul nu a putut fi identificat) | Mută procedura la alt terapeut sau ridică „Max” din „Limite zilnice per terapeut”. Nu lipsește nimic din program. |
+| „Mutate în altă zi” | „Ziua sau ora preferată era ocupată, așa că procedura a fost programată în altă zi. Nu se pierde nimic din plan.” | „ora 16:00 era ocupată în ziua planificată” sau „ora preferată era ocupată” sau „ziua planificată era plină” | Nimic, dacă noua zi convine. Dacă ora preferată trebuie respectată strict, eliberează ora sau schimbă politica orei individuale. |
+| „Alte atenționări” | „Situații care nu se încadrează în categoriile de mai sus.” | detaliul brut, așa cum l-a produs generatorul | Citește detaliul (vezi secțiunea 2). |
+
+<Tip>
+La „Repartizează pe zile” cu un subset de oaspeți, dialogul mai afișează o notă: „Generare doar pentru oaspeții selectați: capacitatea ține cont de programările existente, nu și de zilele planificate (ne-adăugate în program) ale celorlalți oaspeți. Adaugă planificările în programul oaspeților înainte de a genera alte subseturi.”
+</Tip>
+
+## 2. Detaliile brute (în engleză)
+
+Fiecare atenționare păstrează textul original al generatorului; rulările vechi îl afișează direct. Formatul general este `Oaspete - Procedură: detaliu`.
+
+| Detaliu (așa cum apare) | Ce înseamnă | Ce faci |
+|---|---|---|
+| `Slot full on 2026-07-27 at 09:00, 12:00. Capacity: 9, no alternative days available.` | Toate locurile de la orele oaspetelui erau ocupate în ziua respectivă (capacitate 9) și nicio altă zi nu avea loc. Procedura **lipsește** din program (grupul „Neprogramate”). Fără „at …” înseamnă că oaspetele nu avea oră preferată și toată ziua era plină. | Mărește capacitatea (număr de oaspeți, terapeuți pe slot, „Capacitate condiționată”), adaugă slotul în alte zile sau pune procedura manual. |
+| `Preferred slot full on 2026-07-27, allocated to 2026-07-28 instead.` | Ora preferată a oaspetelui era ocupată în ziua planificată; procedura a fost mutată în altă zi (grupul „Mutate în altă zi”). | Nimic, dacă noua zi convine. Altfel eliberează ora sau schimbă `individualHourPolicy` din `strict`. |
+| `Day full on 2026-07-27, allocated to 2026-07-28 instead.` | Ziua planificată nu mai avea niciun loc (oaspete fără oră preferată); procedura a fost mutată. | Nimic, dacă noua zi convine. |
+| `Per-therapist daily cap exceeded on 2026-07-27 for Masaj (therapist(s): …); placed over cap.` | Terapeutul oaspetelui depășește limita din „Limite zilnice per terapeut” în acea zi; procedura a rămas programată, peste limită (grupul „Peste norma terapeutului”). | Mută la alt terapeut sau ajustează limita. |
+| `Insufficient total capacity: 48 allocations needed but only 40 slots available. Deficit: 8 slots.` | Pe tot sejurul, cererea pentru procedură (număr de ședințe × oaspeți) depășește locurile disponibile. Apare cu oaspetele „System”. | Redu frecvența din plan, adaugă sloturi în programul general sau mărește capacitatea. |
+| `EXISTING DATA OVER-CAPACITY: 12/10 slots (120%). Database contains more GuestSchedule records than available capacity. Consider deleting and regenerating.` | Programările deja existente (înainte de această rulare) depășesc capacitatea procedurii — de obicei rămășițe ale unor generări vechi sau adăugări manuale. | Șterge programul generat automat pentru zilele afectate („Șterge programul” → „Programul generat automat”) și regenerează. |
+| `High capacity utilization after planning (95%): 38/40 slots used (added 6 new). Only 2 slots remaining.` | Informativ: după planificare, procedura este aproape plină (peste 90%). Nimic nu lipsește. | Nimic; ține cont că următorii oaspeți adăugați nu vor mai avea loc. |
+| `- Nu s-a găsit loc pentru Oaspete la Consultație (consultația 2/3): …` | Consultația nu a putut fi rezervată; motivul urmează după două puncte: „nu există niciun medic activ în lista de disponibilitate a sejurului (Terapeuți / Medici)”, „medicul ales nu este activ în lista de disponibilitate a sejurului”, „practicianul ales nu are rol de medic”, „medicul este deja ocupat în tot intervalul programului”, „intervalul programului este în afara orelor de lucru ale medicului”, „medicul a atins numărul maxim de consultații pe zi”, „oaspetele are deja alte programări în tot intervalul”, „durata consultației depășește intervalul programului”, „nu există niciun interval liber în programul acestei zile”. | Rezolvă exact motivul indicat: bifează medicul în „Disponibilitate terapeuți & medici”, verifică rolul și programul lui de lucru, eliberează intervalul sau adaugă slotul de consultație în programul general. |
+| `Proc a fost șters pentru Oaspete în ziua 27.07.2026, 09:00 pentru că nu mai apare în planul terapeutic curent` | Curățare automată la generare: programarea aparținea unei proceduri scoase între timp din planul terapeutic al oaspetelui, așa că a fost ștearsă. | Nimic, dacă scoaterea din plan a fost intenționată. Altfel adaugă procedura înapoi în plan și regenerează. |
+
+<Note>
+Datele din detaliile brute sunt în format `AAAA-LL-ZZ`, iar orele `HH:mm`. În dialog aceleași informații apar tradus: „ora 09:00 era ocupată (capacitate 9)”.
+</Note>
+
+## 3. Mesajele pașilor de verificare
+
+Cardurile din bara „Verificări” afișează un rezumat și, la click, lista rândurilor. Mai jos sunt mesajele care cer o acțiune.
+
+| Pas | Mesaj | Ce înseamnă | Ce faci |
+|---|---|---|---|
+| „Fă modificările necesare pentru acest sejur în șabloanele de program” | „Nu există șabloane de program. Adaugă și configurează șabloane mai întâi — totul se bazează pe ele.” | Centrul nu are niciun șablon de program. | Creează șabloane în „Șabloane program” (`/admin/schedule/template`). |
+| același | „N din minimum M șabloane de program configurate” | Sub pragul „Șabloane minime”. | Adaugă șabloane sau scade pragul. |
+| „Zile cu program” | „N din T zile au program — sunt necesare minimum M” | Prea puține zile au program general față de pragul „Zile minime cu program” / „Procent minim (%)”. | Aplică un șablon de sejur sau duplică programul general în zilele lipsă. |
+| „Setează disponibilitatea personalului” | „Niciun terapeut disponibil pentru acest sejur — alege terapeuții activi” | Nimeni nu este bifat în „Disponibilitate terapeuți & medici”. | Deschide bara laterală și bifează terapeuții. |
+| același | „N din minimum M terapeuți disponibili pentru acest sejur” | Sub pragul „Terapeuți minimi”. | Bifează mai mulți terapeuți sau scade pragul. |
+| „Terapeut, cameră, oră” | „N oaspeți au date lipsă”; pe rând „Lipsește: Terapeut, Cameră, Oră”; „Nu există oaspeți în această sesiune” | Oaspeților le lipsește terapeutul, camera sau ora individuală. Camera nu se verifică dacă „Cameră preferențială per oaspete” este dezactivată. | Completează în tabelul Repartizare (coloanele terapeut, cameră, oră). |
+| „Ore la procedurile individuale” | „N oaspeți au ore care nu se potrivesc cu procedurile individuale” | Orele individuale setate nu corespund numărului de proceduri individuale. Rânduri posibile: „Oră fixată pentru „Proc”, dar oaspetele nu mai are această procedură în plan"; „Ora fixată 0930 nu se regăsește în orele oaspetelui — re-rulează Faza 2 (Ore individuale)”; „N proceduri flexibile cad în aceeași zi (data), dar au o singură oră comună — nu încap toate”; „Are proceduri flexibile, dar nicio oră comună setată pentru ele”; „Ore individuale duplicate sau nevalide (eliminate automat)”. | Ajustează orele individuale ale oaspetelui, scoate fixările vechi sau re-rulează faza „Ore individuale” din alocarea automată. |
+| „Proceduri în program” (Repartizare) | „Nu există proceduri „Tip” incluse în program"; „Niciun program (Pasul 1) nu conține proceduri de tipul „Tip”" | Niciun slot de acest tip în programul general sau nicio procedură de acest tip marcată „inclusă în program”. | Adaugă procedura în program (Proceduri) sau slotul în programul general (Pasul 1). |
+| „Repartizează pe zile” | „N planuri fără date selectate”; pe rând „Fără date selectate”; „Nu există planuri de repartizat pentru acest tip” | Planuri terapeutice de acest tip care nu au zile alese. | Rulează „Repartizează pe zile” sau alege zilele manual. Consultațiile fără zi nu apar niciodată în program. |
+| „Adaugă în programul oaspeților” | „N planuri nu sunt complet în programul oaspeților”; pe rând „M din T zile fără program” | Zilele repartizate nu au încă programare în programul oaspeților. | Rulează „Adaugă în programul oaspeților” sau „Generează” în zilele respective. |
+| „Procedurile oaspeților” | „N oaspeți au proceduri din plan neprogramate”; pe rând „Neprogramate: Proc1, Proc2”; „Generează mai întâi programul oaspeților” | Proceduri din plan care nu apar în programul oaspetelui. | Generează sau adaugă manual; vezi cauzele din [Proceduri neplasate](/app-interface/program/depanare/proceduri-neplasate). |
+| „Rezolvă manual eventualele erori” | „N programări cu eroare de rezolvat”; pe rând „Nu a putut fi plasată — completează ora în tabel”; „Nu există încă program generat pentru această zi” | Programări marcate cu „X” în tabelul oaspeților. | Scrie ora direct în celulă; rândurile afectate sunt evidențiate. |
+| „Info: suprapuneri” | „N suprapuneri în programul zilei”; pe rând „A ↔ B” cu prefix „Terapeut” sau „Cameră” | Același oaspete, terapeut sau cameră apare de două ori la aceeași oră. | Mută una dintre programări. |
+| „Program pentru zi” | „Nu există program pentru această zi.” | Fără program general nu se poate genera. | Aplică șablonul sau construiește programul general (Pasul 1). |
+| Tab „Configurare” (toate cele patru carduri) | „N din minimum M configurate” | Sub pragul „Număr minim” setat de centru. | Adaugă elementele lipsă sau scade pragul. |
+| „Consultații” | „N din T consultații au planuri pentru program”; „Nu există consultații” | Consultații fără proceduri programabile atașate (sub „Proceduri minime per consultație”). | Completează planul terapeutic la consultație. |
+
+## 4. Confirmări și dialoguri de blocare
+
+| Când apare | Mesaj | Ce se întâmplă dacă confirmi |
+|---|---|---|
+| „Generează” când ziua are deja program | „Regenerează programul”: „Aceasta va regenera programul tuturor oaspeților pentru această zi. Elementele **blocate** (🔒) se păstrează, restul programului generat automat va fi **înlocuit**.” (cu numărul de oaspeți și de zile selectate, dacă ai filtrat) | Orele blocate rămân; restul programului generat automat este șters și regenerat. Elementele adăugate manual nu sunt atinse de generare. |
+| „Generează” pe o zi fără program | „Generează programul”: „Aceasta va genera programul tuturor oaspeților pentru această zi.” | Se generează programul. Dacă pe zi cad zile speciale, dialogul are și bifele lor. |
+| „Șterge programul” (pasul Oaspeți) | „Alege ce să ștergi din programul acestei zile:” cu bifele „Programul generat automat” (bifat implicit), „Elementele adăugate manual”, „Elementele blocate” | Se șterg doar categoriile bifate. Fără nicio bifă nu se șterge nimic. |
+| „Șterge programul zilei” (pasul General) | „Ești sigur că vrei să ștergi tot programul acestei zile? Această acțiune nu poate fi anulată.” | Programul general al zilei este șters. |
+| „Șterge tot programul general (toate zilele)” | „Ești sigur că vrei să ștergi tot programul general al sejurului (pentru toate zilele)? Această acțiune nu poate fi anulată.” | Programul general al întregului sejur este șters. |
+| „Aplică șablon sejur” când sejurul are deja program general | „Acest sejur are deja un program general. Aplicarea șablonului va ȘTERGE programul existent (și programările individuale generate pe baza lui) și îl va reconstrui. Continui?” | Programul general și programările individuale generate pe baza lui sunt șterse, apoi șablonul este aplicat de la zero. |
+| „Repartizează pe zile” cu zile din trecut în selecție | „Zile în trecut”: „Selecția include N zile care au trecut (inclusiv azi). Programările existente din aceste zile vor fi înlocuite. Continuați?” — „Regenerează inclusiv zilele trecute” | Repartizarea suprascrie și zilele trecute. |
+| Serverul refuză regenerarea zilelor trecute | „Regenerare zile trecute”: „Aceasta va suprascrie programul pentru ziua de azi și zilele trecute. Continuați?” — „Continuă” | Rularea se repetă cu confirmarea explicită. |
+| „Șterge repartizarea pe zile” (Repartizare) | „Ești sigur că vrei să ștergi repartizarea?”: „Alege ce zile vrei să ștergi. Această acțiune nu poate fi anulată.” cu opțiunile „Doar zilele viitoare (păstrează ziua de azi și cele trecute)” / „Toate zilele (inclusiv cele trecute)” | Se șterg zilele alese ale repartizării pentru tipul selectat, împreună cu programările generate din ele. |
+| „Șterge ziua” din capul unei coloane (Repartizare) | „Ești sigur că vrei să ștergi această zi?”: „Se va șterge repartizarea din data …, inclusiv programările generate pentru oaspeți. Această acțiune nu poate fi anulată.” | Coloana zilei și programările ei sunt eliminate; celelalte zile rămân. |
+| Ștergerea unei programări din Repartizare | „Șterge programarea”: „Sigur doriți să ștergeți această programare? Ora și camera repartizate vor fi eliminate.” | Programarea, ora și camera sunt eliminate. |
+| Părăsirea tab-ului „Configurare” cu modificări | „Modificări nesalvate”: „Ai modificări nesalvate în configurare. Continui fără să le salvezi?” — „Continuă fără salvare” / „Rămâi la editare” | Modificările nesalvate se pierd. Bara pașilor arată între timp „Configurarea are modificări nesalvate”. |
+| „Renunță la modificări” în configurare | „Renunți la modificări?”: „Configurarea revine la ultima versiune salvată.” | Se reîncarcă ultima versiune salvată. |
+| „Revino la pașii impliciți” | „Se șterge lista personalizată de pași. Bara de verificări va folosi din nou pașii predefiniți. Continui?” | Lista personalizată de pași este ștearsă. |
+| „Șterge” configurarea | „Sigur vrei să ștergi configurarea „Nume”?" | Configurarea este ștearsă. |
+| Curățarea automată la generare | „Proc a fost șters pentru Oaspete în ziua … pentru că nu mai apare în planul terapeutic curent” (în dialogul de rezultat, la atenționări) | Nu este o confirmare: programarea a fost deja ștearsă pentru că procedura nu mai este în planul terapeutic al oaspetelui. |
+
+<Warning>
+Ștergerile programului general și ale configurării sunt definitive („Această acțiune nu poate fi anulată”). La „Regenerează programul”, doar elementele **blocate** (🔒) sunt protejate — dacă vrei să păstrezi ore anume, blochează-le înainte. Vezi [Fixarea vs. blocarea orelor](/app-interface/program/ghiduri/fixarea-vs-blocarea-orelor).
+</Warning>
+
+## Vezi și
+
+- [De ce nu a fost plasată o procedură](/app-interface/program/depanare/proceduri-neplasate)
+- [Lista pașilor de verificare](/app-interface/program/referinta/verificari)
+- [Pasul 4 — Oaspeți](/app-interface/program/sejur/pasul-4-oaspeti)
+- [Întrebări frecvente](/app-interface/program/depanare/intrebari-frecvente)

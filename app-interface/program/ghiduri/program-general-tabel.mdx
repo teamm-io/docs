@@ -1,0 +1,97 @@
+---
+title: "Program general (tabel)"
+description: "Tabelul și cronologia programului general al zilei în TEAMM: coloanele, adăugarea și editarea unui element („Adaugă program” / „Editează program”), alegerea medicilor pentru consultații, duplicarea în alte zile, mutarea prin tragere și ștergerea programului zilei sau al întregului sejur."
+---
+
+**Unde în aplicație:** „Program v2” → tab „General” (`/admin/schedule/manage-v2`). Același tabel există și ca pagină de sine stătătoare la `/admin/schedule/table` (fără intrare în meniu) și în „Creează programul” → tab „General”.
+
+## Întrebări la care răspunde pagina
+
+- Ce arată tabelul „Program general” și ce înseamnă fiecare coloană?
+- Cum adaug de mână un interval în programul general al zilei?
+- Cum spun aplicației cu ce medici să programeze consultațiile dintr-un interval?
+- Cum copiez un interval în alte zile ale sejurului?
+- Pot muta un interval cu mouse-ul în cronologie?
+- Cum șterg programul general al unei zile sau al întregului sejur?
+
+## Pe scurt
+
+Programul general este lista intervalelor (sloturilor) unei zile: ce procedură sau protocol rulează, la ce oră, pentru ce gen, cu ce terapeuți sau medici. Pe el se bazează tot ce urmează: alocarea terapeuților, repartizarea și generarea orelor. Îl construiești de obicei din șabloane („Adaugă din șabloane”, „Aplică șablon sejur”) și îl ajustezi din acest tabel, în vizualizarea „Tabel” sau „Cronologie”.
+
+## Vizualizări și coloane
+
+Comutatorul din bara tabelului alege „Tabel” sau „Cronologie”; alegerea se ține minte. Caseta de căutare filtrează rândurile.
+
+| Coloană | Conținut |
+|---|---|
+| „Procedură/protocol” | Procedurile din interval (link către procedură) sau numele protocolului |
+| „Sex” | Genul intervalului |
+| „Opțiune” | Opțiunile procedurilor |
+| „Interval” | Ora de început – ora de sfârșit |
+| „Data” | Ziua (zi din săptămână, dd.MM) |
+| „Terapeuți” | Terapeuții sau medicii atribuiți (doar în Program v2) |
+| „Sejur” | Sejurul din care face parte |
+
+Meniul rândului: „Editează”, „Duplică”, „Șterge” (cu confirmare).
+
+În „Cronologie”, intervalele care au același tip de procedură, gen și ore sunt grupate pe un singur card. Poți trage un card la altă oră sau îi poți trage marginile ca să îi schimbi durata, cu pas de 15 minute; modificarea se salvează imediat. Dacă ziua nu are program: „Nu există program pentru această zi” / „Adaugă programul general pentru această zi din șabloane. Totul depinde de ce se află în programul general.”, cu butonul „Adaugă program”.
+
+## Adaugă sau editează un interval
+
+<Steps>
+  <Step title="Deschide dialogul">
+    „Adaugă program” (din antet sau din butonul „+” al barei) sau „Editează” din meniul rândului. Titlurile: „Adaugă program” / „Editează program”; descrierea: „Completează formularul pentru a adăuga un element nou în programul aceestui sejur.” / „… pentru a edita acest element din programul acestui sejur.”
+  </Step>
+  <Step title="Completează câmpurile">
+    În partea de sus vezi un rezumat live (data, procedurile, opțiunile, orele, genul, terapeuții).
+    - Procedurile și opțiunile lor (la intervalele cu proceduri); durata este validată față de interval.
+    - „Ora de început” → „Ora de sfârșit”.
+    - „Sex” (obligatoriu).
+    - Protocolul, la intervalele de protocol („Alege protocolul (opțional)”).
+    - „Terapeuți” / „Medici” / „Terapeuți și medici”, cu placeholder „Alege terapeuții” sau „Alege medicii”.
+  </Step>
+  <Step title="Salvează">
+    „Salvează” confirmă adăugarea sau actualizarea.
+  </Step>
+</Steps>
+
+<Info>
+La un interval de consultație, selecția medicilor are alt sens decât la terapeuți: „Consultațiile din acest interval vor fi programate doar cu medicii aleși aici. Lasă gol pentru a folosi orice medic disponibil.” Dacă lista este goală, cauza este lista de disponibilitate: „Niciun medic disponibil în acest sejur. Adaugă-i din Terapeuți → Disponibilitate, apoi revino aici.”
+</Info>
+
+<Warning>
+Dacă intervalul amestecă consultații cu alte proceduri, dialogul avertizează: „Atenție: intervalul amestecă consultații cu alte proceduri — ține consultațiile în intervale separate.”
+</Warning>
+
+## Duplică intervalul în alte zile
+
+În modul editare apare secțiunea „Zilele cu aceeași procedură (aceleași opțiuni și gen)”: „Zilele bifate au deja acest program la aceeași oră. Bifează o zi nebifată pentru a-l adăuga și în acea zi.” Zilele care rulează deja intervalul la aceleași ore sunt bifate și blocate; ziua curentă are eticheta „ziua curentă”. După ce bifezi cel puțin o zi nouă, apare butonul „Duplică în zilele selectate”: copiază intervalul (cu orele editate) în acele zile, fără să atingă originalul.
+
+## Ștergerea programului general
+
+În Program v2, butonul roșu cu coș de gunoi din bara tab-ului „General” (scurtătură `X`) are două opțiuni:
+
+- „Șterge programul zilei”: „Ești sigur că vrei să ștergi tot programul acestei zile? Această acțiune nu poate fi anulată.”
+- „Șterge tot programul general (toate zilele)”: „Ești sigur că vrei să ștergi tot programul general al sejurului (pentru toate zilele)? Această acțiune nu poate fi anulată.”
+
+Confirmi cu „Șterge” sau renunți cu „Anulează”.
+
+## Alte acțiuni din bara tab-ului „General”
+
+- „Adaugă” (scurtătură `A`): deschide panoul „Șabloane program” pentru ziua curentă; de acolo, „Adaugă toate șabloanele (N × Z = T)” adaugă toate șabloanele filtrate în zilele selectate. Confirmarea: „Am adăugat șablonul în program! (N programe pentru Z date)”.
+- „Aplică șablon sejur”: completează toate zilele sejurului dintr-un șablon de sejur.
+- „Duplică” (scurtătură `D`): copiază programul dintr-o altă zi.
+
+## Reguli de reținut
+
+- Fără program general în zi nu se poate genera nimic pentru oaspeți; verificarea „Program pentru zi” din tab-ul „Oaspeți” semnalează lipsa.
+- Mutarea prin tragere în cronologie se salvează pe loc, fără dialog de confirmare.
+- Ține consultațiile în intervale separate de restul procedurilor.
+- Ștergerea programului general nu poate fi anulată.
+
+## Vezi și
+
+- [Pasul 1 — General](/app-interface/program/sejur/pasul-1-general)
+- [Șabloane program](/app-interface/program/configurare/sabloane-program)
+- [Șabloane sejur](/app-interface/program/configurare/sabloane-sejur)
+- [Creează programul (varianta clasică)](/app-interface/program/ghiduri/program-clasic)

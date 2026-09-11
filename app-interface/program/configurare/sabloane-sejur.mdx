@@ -1,0 +1,85 @@
+---
+title: "Șabloane sejur"
+description: "Șabloanele de sejur din TEAMM: cum descrii forma unui sejur (Ziua 1, Ziua 2… cu etichete de șabloane program, șabloane de terapeuți și presetări de export) și cum o aplici pe un sejur întreg cu „Previzualizează” și „Aplică șablonul”."
+---
+
+**Unde în aplicație:** meniul „Program” → „Șabloane sejur” (`/admin/schedule/session-templates`). Aplicarea se face din „Program v2” → tab „General” → „Aplică șablon sejur”.
+
+## Întrebări la care răspunde pagina
+
+- Cum construiesc programul general al unui sejur întreg dintr-o singură apăsare?
+- Ce conține un șablon de sejur și cum se leagă de șabloanele program?
+- Ce înseamnă „Ziua 1 începe” și de ce primesc avertisment că sejurul începe în altă zi a săptămânii?
+- Ce se întâmplă dacă aplic un șablon de sejur peste un sejur care are deja program?
+- De ce o zi apare „Fără program” sau „Neacoperită de șablon” în previzualizare?
+
+## Pe scurt
+
+Un șablon de sejur este „forma” reutilizabilă a unui sejur: pentru fiecare zi (Ziua 1, Ziua 2, …) reține doar **etichetele** de șabloane program. La aplicare, pentru fiecare zi a sejurului se folosesc automat toate șabloanele de program curente care au cel puțin una dintre etichetele zilei, iar fiecare devine un slot în „Program general”. Modificările făcute ulterior în șabloanele program se reflectă automat la următoarea aplicare, fără să editezi șablonul de sejur. Șablonul poate purta și șabloane de terapeuți și presetări de export.
+
+## Crearea unui șablon de sejur
+
+Tabelul (căutare „Caută după denumire”) are acțiunile de editare, duplicare și ștergere; „Adaugă șablon” deschide dialogul „Adaugă un șablon de sejur”: „Etichetează fiecare zi a sejurului. La aplicare se folosesc automat șabloanele de program curente cu etichete potrivite.”
+
+<Steps>
+  <Step title="Denumire și lungime">
+    „Denumire” (ex. „Sejur standard 12 zile”) și „Număr zile” — câte zile explicite are șablonul. Zilele apar ca rânduri „Ziua 1”, „Ziua 2” …
+  </Step>
+  <Step title="Ziua 1 începe">
+    Ziua săptămânii în care începe de obicei Ziua 1, sau „Oricare”. Cu o zi concretă, rândurile afișează și ziua săptămânii (Lu, Ma…), iar la aplicarea pe un sejur care începe în altă zi primești avertisment. Cu „Oricare”, șablonul este pur pe index și nu avertizează niciodată.
+  </Step>
+  <Step title="Etichete pe zile">
+    Secțiunea „Etichete pe zile”: „Se aplică toate șabloanele de program care au cel puțin una dintre etichetele zilei.” Pentru fiecare zi alegi „Etichete șabloane program”. O zi fără etichete rămâne fără program.
+  </Step>
+  <Step title="Șabloane terapeuți și presetări export">
+    „Șabloane terapeuți” — „Alege șabloanele de terapeuți folosite la acest sejur”: la aplicare sunt aduse ca rânduri fictive, neatribuite, în tab-ul „Terapeuți”. „Presetări export” — „Alege presetările de export folosite la acest sejur”: sunt preselectate pe sejurul construit din acest șablon.
+  </Step>
+</Steps>
+
+<Tip>
+Un șablon program fără nicio etichetă nu poate fi adus de niciun șablon de sejur — tabelul de șabloane program îl marchează „Fără etichetă”. Vezi [Șabloane program și etichete](/app-interface/program/configurare/sabloane-program).
+</Tip>
+
+## Aplicarea pe un sejur
+
+În tab-ul „General” al unui sejur fără program apare „Sejurul nu are încă program” — „Aplică un șablon de sejur ca să construiești programul pentru toate zilele deodată.” Butonul „Aplică șablon sejur” deschide bara „Aplică un șablon de sejur”.
+
+<Steps>
+  <Step title="Alege șablonul">
+    Caută („Caută un șablon de sejur...”) și selectează un șablon; fiecare arată câte etichete program și câți terapeuți poartă.
+  </Step>
+  <Step title="Previzualizează">
+    Afișează, fără să scrie nimic, rezumatul „N zile cu program · N zile fără program · N zile neacoperite de șablon”, avertismentele și defalcarea pe zile: pentru fiecare zi a sejurului, „Ziua N” cu sloturile grupate pe activitate și intervale, sau „Fără program” (zi configurată, dar fără etichete ori fără șablon potrivit) / „Neacoperită de șablon” (sejurul e mai lung decât șablonul).
+  </Step>
+  <Step title="Aplică șablonul">
+    Creează sloturile în „Program general”: „Program creat: N adăugate, N actualizate (N zile cu program)”. Reaplicarea aceluiași șablon actualizează sloturile existente, nu le duplică. Dacă șablonul poartă șabloane de terapeuți, aplicația trece la tab-ul „Terapeuți” și le adaugă ca rânduri fictive.
+  </Step>
+</Steps>
+
+<Warning>
+Dacă sejurul are deja program general, apare confirmarea: „Acest sejur are deja un program general. Aplicarea șablonului va ȘTERGE programul existent (și programările individuale generate pe baza lui) și îl va reconstrui. Continui?” La confirmare, programul existent este șters înainte de aplicare; dacă au fost șterse programări individuale, primești avertismentul „… programări individuale generate au fost șterse odată cu programul înlocuit — regenerează programul pacienților dacă e nevoie.”
+</Warning>
+
+## Avertismente frecvente
+
+| Avertisment | Ce înseamnă |
+|---|---|
+| „Șablonul a fost creat pentru sejururi care încep în altă zi a săptămânii decât acest sejur — zilele se aplică după index (Ziua 1 → prima zi a sejurului)…” | „Ziua 1 începe” diferă de ziua reală de început a sejurului; programul poate fi decalat față de zilele săptămânii din șablon. |
+| „Ziua N (data): nu are nicio etichetă — ziua rămâne fără program.” | Rândul zilei nu are etichete. |
+| „Ziua N (data): nu există niciun șablon de program cu etichetele selectate — ziua rămâne fără program.” | Etichetele zilei nu se potrivesc cu niciun șablon program curent. |
+| „N zile ale sejurului nu sunt acoperite de șablon … — șablonul are N zile configurate.” | Sejurul este mai lung decât șablonul; zilele în plus rămân goale. |
+| „Șablonul are N zile configurate după ultima zi a sejurului …” | Șablonul este mai lung decât sejurul; zilele în plus nu se aplică. |
+| „… are un interval orar invalid … și a fost omis.” / „… are ora de final mai mică sau egală cu ora de început … și a fost omis.” | Un șablon program cu ore greșite a fost sărit; corectează-l în „Șabloane program”. |
+
+## Reguli de reținut
+
+- Aplicarea **adaugă și actualizează**, nu șterge — cu excepția confirmării de înlocuire de mai sus.
+- Șabloanele de terapeuți **nu** sunt atribuite automat unor persoane reale: apar ca rânduri neatribuite; perechea șablon → terapeut rămâne manuală (vezi [Pasul 2 — Terapeuți](/app-interface/program/sejur/pasul-2-terapeuti)).
+- Zilele sunt legate de indexul zilei din sejur (Ziua 1 = prima zi a sejurului), nu de ziua săptămânii.
+
+## Vezi și
+
+- [Șabloane program și etichete](/app-interface/program/configurare/sabloane-program)
+- [Șabloane terapeuți (T1, F2…) și sloturile P](/app-interface/program/configurare/sabloane-terapeuti)
+- [Pasul 1 — General](/app-interface/program/sejur/pasul-1-general)
+- [Descarcă programul](/app-interface/program/ghiduri/descarca-programul)

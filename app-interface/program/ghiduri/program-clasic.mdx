@@ -1,0 +1,62 @@
+---
+title: "Creează programul (varianta clasică)"
+description: "Pagina „Creează programul” din TEAMM, varianta clasică a modulului Program: aceleași date și tab-uri ca Program v2, fără bara de verificări și fără pașii ghidați; corespondența dintre tab-urile clasice și pașii din Program v2."
+---
+
+**Unde în aplicație:** meniul „Program” → „Creează programul” (`/admin/schedule/manage`). Varianta recomandată este „Program v2 ⚡️” (`/admin/schedule/manage-v2`).
+
+## Întrebări la care răspunde pagina
+
+- Care este diferența dintre „Creează programul” și „Program v2”?
+- Dacă lucrez în varianta clasică, pierd ceva din ce a făcut un coleg în v2?
+- Unde găsesc în v2 ce era în tab-ul „Repartizare” din varianta clasică?
+- De ce nu văd tab-urile „Terapeuți” și „Configurare” în varianta clasică?
+- Mai este valabil ghidul vechi pas cu pas?
+
+## Pe scurt
+
+„Creează programul” este interfața anterioară a aceluiași modul. Lucrează pe **aceleași date** ca „Program v2”: același program general, aceeași repartizare, aceleași programări ale oaspeților; orice modificare făcută într-una se vede imediat în cealaltă. Diferă doar felul în care sunt prezentate: v2 adaugă pașii ghidați din fiecare tab, bara „Verificări” și tab-ul „Configurare”, iar clasicul rămâne un set de tab-uri simple. Documentația de față descrie fluxul v2; pagina aceasta arată doar unde se regăsește fiecare lucru.
+
+## Ce vezi în varianta clasică
+
+- Antetul „Creează programul” cu tab-urile „General”, „Repartizare”, „Oaspeți”. Tab-urile „Terapeuți” și „Configurare” apar doar după „Activează funcții în dezvoltare” din meniul cu „i” (unde este și „Ghidează-mă”).
+- Sub antet, alegerea sejurului și a zilei. Fără ele: „Selectează un sejur și o dată pentru a vizualiza și gestiona programul.”
+- Butoanele din antet: uneltele (roată dințată: „Duplică” programul dintr-o altă zi și „Adaugă manual elemente în programul zilei”), „Notițe” (tooltip „Baza de cunoștințe a centrului”) și descărcarea tab-ului curent.
+- În tab-ul „Oaspeți”, generatorul păstrează săgeata cu versiunile algoritmului (V4–V1); în v2 versiunea este fixată la V4.
+
+<Info>
+Tab-ul activ este ținut minte în aceeași cheie pentru ambele variante: dacă închizi clasicul pe „Repartizare”, v2 se deschide pe pasul „Repartizare”, și invers. La fel se păstrează sejurul și ziua alese.
+</Info>
+
+## Corespondența tab clasic → pas în Program v2
+
+| Tab în „Creează programul” | Pas în „Program v2” | Ce faci acolo |
+|---|---|---|
+| „General” | [Pasul 1 — General](/app-interface/program/sejur/pasul-1-general) | Programul general al zilei: intervale din șabloane, ștergerea programului zilei |
+| „Terapeuți” (doar cu funcții în dezvoltare) | [Pasul 2 — Terapeuți](/app-interface/program/sejur/pasul-2-terapeuti) | Program pe terapeut, blocaje, alocarea automată |
+| „Repartizare” | [Pasul 3 — Repartizare](/app-interface/program/sejur/pasul-3-repartizare) | Terapeut, oră și cameră pe oaspete, repartizarea procedurilor pe zile |
+| „Oaspeți” | [Pasul 4 — Oaspeți](/app-interface/program/sejur/pasul-4-oaspeti) | Generarea orarului zilei, blocarea orelor, adăugarea manuală, descărcarea |
+| „Configurare” (doar cu funcții în dezvoltare) | Tab „Configurare” din v2 | „Configurare programare” a centrului |
+
+## Ce nu are varianta clasică
+
+- Bara „Verificări” (suprapuneri, proceduri neprogramate, ore fixate etc.) și pașii bifabili din fiecare tab.
+- Tab-ul „Configurare” în meniul implicit și previzualizarea generării.
+- „Descarcă tot” cu presetările sejurului.
+
+<Note>
+Ghidul vechi pas cu pas (walkthrough-ul Scribe din 2024) descrie această interfață și este depășit. Pentru fluxul actual folosește [Programul unui sejur, pas cu pas](/app-interface/program/sejur/prezentare).
+</Note>
+
+## Reguli de reținut
+
+- Nu există „migrare”: aceleași date, două interfețe. Poți trece oricând dintr-una în alta.
+- Pentru instrucțiuni urmează paginile v2; etichetele din dialoguri (generare, export, notițe) sunt aceleași.
+- Recomandarea este să lucrezi în „Program v2”, unde verificările îți arată ce lipsește înainte de a genera.
+
+## Vezi și
+
+- [Prezentarea fluxului unui sejur](/app-interface/program/sejur/prezentare)
+- [Program general (tabel)](/app-interface/program/ghiduri/program-general-tabel)
+- [Generarea programului](/app-interface/program/ghiduri/generare)
+- [Notițe pe zi și notițe generale](/app-interface/program/ghiduri/notite)

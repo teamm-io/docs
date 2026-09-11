@@ -1,0 +1,87 @@
+---
+title: "Șabloane program și etichete"
+description: "Șabloanele program din TEAMM — intervalele orare recurente ale centrului (ex. Bazin 11:00 Femei): câmpurile unui șablon, etichetele, și cum le aduci în „Program general” al unui sejur cu „Adaugă rapid”, „Adaugă cu modificări” sau „Adaugă toate șabloanele”."
+---
+
+**Unde în aplicație:** meniul „Program” → „Șabloane program” (`/admin/schedule/template`); etichetele: butonul „Adaugă etichete” (`/admin/schedule/template/tags`). Același tabel apare încorporat în tab-ul „General” din „Program v2”.
+
+## Întrebări la care răspunde pagina
+
+- Ce este un șablon program și de ce contează pentru procedurile colective?
+- Cum creez un șablon pentru o procedură cu restricție de gen sau pentru un protocol?
+- La ce folosesc etichetele și de ce văd avertismentul „Fără etichetă”?
+- Care este diferența dintre „Adaugă rapid”, „Adaugă cu modificări” și „Adaugă toate șabloanele”?
+- Dacă modific un șablon, se schimbă și programul sejurului curent?
+
+## Pe scurt
+
+Șabloanele program sunt intervalele orare recurente ale centrului — scheletul zilei. Fiecare șablon are oră de început și de sfârșit plus procedura (sau procedurile) ori protocolul care are loc atunci. Ele populează „Program general” al fiecărui sejur, de unde pornește generarea: fie le adaugi manual pe zilele alese, fie le aduce un [șablon de sejur](/app-interface/program/configurare/sabloane-sejur) prin etichete.
+
+<Warning>
+Orele procedurilor colective vin **exclusiv** din aceste șabloane: generatorul umple sloturile existente cu oaspeți, dar nu inventează sloturi colective noi. Fără șablon (și fără slot în „Program general”), o procedură colectivă nu poate fi programată în acea zi.
+</Warning>
+
+## Câmpurile unui șablon
+
+Dialogul „Adaugă șablon” / „Editează șablon”: „Șabloanele pot fi folosite pentru a crea rapid programul fiecărei zile. Se pot crea șabloane doar pentru procedurile incluse în program.”
+
+| Câmp | Ce face |
+|---|---|
+| Tip: „Procedură” / „Protocol” | Șablonul este definit fie pe una sau mai multe proceduri (fiecare cu „Opțiune”, dacă procedura se programează pe opțiuni), fie pe un „Protocol”. |
+| „Procedură” | Procedurile care au loc în interval; doar cele „Inclus în program”. Când procedura are opțiuni alese, „Programul se va genera ținând cont de opțiuni” (dacă nu dorești acest lucru, șterge toate opțiunile). |
+| „Ora de început”, „Ora de sfârșit” | Intervalul slotului. Ora de început trebuie să fie mai mică decât ora de sfârșit. |
+| „Adaugă încă un interval (se va crea un șablon pentru fiecare interval)” | La adăugare, poți introduce mai multe intervale deodată — rezultă câte un șablon pentru fiecare. |
+| „Sex” | Restricție de gen („Masculin”, „Feminin”); oaspeții și terapeuții alocați slotului respectă automat restricția. |
+| „Specializare” | Specializarea asociată slotului (opțional). |
+| „Etichete” | Etichetele șablonului — vezi mai jos. |
+
+## Etichete
+
+Etichetele se administrează din „Adaugă etichete” (pagina „Etichete”). Ele au două roluri:
+
+- **Filtrare**: tabelul se filtrează după „Etichete”, pe lângă „Tip” („Toate” / „Proceduri” / „Protocoale”), procedură, tipul procedurii și categorie.
+- **Șabloane sejur**: un șablon de sejur etichetează fiecare zi a sejurului; la aplicare, se folosesc automat șabloanele de program curente cu etichete potrivite. Prin etichete, un șablon poate rula astfel doar în anumite zile — restul zilelor nu au slotul respectiv.
+
+<Warning>
+Un șablon fără etichete este marcat în tabel cu „Fără etichetă”: „Fără etichetă, acest șablon nu poate fi adăugat de niciun șablon de sejur. Adaugă cel puțin o etichetă.” Poate fi adăugat în continuare manual, din tab-ul „General”.
+</Warning>
+
+## Adăugarea șabloanelor în programul unui sejur
+
+În tab-ul „General” din „Program v2”, tabelul de șabloane apare cu un selector de zile („Adaugă șabloane în zilele:”) și cu trei moduri de adăugare:
+
+<Steps>
+  <Step title="Alege zilele">
+    În „Adaugă șabloane în zilele:” bifezi zilele sejurului în care vrei sloturile. Zilele care au deja program sunt evidențiate.
+  </Step>
+  <Step title="Adaugă rapid">
+    Butonul din rândul șablonului creează slotul exact ca în șablon, în toate zilele alese. Un slot deja existent în acea zi este actualizat, nu duplicat. Mesaj: „Am adăugat șablonul în program!”.
+  </Step>
+  <Step title="Adaugă cu modificări">
+    Deschide dialogul slotului cu datele șablonului precompletate, ca să modifici ora, procedura, genul etc. înainte de a-l adăuga. Modificarea rămâne doar în sejur; șablonul nu se schimbă.
+  </Step>
+  <Step title="Adaugă toate șabloanele">
+    Adaugă toate șabloanele din listă (după filtrele curente) în toate zilele alese; butonul arată calculul „(șabloane × zile = total)”. Mesaj: „Am adăugat șabloanele în program!”.
+  </Step>
+</Steps>
+
+În tabel, insigna „Adăugat” înseamnă „Adăugat deja în toate zilele selectate”, iar „Parțial” — „Adăugat deja în unele dintre zilele selectate”. Vizualizarea se poate comuta între „Tabel” și „Cronologie”.
+
+## Reguli de reținut
+
+- Modificarea unui șablon afectează sejururile viitoare; programul general al unui sejur deja creat se ajustează separat, în pasul „Program general”.
+- Un șablon poate fi restricționat la un gen — oaspeții și terapeuții alocați slotului respectă automat restricția.
+- Ține șabloanele curate: fiecare slot în plus devine un slot de umplut la fiecare sejur, cu terapeuți și capacitate.
+
+## Exemple
+
+- Bazin în fiecare zi: **11:00** Femei, **15:00** Bărbați — două șabloane cu aceeași procedură și gen diferit.
+- Cataplasmă doar marți și joi — un șablon cu o etichetă pe care șablonul de sejur o pune doar pe zilele respective.
+- Gimnastică de grup 09:00–10:00 fără restricție de gen — un singur slot mixt pe zi.
+
+## Vezi și
+
+- [Șabloane sejur](/app-interface/program/configurare/sabloane-sejur)
+- [Pasul 1 — General](/app-interface/program/sejur/pasul-1-general)
+- [Proceduri în program](/app-interface/program/configurare/proceduri)
+- [Protocoale și reguli/logici de proceduri](/app-interface/program/configurare/protocoale-si-logici)

@@ -1,0 +1,73 @@
+---
+title: "Notițe pe zi și notițe generale"
+description: "Dialogul „Notițe” din modulul Program al TEAMM: notițe pe fiecare zi a sejurului și baza de cunoștințe a centrului, editate în echipă cu text formatat, salvare automată și protecție la editări simultane."
+---
+
+**Unde în aplicație:** „Program v2” → butonul „Notițe” din antet, tooltip „Baza de cunoștințe a centrului” (`/admin/schedule/manage-v2`). Același buton există și în „Creează programul” (`/admin/schedule/manage`).
+
+## Întrebări la care răspunde pagina
+
+- Unde notez ce s-a stabilit pentru o anumită zi a sejurului (cine lipsește, de ce arată programul altfel)?
+- Unde scriem regulile și înțelegerile care se aplică mereu, indiferent de sejur?
+- Trebuie să apăs „Salvează”? Cum știu că s-a salvat?
+- Ce înseamnă mesajul „Altcineva a salvat notițele … între timp”?
+- Cum văd ce zile au deja notițe?
+
+## Pe scurt
+
+Dialogul „Notițe” („Informații utile pentru oricine gestionează programul”) are două file. „Notițe pe zi” ține câte un text pentru fiecare zi a sejurului curent, pentru informații care contează doar în acea zi. „Generale” este baza de cunoștințe a centrului: un singur document, comun tuturor sejururilor, pentru regulile și constrângerile care se aplică mereu. Ambele sunt câte un singur câmp pe care toată echipa îl editează pe loc (nu un fir de mesaje), cu text formatat, salvare automată și protecție împotriva suprascrierii editărilor colegilor.
+
+## Fila „Notițe pe zi”
+
+<Steps>
+  <Step title="Alege ziua">
+    Selectorul de zile este limitat la sejurul curent și se deschide pe ziua afișată în program. Zilele care au deja notițe sunt marcate cu bulină verde: „Zilele cu bulină verde au deja notițe”.
+  </Step>
+  <Step title="Scrie">
+    Editorul de text formatat (cu tabele și contor de caractere) are placeholder-ul „Note pentru această zi: ce s-a stabilit, cine lipsește, de ce arată programul altfel…”.
+  </Step>
+  <Step title="Schimbă ziua sau închide">
+    Modificările în curs sunt salvate înainte de a trece la altă zi sau de a închide dialogul. Sub editor vezi „Ultima modificare: dd.MM.yyyy HH:mm · «nume»”.
+  </Step>
+</Steps>
+
+<Note>
+Notițele pe zi sunt legate de sejur și de a câta zi a sejurului este (prima zi, a doua zi…). Fără un sejur ales, fila este dezactivată: „Alege un sejur pentru notițele pe zi”, iar dialogul se deschide direct pe „Generale”.
+</Note>
+
+## Fila „Generale”
+
+Un singur document pe centru, cu placeholder-ul „Baza de cunoștințe a centrului — reguli, constrângeri, înțelegeri care se aplică mereu…”. Este gândit pentru cunoștințele nescrise care altfel stau doar în capul unei singure persoane: cine cu cine nu poate fi programat, ce cameră se evită la o anumită oră, înțelegeri cu terapeuții. Se încarcă la prima deschidere a filei.
+
+## Salvarea automată
+
+Nu există buton de salvare. Starea din josul dialogului arată:
+
+| Stare | Ce înseamnă |
+|---|---|
+| „Modificări nesalvate” | Ai editat; salvarea automată pornește la scurt timp după ce te oprești din scris |
+| „Se salvează…” | Salvarea este în curs (poți continua să scrii) |
+| „Salvat automat” | Textul din editor este identic cu cel salvat |
+
+Trecerea la altă zi, schimbarea filei și „Închide” declanșează mai întâi o salvare completă a modificărilor în așteptare.
+
+## Editări simultane
+
+Fiecare salvare trimite și versiunea pe care ai încărcat-o. Dacă un coleg a salvat între timp, serverul refuză salvarea ta și dialogul afișează:
+
+<Warning>
+„Altcineva a salvat notițele acestei zile între timp («nume»). Textul tău nu a fost salvat, ca să nu suprascrie modificările lor. Copiază ce ai scris, reîncarcă versiunea curentă și completeaz-o.” (la fel pentru „notițele generale”). Butonul „Reîncarcă” aduce versiunea colegului; până atunci salvarea automată este oprită și nu poți trece la altă zi sau filă.
+</Warning>
+
+## Reguli de reținut
+
+- Notițele sunt documente editate în comun, nu un jurnal: rescrie și reorganizează, nu doar adăuga la final.
+- „Notițe pe zi” = doar acea zi a acelui sejur; „Generale” = tot centrul, toate sejururile.
+- Ștergerea completă a textului lasă ziua fără bulină; o notiță care conține doar o imagine sau un tabel contează în continuare ca notiță.
+- La conflict, copiază-ți textul înainte de „Reîncarcă”.
+
+## Vezi și
+
+- [Prezentarea fluxului unui sejur](/app-interface/program/sejur/prezentare)
+- [Pasul 4 — Oaspeți: generează orarul zilei](/app-interface/program/sejur/pasul-4-oaspeti)
+- [Creează programul (varianta clasică)](/app-interface/program/ghiduri/program-clasic)

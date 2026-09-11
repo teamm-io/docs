@@ -1,0 +1,82 @@
+---
+title: "Cum se construiește programul"
+description: "Modelul din spatele modulului Program din TEAMM: ce configurezi o singură dată, ce prescrie medicul și cum se construiește, pas cu pas, programul unui sejur."
+---
+
+**Unde în aplicație:** meniul „Program” → „Prezentare generală” (`/admin/schedule/overview`) afișează exact această hartă, cu butoane „Arată info” și „Arată exemple” pe fiecare element.
+
+## Întrebări la care răspunde pagina
+
+- Din ce se construiește programul unui sejur în TEAMM?
+- Care este diferența dintre „Program general”, „Repartizare” și „Oaspeți”?
+- Ce trebuie configurat o singură dată și ce se face la fiecare sejur?
+- Ce face fiecare dintre cele două generatoare?
+- Ce este un sejur?
+
+## Pe scurt
+
+Programul se construiește pe trei niveluri. Primul nivel este **configurarea centrului**, făcută o singură dată și refolosită la fiecare sejur: proceduri, protocoale, șabloane, terapeuți, camere și politica de generare. Al doilea nivel este **planul terapeutic**, prescris de medic la consultație pentru fiecare oaspete. Al treilea nivel este **programul sejurului**, construit pas cu pas din primele două, cu ajutorul a două generatoare.
+
+Un **sejur** (sesiune) este perioada de ședere a unui grup de oaspeți. Tot programul este legat de un sejur: șabloanele se aplică pe zilele lui, terapeuții se marchează disponibili pentru el, iar orele se generează zi cu zi în interiorul lui.
+
+## Nivelul 1 — Configurarea centrului (o singură dată)
+
+Aceste date se setează o dată și sunt folosite de toate sejururile:
+
+| Element | Ce conține | Unde |
+|---|---|---|
+| Proceduri | Durată, capacitate pe oră, tip, terapeuți necesari, cameră implicită | `/admin/schedule/procedures` |
+| Protocoale | Grupuri de proceduri prescrise ca un întreg | `/admin/medical/protocols` |
+| Șabloane program | Sloturile recurente ale zilei (ex. Bazin 11:00 Femei) | `/admin/schedule/template` |
+| Șabloane terapeuți | Terapeuți fictivi (T1, F2…) cu program pe ore | `/admin/schedule/therapist-templates` |
+| Șabloane sejur | Pachete gata de aplicat pe un sejur întreg | `/admin/schedule/session-templates` |
+| Reguli și logici | Relații între proceduri: necesită / evită, înainte / după | `/admin/medical/procedure-logics` |
+| Terapeuți & medici | Gen, culoare, cameră preferată, program de lucru | `/admin/schedule/practitioners` |
+| Săli | Camerele și procedurile permise în fiecare | `/admin/medical/rooms/medical` |
+| Configurare programare | Politica de generare: faze, cote, capacitate, reguli terapeuți | `/admin/schedule/config` |
+
+Vezi secțiunea [Configurare inițială](/app-interface/program/configurare/proceduri) pentru fiecare element.
+
+## Nivelul 2 — Planul terapeutic
+
+La consultație, medicul bifează procedurile și protocoalele oaspetelui și stabilește **frecvența** fiecăreia (zilnic, de N ori pe săptămână, o singură dată, un număr total de ședințe). Doar ce este bifat în plan intră în program. Detalii în [Planul terapeutic și frecvența](/app-interface/program/plan-terapeutic).
+
+## Nivelul 3 — Programul sejurului, pas cu pas
+
+Pașii sunt în ordinea reală a pipeline-ului și corespund tab-urilor din „Program v2”:
+
+<Steps>
+  <Step title="General — programul zilei">
+    Programul zilnic al centrului pentru acest sejur, populat automat din „Șabloane program”. Aici stabilești ce se întâmplă în fiecare zi: sloturile colective, ora și publicul lor. Un slot care lipsește aici nu poate primi oaspeți. Modificările sunt valabile doar pentru sejurul curent.
+  </Step>
+  <Step title="Terapeuți — cine lucrează și când">
+    Marchezi terapeuții disponibili, atribui terapeuți reali șabloanelor (T1 → Maria), adaugi pacienții în orele P și aplici șabloanele. Opțional, generatorul de alocare atribuie terapeuți automat în trei faze: colective, ore individuale, mixte & protocoale.
+  </Step>
+  <Step title="Repartizare — primul generator">
+    Transformă frecvențele din planul terapeutic în zile concrete ale sejurului, pentru fiecare oaspete. Respectă cotele (maxim pe zi, minim pe sejur), zilele permise și regulile „evită în aceeași zi”. Rezultatul este distribuția pe zile, cu terapeut, oră și cameră per oaspete.
+  </Step>
+  <Step title="Oaspeți — al doilea generator">
+    Pentru ziua aleasă, dă ore tuturor procedurilor repartizate în acea zi, respectând capacitatea, ferestrele de timp, programul terapeuților și regulile de gen. Ce nu poate fi plasat apare în lista „Neprogramate”, cu motivul.
+  </Step>
+</Steps>
+
+<Note>
+Pe lângă cei patru pași există tab-ul **Configurare**, marcat „O singură dată”: politica centrului, nu ceva de refăcut la fiecare sejur.
+</Note>
+
+## Cele două generatoare, pe scurt
+
+| Generator | Ce primește | Ce produce | Când îl rulezi |
+|---|---|---|---|
+| Repartizare pe zile | Planul terapeutic + cote + logici | Zilele fiecărei proceduri din plan | O dată pe sejur, apoi la modificări de plan |
+| Orele pe o zi | Repartizarea zilei + program general + terapeuți | Orele exacte, per oaspete, pentru o zi | Pentru fiecare zi, oricând, de câte ori e nevoie |
+
+<Tip>
+Rulează generatorul de ore mai întâi în modul de previzualizare: vezi lista „Neprogramate” și avertismentele înainte ca programul să fie modificat.
+</Tip>
+
+## Vezi și
+
+- [Program v2: pașii și bara „Verificări”](/app-interface/program/sejur/prezentare)
+- [Glosar](/app-interface/program/glosar)
+- [De ce nu a fost plasată o procedură](/app-interface/program/depanare/proceduri-neplasate)
